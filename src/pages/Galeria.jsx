@@ -96,12 +96,16 @@ export default function Galeria() {
 
   return (
     <>
-      {/* Header compacto (copy §7.1): sin foto. pt-32 libra la navbar
-          fija sólida de /galeria. */}
-      <section className="bg-marfil pt-32 lg:pt-40">
+      {/* Header compacto (copy §7.1): sin foto. La galería ES la foto,
+          así que el header no compite — mismo lenguaje tipográfico que
+          SectionHeading (eyebrow dorado → H1 serif ligera → línea dorada
+          de 48px → intro), sólo que como H1 de página. pt-32 libra la
+          navbar fija sólida de /galeria; pb generoso para que el cambio
+          a la retícula de fotos se sienta como una exhalación (§1.3). */}
+      <section className="bg-marfil pt-32 pb-12 lg:pt-40 lg:pb-16">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <p className="eyebrow text-dorado">Galería</p>
-          <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.25rem,5vw,4.5rem)] font-light leading-[1.05] text-balance text-marino">
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-light leading-[1.1] text-balance text-marino sm:text-5xl lg:text-6xl">
             La casa, en imágenes
           </h1>
           <div className="mt-7 h-px w-12 bg-dorado" aria-hidden="true" />
@@ -113,15 +117,21 @@ export default function Galeria() {
       </section>
 
       {/* Fila de filtros (brief §4.6, copy §7.2): pills con scroll
-          horizontal en móvil. El activo lleva aria-pressed y fondo
-          marino; los demás, borde tenue. Touch targets ≥44px. El
-          contenedor es role="group" con etiqueta para el lector. */}
-      <section className="sticky top-20 z-30 border-y border-arena bg-marfil/95 backdrop-blur-sm">
+          horizontal en móvil. Sticky bajo la navbar (top-20 = 80px). Un
+          solo filete arena abajo —no doble borde— para que la barra se
+          lea como una continuación del header, no como una caja. El
+          activo lleva aria-pressed y fondo marino sólido (marfil sobre
+          marino = AA); los inactivos viven sin caja, sólo texto piedra
+          con un filete dorado que crece al hover —mismo gesto que los
+          links de la navbar—, evitando la estética de "botón genérico".
+          Scroll horizontal sin barra fea (patrón del Home/Experiencias).
+          Touch targets ≥44px. role="group" con etiqueta para el lector. */}
+      <section className="sticky top-20 z-30 border-b border-arena bg-marfil/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <div
             role="group"
             aria-label="Filtrar fotografías por categoría"
-            className="-mx-5 flex gap-2.5 overflow-x-auto px-5 py-4 sm:mx-0 sm:flex-wrap sm:px-0"
+            className="-mx-5 flex gap-1 overflow-x-auto px-5 py-3 sm:mx-0 sm:flex-wrap sm:gap-1.5 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {galleryFilters.map((f) => {
               const activoFiltro = f.id === filtro;
@@ -132,13 +142,23 @@ export default function Galeria() {
                   onClick={() => cambiarFiltro(f.id)}
                   aria-pressed={activoFiltro}
                   className={[
-                    'eyebrow inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap px-4 transition-colors duration-200',
+                    'eyebrow group relative inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap px-3.5 transition-colors duration-200 sm:px-4',
                     activoFiltro
                       ? 'bg-marino text-marfil'
-                      : 'border border-marino/20 text-marino/75 hover:border-marino/40 hover:text-marino',
+                      : 'text-piedra hover:text-marino',
                   ].join(' ')}
                 >
                   {f.label}
+                  {/* Filete dorado del estado inactivo: aparece bajo la
+                      etiqueta al hover, crece desde la izquierda. En el
+                      activo no se dibuja (el fondo marino ya marca el
+                      estado). Decorativo. */}
+                  {!activoFiltro && (
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-3.5 bottom-2 h-px origin-left scale-x-0 bg-dorado transition-transform duration-300 ease-out group-hover:scale-x-100 sm:inset-x-4"
+                    />
+                  )}
                 </button>
               );
             })}
@@ -183,7 +203,7 @@ export default function Galeria() {
                   type="button"
                   onClick={(evento) => abrir(indice, evento)}
                   aria-label={`Ampliar fotografía ${indice + 1} de ${fotos.length}: ${foto.alt}`}
-                  className="group mb-3 block w-full overflow-hidden text-marino focus-visible:outline-marino sm:mb-4"
+                  className="group relative mb-3 block w-full overflow-hidden text-marino focus-visible:outline-marino sm:mb-4"
                   /* Reserva el alto exacto desde el ratio real: el
                      masonry no salta al cargar (brief §4.6). break-inside
                      evita que una foto se corte entre columnas. */
@@ -198,6 +218,13 @@ export default function Galeria() {
                     loading="lazy"
                     decoding="async"
                     className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]"
+                  />
+                  {/* Velo marino sutil al hover (nunca negro, §1.1):
+                      reafirma que la foto es interactiva sin robarle
+                      protagonismo. Sólo opacity, decorativo. */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 bg-marino/0 transition-colors duration-500 ease-out group-hover:bg-marino/10"
                   />
                 </button>
               ))}

@@ -229,11 +229,13 @@ export default function Lightbox({
           />
 
           {/* Barra superior: contador a la izquierda, cerrar a la
-              derecha. Contador en marfil/90 sobre marino/95 → AA. */}
+              derecha. La cifra activa toma el dorado (único acento,
+              5.8:1 sobre marino → AA); "de N" queda en marfil tenue para
+              que el número que cambia sea el que llama la atención. */}
           <div className="relative z-20 flex items-center justify-between px-5 pt-5 sm:px-8 sm:pt-6">
-            <p className="eyebrow text-marfil/90 tabular-nums" aria-live="polite">
+            <p className="eyebrow tabular-nums text-marfil/60" aria-live="polite">
               <span className="sr-only">Fotografía </span>
-              {index + 1} de {total}
+              <span className="text-dorado">{index + 1}</span> de {total}
             </p>
             <button
               ref={closeRef}
