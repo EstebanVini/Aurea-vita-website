@@ -9,9 +9,12 @@
  * que el comportamiento por defecto de SectionHeading.
  *
  * Fotos según curaduría (docs/fotos/spa-terraza.md, brief §4.4/§4.8):
- * spa_01 es el hero; el circuito de aguas usa spa_06 + spa_03; los
+ * spa_01 es el hero; el circuito de aguas usa spa_06 (la alberca de
+ * inmersión en patio de arena, la más serena y en paleta del set); los
  * rituales/aromaterapia usan spa_15 + spa_09. Descartadas: spa_11
- * (letrero ajeno), spa_14 (clínica médica), spa_07 (manicure dorada).
+ * (letrero ajeno), spa_14 (clínica médica), spa_07 (manicure dorada) y
+ * spa_03 (azulejo turquesa + grifo cromado-dorado, fuera de paleta: el
+ * pase global la retiró del bloque de contraste; QA P2).
  *
  * Las mayúsculas de los eyebrows y de las duraciones las pone CSS
  * (utilidad `eyebrow`), nunca estos datos (copy §11). Sin precios:
@@ -82,21 +85,22 @@ export const spaMenu = {
   ],
 };
 
-/** Bloque "Circuito de aguas" — sección de contraste oliva (copy §5.4). */
+/**
+ * Bloque "Circuito de aguas" — sección de contraste (copy §5.4).
+ * El pase global la convirtió en una banda inmersiva de foto a sangre
+ * completa (spa_06 + overlay marino, patrón de los heroes): el texto
+ * marfil sobre el scrim marino alcanza AA, lo que el fondo plano oliva
+ * no permitía con ningún token (QA P1). El verde del agua de la propia
+ * alberca + el eyebrow salvia y la línea oliva conservan la identidad.
+ */
 export const spaCircuito = {
   eyebrow: 'El agua como medicina',
   titulo: 'Frío, calor y nada más',
   texto:
     'El circuito de aguas alterna temperaturas como lo ha hecho la gente de mar desde siempre: vapor que abre, agua fría que despierta, flotación que suelta. Cuarenta minutos después, el cuerpo opina distinto.',
-  fotos: {
-    inmersion: {
-      src: '/fotos_hotel/spa/spa_06.jpeg',
-      alt: 'Alberca de inmersión del circuito de aguas en ambiente de penumbra',
-    },
-    tina: {
-      src: '/fotos_hotel/spa/spa_03.jpeg',
-      alt: 'Tina de piedra orgánica del Spa Vita junto a un muro de textura natural',
-    },
+  foto: {
+    src: '/fotos_hotel/spa/spa_06.jpeg',
+    alt: 'Alberca de inmersión del circuito de aguas en un patio de muros de arena',
   },
 };
 

@@ -200,76 +200,51 @@ export default function Spa() {
         </div>
       </section>
 
-      {/* 4 · Circuito de aguas — ÚNICA sección de contraste de la página
-          (brief §1.4 / §4.4): fondo OLIVA en lugar de marino, texto
-          marfil. Es el "momento de profundidad" de /spa. Sobre oliva el
-          eyebrow va marfil (el dorado da contraste insuficiente sobre
-          oliva); la línea decorativa, marfil tenue. Dúo de fotos:
-          spa_06 (plunge pool) grande + spa_03 (tina orgánica) montada
-          en collage asimétrico, mismo recurso que Cielo. */}
-      <section className="bg-oliva py-20 lg:py-32">
-        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
-          <Reveal>
-            {/* Texto en marfil SÓLIDO sobre oliva (no /90 ni /85): a
-                opacidad parcial el eyebrow caía a 2.81:1 y el cuerpo a
-                2.67:1. El sólido sube a 3.09:1 — el máximo alcanzable con
-                cualquier token sobre oliva #7a8f7c. El H2 (texto grande,
-                ≥24px) pasa AA con ese 3.09 (umbral 3:1). El eyebrow (12px)
-                y el cuerpo (16–18px) son texto pequeño: 3.09 sigue bajo
-                4.5:1. Ningún token resuelve esto sobre oliva — ver P1 en
-                el reporte (requiere decisión a nivel de token, fuera de
-                este archivo). */}
-            <p className="eyebrow text-marfil">{spaCircuito.eyebrow}</p>
-            <h2 className="mt-4 max-w-2xl font-display text-4xl font-light leading-[1.1] text-balance text-marfil sm:text-5xl lg:text-6xl">
+      {/* 4 · Circuito de aguas — sección de contraste y "momento de
+          profundidad" de /spa (brief §1.4 / §4.4). El pase global la
+          rehízo como banda INMERSIVA de foto a sangre completa (spa_06
+          + overlay marino, patrón de los heroes y de la banda CTA del
+          Home, brief §1.1 "la foto manda"). Motivo: el fondo plano oliva
+          NO alcanza AA con ningún token para texto pequeño (marfil sobre
+          oliva = 3.09:1; ver QA P1). Sobre el scrim marino el texto
+          marfil pasa AA holgado. La identidad verde se conserva en el
+          agua verde de la propia alberca, el eyebrow salvia y la línea
+          oliva. Se retiró spa_03 (turquesa/grifo dorado fuera de paleta,
+          QA P2): spa_06 sostiene el bloque sola, más SHA/serena. */}
+      <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-marino py-24 lg:py-36">
+        <img
+          src={spaCircuito.foto.src}
+          alt={spaCircuito.foto.alt}
+          width="867"
+          height="650"
+          loading="lazy"
+          /* No es el LCP (vive a media página): lazy. Encuadre al centro
+             para conservar la alberca y los muros de arena. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_55%]"
+        />
+        {/* Overlay marino: denso a la izquierda (donde va el texto) y
+            ligero a la derecha (deja respirar la alberca). Garantiza el
+            AA del marfil con independencia de la luminancia de la foto.
+            Nunca negro puro (brief §1.1). */}
+        <div
+          className="absolute inset-0 bg-linear-to-r from-marino/85 via-marino/55 to-marino/25"
+          aria-hidden="true"
+        />
+        <Reveal className="relative z-10 mx-auto w-full max-w-[1400px] px-5 sm:px-8">
+          <div className="max-w-xl">
+            {/* Eyebrow salvia sobre marino (5.54:1, AA): el acento verde
+                de la página sin texto sobre oliva. */}
+            <p className="eyebrow text-salvia">{spaCircuito.eyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl font-light leading-[1.1] text-balance text-marfil sm:text-5xl lg:text-6xl">
               {spaCircuito.titulo}
             </h2>
-            <div className="mt-7 h-px w-12 bg-marfil/60" aria-hidden="true" />
-            <p className="mt-7 max-w-[60ch] text-base leading-relaxed text-marfil sm:text-lg">
+            {/* Línea oliva: el verde se gana en lo decorativo. */}
+            <div className="mt-7 h-px w-12 bg-oliva" aria-hidden="true" />
+            <p className="mt-7 max-w-[58ch] text-base leading-relaxed text-marfil/90 sm:text-lg">
               {spaCircuito.texto}
             </p>
-          </Reveal>
-          {/* Dúo de fotos: la inmersión grande, la tina montada sobre su
-              esquina con marco oliva — el solape iguala la altura del
-              texto y evita el vacío del apilado simétrico. En móvil se
-              apilan en grid de 2 columnas (foto primero, brief §4.4). */}
-          <RevealGroup
-            stagger={0.1}
-            delayChildren={0.1}
-            className="grid gap-5 sm:grid-cols-2 lg:block"
-          >
-            <RevealItem className="overflow-hidden lg:w-[82%]">
-              <img
-                src={spaCircuito.fotos.inmersion.src}
-                alt={spaCircuito.fotos.inmersion.alt}
-                width="940"
-                height="627"
-                loading="lazy"
-                /* spa_06 es horizontal (4:3) en un marco vertical 4:5:
-                   encuadre bajo (62%) para conservar el agua de la
-                   alberca y el muro de arena, no el techo vacío. */
-                className="aspect-[4/5] w-full object-cover object-[50%_62%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
-              />
-            </RevealItem>
-            <RevealItem className="overflow-hidden lg:relative lg:z-10 lg:-mt-28 lg:ml-auto lg:w-[58%] lg:border-[10px] lg:border-oliva">
-              <img
-                src={spaCircuito.fotos.tina.src}
-                alt={spaCircuito.fotos.tina.alt}
-                width="940"
-                height="627"
-                loading="lazy"
-                /* spa_03 trae azulejo turquesa y un grifo cromado-dorado
-                   a la derecha, ajenos a la paleta serena del bloque
-                   oliva. Encuadre a la izquierda y bajo (34%/58%) en
-                   marco 4:5: centra la tina blanca orgánica (el sujeto
-                   real), recorta el grifo de la derecha y las cuerdas/
-                   persiana laterales, y reduce el turquesa visible.
-                   Va montada al 58% con marco oliva: la foto serena
-                   (spa_06) manda en tamaño; esta queda como detalle. */
-                className="aspect-[4/5] w-full object-cover object-[34%_58%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
-              />
-            </RevealItem>
-          </RevealGroup>
-        </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* 5 · Rituales / aromaterapia (marfil, brief §4.4): spa_15
