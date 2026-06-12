@@ -1,70 +1,74 @@
 # Estado de la sesión — Aurea Vita (checkpoint 2026-06-12)
 
-Orquestación según `prompt-claude-code-aurea-vita.md` §10. Flujo por página:
-`ui-engineer` → `motion-engineer` → `visual-designer` → `qa-auditor`.
+**Desarrollo COMPLETO.** Las 7 páginas implementadas, animadas, refinadas y
+auditadas según el flujo del prompt (§10): `ui-engineer` → `motion-engineer`
+→ `visual-designer` → `qa-auditor` por página, más el pase global final.
+Build verde. `npm run dev` → http://localhost:5173/
 
 ## Artefactos de referencia (ya generados, NO regenerar)
 
-- `docs/fotos/*.md` — catálogo visual de las 120 fotos con picks y **lista negra**
-  (terraza: solo terraza_13/10/03; lobby: solo 05/07/08/12/15 sin cubrebocas;
-  habitaciones_08/09 descartadas; habitaciones_06 retirada de Suite Aurea por Torre de Tokio;
-  fachadas_10 descartada por letreros "Sacher" → se usa fachadas_05 con object-right).
-- `docs/brief.md` — design brief completo del ux-architect (§4.8 lista negra, §6 motion, §8 entregables copy).
-- `docs/copy.md` — TODO el copy del ux-writer (tagline ganador: "Santuario frente al Pacífico";
-  §7.3 alts en español; §10 metadatos por ruta; frase de footer "Donde el día baja la voz").
+- `docs/fotos/*.md` — catálogo visual de las 120 fotos con picks y **lista negra**.
+- `docs/brief.md` — design brief completo del ux-architect.
+- `docs/copy.md` — TODO el copy del ux-writer (metadatos §10).
 
 ## Estado por fase
 
 | Fase | Estado |
 |---|---|
-| Catálogo fotográfico (4 agentes) | ✅ Completo |
-| ux-architect (brief) | ✅ Completo |
-| ux-writer (copy) | ✅ Completo |
-| Setup técnico (Vite 7 + React 19 + Tailwind 4 + Router 7 + Framer Motion 12, tokens, Navbar, Footer) | ✅ Completo, build verde |
-| **Home** (ui → motion → visual → qa) | ✅ Completo y auditado (7 P1 corregidos) |
-| **Habitaciones** (ui → motion → visual → qa) | ✅ Completo y auditado (3 P1 corregidos) |
-| **Gastronomía** | ui ✅ → motion ✅ → visual ✅ → **qa PENDIENTE** ← AQUÍ SE QUEDÓ |
-| **Spa** | ⬜ Pendiente todo el ciclo |
-| **Experiencias** | ⬜ Pendiente todo el ciclo |
-| **Galería** (masonry + filtros + lightbox con teclado) | ⬜ Pendiente todo el ciclo |
-| **Contacto** (form validado + confirmación simulada + query params) | ⬜ Pendiente todo el ciclo |
-| Pase global final (qa-auditor + visual-designer) + dejar `npm run dev` corriendo | ⬜ Pendiente |
+| Catálogo fotográfico, brief, copy | ✅ Completo |
+| Setup técnico (Vite 7 + React 19 + Tailwind 4 + Router 7 + Framer Motion 12) | ✅ Completo |
+| **Home** (ui → motion → visual → qa) | ✅ Completo y auditado |
+| **Habitaciones** | ✅ Completo y auditado |
+| **Gastronomía** | ✅ Completo y auditado (QA: sin P0/P1; P3 alt corregido) |
+| **Spa** | ✅ Completo y auditado |
+| **Experiencias** | ✅ Completo y auditado |
+| **Galería** (masonry + filtros + Lightbox con teclado) | ✅ Completo y auditado |
+| **Contacto** (form validado + precarga query params + confirmación simulada) | ✅ Completo y auditado |
+| Pase global final (qa-auditor + visual-designer) | ✅ Completo |
 
-## Infraestructura ya construida (reutilizar, no duplicar)
+## Decisiones relevantes del cierre
 
-- Tokens `@theme` en `src/styles/index.css` (marfil/arena/marino/dorado/oliva/salvia/piedra),
-  `font-display` (Cormorant Garamond 300–500) / `font-body` (Jost), utilidad `eyebrow`,
-  clases `logo-claro`/`logo-marino` (el Logo.svg es PNG embebido → cambio de color por filtros CSS),
-  outline global `2px solid currentColor`.
-- Componentes: `Navbar` (transparente→sólida, `HERO_ROUTES` — agregar cada ruta nueva con hero),
-  `Footer`, `BookingBar` (navega a `/contacto?llegada=&salida=&huespedes=`), `SectionHeading`
-  (H2 `lg:text-6xl`), `FeatureCard`, `RoomCard` (galería con thumbnails, `aria-pressed`/`aria-live`),
-  `Reveal.jsx` (`Reveal`/`RevealGroup`/`RevealItem`, reduced-motion seguro).
-- `src/lib/motion.js`: `EASE_OUT`, `fadeRise()`, `staggerGroup()`, `VIEWPORT_ONCE`, `drawLine()`.
-  (Bug de `delay:0` que pisaba `staggerChildren` YA corregido.)
-- Datos: `src/data/home.js`, `src/data/rooms.js` (slugs `vista-jardin`/`vista-mar`/`suite-aurea`,
-  contrato `formLabel` para el select de /contacto), `src/data/dining.js`.
-- Hook `usePageMeta` (title + description por ruta, copy.md §10).
+- **Spa · bloque "Circuito de aguas"**: el fondo plano `oliva` (#7A8F7C) NO alcanza
+  AA con ningún token para texto pequeño (marfil sobre oliva = 3.09:1). Se rehízo
+  como **banda inmersiva de foto** (spa_06 a sangre completa + overlay marino
+  degradado izq→der), texto marfil ≥4.5:1; eyebrow salvia + línea oliva conservan
+  la identidad verde. Se retiró **spa_03** (azulejo turquesa + grifo cromado-dorado,
+  fuera de paleta).
+- **Spa · botón CTA**: el brief permitía botón oliva (única excepción); se RECHAZA
+  porque oliva no da AA en el label de 12px (3.09:1). CTA dorado + eyebrow salvia.
+- **Contacto · estado de error**: sin rojo (fuera de paleta). Borde `marino` 2px +
+  fondo `arena/40` + ícono dorado; semántica vía `role="alert"`/`aria-invalid`.
+- **Preload del LCP (aereas_11)**: movido del HTML estático a un `useEffect` en Home
+  (ya no penaliza las rutas interiores con ~108KB).
+- **Navbar `HERO_ROUTES`**: incluye `/spa` y `/experiencias` (tienen hero fotográfico).
+- Footer: "Aviso de privacidad"/"Términos" se dejan como `<span>` decorativos
+  (rutas inexistentes en un hotel ficticio; no aparentan links rotos).
 
-## Reglas duras aprendidas (aplicar en páginas restantes)
+## Deuda menor aceptada (no bloqueante)
 
-1. Hero de cada ruta: eager + `fetchPriority="high"`; todo lo demás `loading="lazy"`. `min-h-[100dvh]` solo Home; interiores 70vh.
-2. Contraste AA: eyebrows **marino** sobre fondos claros (dorado/salvia fallan en texto pequeño);
-   dorado como texto solo sobre marino. En secciones marino: `focus-visible:outline-marfil` y `text-marfil` en botones.
-3. Nunca `focus:outline-none`, nunca `h-screen`, sin emojis en markup, cero colores fuera de tokens,
-   solo `/Logo.svg` como marca. Animaciones solo transform/opacity + reduced-motion siempre.
-4. Spa: verdes oliva/salvia dominan SOLO ahí (ojo contraste: salvia sobre claros falla AA → usar en líneas/fondos, no texto pequeño).
+- Clases de CTA dorado duplicadas ~6× → candidato a extraer `<Button>` (se omitió
+  para no arriesgar regresiones al cierre).
+- `guestOptions` (contact.js) y `GUEST_OPTIONS` (BookingBar.jsx) duplicados; idem
+  `FieldUnderline` (Contacto/BookingBar) → candidatos a compartir.
+
+## Infraestructura (reutilizar, no duplicar)
+
+- Tokens `@theme` en `src/styles/index.css` (7 colores + tipografía), utilidad
+  `eyebrow`, `logo-claro`/`logo-marino`, foco global `2px currentColor`.
+- Componentes: `Navbar`, `Footer`, `BookingBar`, `SectionHeading`, `FeatureCard`,
+  `RoomCard`, `Lightbox`, `Reveal`/`RevealGroup`/`RevealItem`.
+- `src/lib/motion.js`: `EASE_OUT`, `fadeRise()`, `staggerGroup()`, `drawLine()`.
+- Datos por página en `src/data/`: home, rooms, dining, spa, experiences, gallery,
+  contact. Hook `usePageMeta`.
+
+## Reglas duras (mantener en cualquier cambio futuro)
+
+1. Hero de cada ruta: eager + `fetchPriority="high"`; todo lo demás `loading="lazy"`.
+   `min-h-[100dvh]` solo Home; interiores `min-h-[70vh]`. Nunca `h-screen`.
+2. Contraste AA: eyebrows **marino** sobre fondos claros (dorado/salvia/oliva fallan
+   en texto pequeño); dorado como texto solo sobre marino; salvia sobre marino sí pasa
+   (5.54:1). CTAs dorados sobre fondo oscuro/foto → `focus-visible:outline-marfil`.
+3. Solo los 7 tokens, sin emojis en markup, solo `/Logo.svg`, animaciones solo
+   transform/opacity + `prefers-reduced-motion` siempre.
+4. Verdes oliva/salvia dominan SOLO en /spa.
 5. MOTION_INTENSITY 6/10.
-
-## Pendientes acumulados para el PASE GLOBAL final
-
-- `<link rel="preload">` de aereas_11 en `index.html` genera warning/108KB en rutas ≠ Home → condicionar o mover.
-- Focus ring de CTAs dorados sobre marino sin override en `Home.jsx:340`, `Navbar` y `BookingBar` (patrón ya resuelto en RoomCard).
-- Extraer componente `<Button>` (clases de CTA dorado duplicadas 6×).
-- P2 Home: BookingBar móvil no se puede re-colapsar; placeholder newsletter contraste bajo; "Aviso de privacidad"/"Términos" son `<span>`.
-- P3: hover scale directo en `<img>` del strip (sticky en touch); fade de 300ms en outline-color del CTA oscuro.
-
-## Cómo retomar
-
-Continuar con: **qa-auditor de /gastronomia** → luego ciclo completo de Spa → Experiencias →
-Galería → Contacto (en ese orden, prompt §10) → pase global → dejar `npm run dev` corriendo y reportar URL.
