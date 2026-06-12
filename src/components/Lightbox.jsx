@@ -52,9 +52,12 @@ const SLIDE_DURATION = 0.3;
 /** Recorrido del slide horizontal: "corto", no un barrido completo. */
 const SLIDE_OFFSET = 48;
 
-/** Selector de elementos enfocables dentro del diálogo. */
+/** Selector de elementos enfocables dentro del diálogo. Excluye lo que
+   está fuera del orden de tabulación (tabindex="-1", como la capa de
+   cierre aria-hidden) y lo deshabilitado: si entrara, el ciclo de Tab
+   podría aterrizar el foco en un elemento oculto para lectores. */
 const FOCUSABLE =
-  'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
+  'button:not([disabled]):not([tabindex="-1"]), [href], [tabindex]:not([tabindex="-1"])';
 
 export default function Lightbox({
   photos,

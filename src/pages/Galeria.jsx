@@ -212,9 +212,14 @@ export default function Galeria() {
                     breakInside: 'avoid',
                   }}
                 >
+                  {/* alt="" a propósito: el nombre accesible ya lo da el
+                      aria-label del botón contenedor (que incluye la
+                      descripción de la foto). Dejar el alt aquí lo
+                      duplicaría en el lector — mismo patrón que los
+                      thumbnails de RoomCard. */}
                   <img
                     src={foto.src}
-                    alt={foto.alt}
+                    alt=""
                     loading="lazy"
                     decoding="async"
                     className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]"
