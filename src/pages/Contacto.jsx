@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { Reveal } from '../components/Reveal.jsx';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { rooms } from '../data/rooms.js';
 import {
@@ -128,6 +129,20 @@ function FieldUnderline({ filled }) {
    visual-designer.
    ============================================================ */
 function FieldError({ id, mensaje }) {
+  /* Fade-in real de ≤150ms al aparecer (brief §6: "los mensajes de error
+     aparecen con fade de 150ms máximo"). Como el mensaje se monta/desmonta
+     condicionalmente, una clase `transition-opacity` por sí sola no anima
+     nada: el nodo nace ya a opacidad 1. Por eso arrancamos en opacity-0 y
+     subimos a opacity-100 en el primer frame tras montar. Solo opacity —
+     cero desplazamiento que mueva el layout. Con prefers-reduced-motion la
+     regla global pone la transición en ~0ms, así que el cambio es
+     instantáneo sin lógica extra. */
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
     <p
       id={id}
@@ -135,6 +150,7 @@ function FieldError({ id, mensaje }) {
       className={[
         'mt-2 flex items-start gap-1.5 text-sm text-marino',
         'transition-opacity duration-150 ease-out',
+        visible ? 'opacity-100' : 'opacity-0',
       ].join(' ')}
     >
       <svg
@@ -168,6 +184,17 @@ function ConfirmacionModal({ resumen, onClose, returnFocusRef }) {
   const panelRef = useRef(null);
   const tituloId = useId();
   const cuerpoId = useId();
+
+  /* El overlay aparece con fade puro (solo opacity, brief §6.7: "aparición
+     del modal con fade"); el panel hace su entrada con el leve rise de
+     animate-fade-rise. Arrancamos el telón en opacity-0 y subimos en el
+     primer frame; con prefers-reduced-motion la regla global lo vuelve
+     instantáneo. */
+  const [montado, setMontado] = useState(false);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setMontado(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -212,24 +239,32 @@ function ConfirmacionModal({ resumen, onClose, returnFocusRef }) {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-5 motion-safe:animate-fade-rise"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-5"
       role="dialog"
       aria-modal="true"
       aria-labelledby={tituloId}
       aria-describedby={cuerpoId}
     >
-      {/* Telón marino (brief §1.1: overlay marino, nunca negro puro). */}
+      {/* Telón marino (brief §1.1: overlay marino, nunca negro puro).
+          Fade puro de entrada (solo opacity). */}
       <button
         type="button"
         aria-label="Cerrar"
         tabIndex={-1}
         onClick={onClose}
-        className="absolute inset-0 -z-10 cursor-default bg-marino/80 backdrop-blur-sm"
+        className={[
+          'absolute inset-0 -z-10 cursor-default bg-marino/80 backdrop-blur-sm',
+          'transition-opacity duration-300 ease-out',
+          montado ? 'opacity-100' : 'opacity-0',
+        ].join(' ')}
       />
 
+      {/* El panel hereda el leve rise (fade + translateY mínimo); con
+          prefers-reduced-motion animate-fade-rise no se aplica (motion-safe)
+          y aparece instantáneo. */}
       <div
         ref={panelRef}
-        className="relative w-full max-w-lg bg-marfil px-7 py-9 shadow-[0_40px_90px_-30px] shadow-marino/60 ring-1 ring-arena sm:px-10 sm:py-11"
+        className="relative w-full max-w-lg bg-marfil px-7 py-9 shadow-[0_40px_90px_-30px] shadow-marino/60 ring-1 ring-arena motion-safe:animate-fade-rise sm:px-10 sm:py-11"
       >
         <p className="eyebrow text-marino">{contactoHeader.eyebrow}</p>
         <h2
@@ -441,8 +476,12 @@ export default function Contacto() {
           editorial entre el borde superior y el encabezado (brief §1.3). */}
       <section className="bg-marfil pb-24 pt-28 sm:pt-32 lg:pb-32">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
-          {/* Encabezado de la página (copy §8.1) */}
-          <header className="max-w-3xl">
+          {/* Encabezado de la página (copy §8.1). Reveal de entrada suave,
+              una sola vez (brief §4.7/§6.2: permitido para el encabezado y
+              las columnas, no para los campos). Reutiliza la primitiva
+              <Reveal>, que con prefers-reduced-motion renderiza el estado
+              final directamente (initial={false}). */}
+          <Reveal as="header" className="max-w-3xl">
             <p className="eyebrow text-marino">{contactoHeader.eyebrow}</p>
             <h1 className="mt-4 font-display text-[clamp(2.25rem,5vw,4rem)] font-light leading-[1.1] text-balance text-marino">
               {contactoHeader.titulo}
@@ -451,13 +490,17 @@ export default function Contacto() {
             <p className="mt-7 max-w-[60ch] text-base leading-relaxed text-marino/80 sm:text-lg">
               {contactoHeader.intro}
             </p>
-          </header>
+          </Reveal>
 
           {/* Dos columnas en desktop. En móvil el formulario va primero
               (order natural del DOM) y el contexto debajo. */}
           <div className="mt-14 grid gap-x-16 gap-y-14 lg:mt-16 lg:grid-cols-[1.1fr_0.9fr]">
             {/* ===== Columna izquierda — formulario ===== */}
-            <div>
+            {/* La columna entra como un bloque (no campo por campo): el
+                reveal se aplica al contenedor, nunca a los inputs (brief
+                §6: "sin animaciones de entrada por campo"). delay leve para
+                que la página asiente de arriba hacia abajo. */}
+            <Reveal delay={0.08}>
               {/* Resumen aria-live al enviar con errores (copy §8.3). Se
                   mantiene en el DOM para que los lectores de pantalla
                   anuncien el cambio; visible solo cuando hay error. */}
@@ -768,10 +811,10 @@ export default function Contacto() {
                   </p>
                 </div>
               </form>
-            </div>
+            </Reveal>
 
             {/* ===== Columna derecha — contexto ===== */}
-            <aside className="lg:pt-1">
+            <Reveal as="aside" delay={0.16} className="lg:pt-1">
               <div className="overflow-hidden">
                 <img
                   src={contactoInfo.foto.src}
@@ -844,7 +887,7 @@ export default function Contacto() {
                   </div>
                 </dl>
               </div>
-            </aside>
+            </Reveal>
           </div>
         </div>
       </section>
