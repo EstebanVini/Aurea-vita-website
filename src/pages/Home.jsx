@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
@@ -50,6 +51,22 @@ export default function Home() {
   );
 
   const reduceMotion = useReducedMotion();
+
+  /* Preload del LCP del hero (aereas_11) acotado a esta ruta: antes vivía
+     en index.html y se descargaba en todas las páginas. Se inyecta al
+     montar y se retira al desmontar para no afectar a las rutas interiores
+     (brief §3.3: head-start del LCP solo donde es el LCP). */
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = '/fotos_hotel/aereas/aereas_11.jpeg';
+    link.setAttribute('fetchpriority', 'high');
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   return (
     <>
@@ -337,7 +354,9 @@ export default function Home() {
           <RevealItem>
             <Link
               to="/contacto"
-              className="eyebrow mt-11 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85"
+              /* Sobre foto+overlay marino el anillo global (currentColor=
+                 marino) es invisible; se fuerza marfil para el foco visible. */
+              className="eyebrow mt-11 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85 focus-visible:outline-marfil"
             >
               Reservar mi estancia
             </Link>

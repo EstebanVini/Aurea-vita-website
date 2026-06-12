@@ -159,7 +159,14 @@ export default function Navbar() {
           ))}
           <Link
             to="/contacto"
-            className="eyebrow inline-flex min-h-[44px] items-center bg-dorado px-6 text-marino transition-colors duration-300 hover:bg-dorado/85"
+            /* En Estado A (onDark, navbar transparente sobre la foto del
+               hero) el anillo global currentColor=marino queda de bajo
+               contraste sobre la fotografía; se fuerza marfil. En Estado B
+               el botón vive sobre marfil y el anillo marino es correcto. */
+            className={[
+              'eyebrow inline-flex min-h-[44px] items-center bg-dorado px-6 text-marino transition-colors duration-300 hover:bg-dorado/85',
+              onDark ? 'focus-visible:outline-marfil' : '',
+            ].join(' ')}
           >
             Reservar
           </Link>
