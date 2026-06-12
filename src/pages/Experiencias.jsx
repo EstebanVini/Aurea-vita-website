@@ -71,9 +71,12 @@ export default function Experiencias() {
           width="940"
           height="627"
           fetchPriority="high"
-          /* Encuadre levemente bajo (60%): prioriza el borde infinito
-             del agua y el horizonte sobre el cielo despejado. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_60%]"
+          /* Encuadre apenas bajo del centro (52%): conserva las palapas
+             y la palmera focal (tercio medio) y deja el agua turquesa al
+             pie, donde se asienta el texto marfil sobre el overlay denso.
+             A 60% en desktop panorámico se perdían las copas y quedaba
+             casi solo agua; 52% sostiene la arquitectura del encuadre. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_52%]"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
             ligero arriba para que la luz del agua respire. AA del
@@ -260,33 +263,61 @@ export default function Experiencias() {
             stagger={0.09}
             delayChildren={0.1}
             amount={0.12}
-            className="mt-14 list-none space-y-5 lg:mt-20 lg:space-y-7"
+            className="mt-14 list-none space-y-12 lg:mt-20 lg:space-y-20"
           >
-            {descubreAcapulco.cards.map((card) => (
+            {descubreAcapulco.cards.map((card, indice) => (
               <RevealItem
                 as="li"
                 key={card.titulo}
                 y={16}
-                className="grid items-center gap-6 sm:grid-cols-[1fr_1.15fr] sm:gap-8 lg:gap-12"
+                /* Alternancia foto/texto en cards pares (patrón SHA/
+                   Anantara): rompe la monotonía de cuatro filas idénticas
+                   y hace que el bloque se lea como editorial, no plantilla.
+                   En móvil siempre foto-arriba (brief §4.5). */
+                className="grid items-center gap-6 sm:grid-cols-[1fr_1.15fr] sm:gap-10 lg:gap-16"
               >
                 {/* Foto: contenedor aspect-ratio fijo (16:10) +
-                    object-cover; aereas_04 entra recortada como las
-                    demás, así las cuatro cards se sienten iguales. */}
-                <div className="overflow-hidden">
+                    object-cover. Las cuatro fotos son horizontales pero
+                    de ratios distintos (~16:9 y ~4:3): cada una lleva su
+                    object-position (en datos) para que el sujeto quede
+                    en cuadro y las cards se sientan uniformes pese a los
+                    recortes mixtos. */}
+                <div
+                  className={`overflow-hidden ${
+                    indice % 2 === 1 ? 'sm:order-2' : ''
+                  }`}
+                >
                   <img
                     src={card.foto.src}
                     alt={card.foto.alt}
-                    width="940"
-                    height="588"
+                    width="867"
+                    height="542"
                     loading="lazy"
+                    style={{ objectPosition: card.foto.objectPosition }}
                     className="aspect-[16/10] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
                   />
                 </div>
-                <div>
-                  <h3 className="font-display text-2xl font-light leading-snug text-balance text-marfil sm:text-3xl lg:text-4xl">
+                {/* Bloque de texto. Número ordinal en dorado (eco del
+                    menú "Marea" de /gastronomia, misma familia visual):
+                    da jerarquía editorial y guía el ojo sin introducir
+                    color fuera de los 7 tokens. El dorado sobre marino
+                    da 5.8:1, AA. En cards pares el texto pasa al lado
+                    opuesto para alternar con la foto. */}
+                <div className={indice % 2 === 1 ? 'sm:order-1' : ''}>
+                  <span
+                    aria-hidden="true"
+                    className="eyebrow block text-dorado"
+                  >
+                    {String(indice + 1).padStart(2, '0')}
+                  </span>
+                  <div
+                    className="mt-5 h-px w-10 bg-dorado/45"
+                    aria-hidden="true"
+                  />
+                  <h3 className="mt-6 font-display text-2xl font-light leading-snug text-balance text-marfil sm:text-3xl lg:text-4xl">
                     {card.titulo}
                   </h3>
-                  <p className="mt-3 max-w-[58ch] text-base leading-relaxed text-marfil/75 sm:text-lg">
+                  <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-marfil/75 sm:text-lg">
                     {card.descripcion}
                   </p>
                 </div>

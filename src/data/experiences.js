@@ -15,6 +15,14 @@
  * aereas_02/08/04/10; aereas_15 se evita aquí por aparecer ya en el
  * Home (brief §4.5: usar aereas_10 en su lugar).
  *
+ * Nota de encuadre (visual-designer): el brief asumía aereas_04 vertical,
+ * pero el archivo entregado es horizontal (867x650, ~4:3). En el
+ * contenedor 16:10 de las cards el recorte de cada foto es distinto según
+ * su ratio (aereas_02/10 son ~16:9 y recortan de lado; aereas_08/04 son
+ * ~4:3 y recortan arriba/abajo). Cada card lleva su `objectPosition`
+ * para que el sujeto quede en cuadro y las cuatro se sientan uniformes
+ * pese a las orientaciones mixtas.
+ *
  * Las mayúsculas de los eyebrows las pone CSS (utilidad `eyebrow`),
  * nunca estos datos (copy §11).
  */
@@ -92,6 +100,9 @@ export const descubreAcapulco = {
       foto: {
         src: '/fotos_hotel/aereas/aereas_02.jpeg',
         alt: 'Vista aérea de la costa y la bahía de Acapulco con aguas turquesa',
+        /* ~16:9: el recorte es lateral. Centro conserva alberca,
+           palapas y la franja de mar a la izquierda. */
+        objectPosition: '50% 50%',
       },
     },
     {
@@ -101,6 +112,10 @@ export const descubreAcapulco = {
       foto: {
         src: '/fotos_hotel/aereas/aereas_08.jpeg',
         alt: 'Acantilados de la costa de Acapulco cayendo hacia el mar',
+        /* ~4:3: el recorte es vertical. Encuadre apenas alto (45%)
+           para sostener el drama del acantilado boscoso sobre el
+           agua, sin perder la franja turquesa del pie. */
+        objectPosition: '50% 45%',
       },
     },
     {
@@ -110,6 +125,11 @@ export const descubreAcapulco = {
       foto: {
         src: '/fotos_hotel/aereas/aereas_04.jpeg',
         alt: 'Vista aérea de manglares y vegetación junto al agua',
+        /* ~4:3: recorte vertical. El interés (laguna con reflejo de
+           sol y las casas entre el manglar) vive en la mitad superior;
+           la base es solo vegetación densa. Encuadre alto (38%) sube
+           el agua al cuadro. */
+        objectPosition: '50% 38%',
       },
     },
     {
@@ -119,6 +139,9 @@ export const descubreAcapulco = {
       foto: {
         src: '/fotos_hotel/aereas/aereas_10.jpeg',
         alt: 'Panorámica aérea de la bahía de Acapulco y la ciudad junto al mar',
+        /* ~16:9: recorte lateral. Encuadre apenas bajo (58%) prioriza
+           la bahía y la ciudad sobre la banda de cielo del pie superior. */
+        objectPosition: '50% 58%',
       },
     },
   ],
