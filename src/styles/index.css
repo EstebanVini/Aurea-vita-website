@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Aurea Vita — Design tokens
+   Única fuente de verdad del color y la tipografía del sitio.
+   Todo color del sitio deriva de estos 7 tokens.
+   ============================================================ */
+@theme {
+  /* Paleta (spec §2) */
+  --color-marfil: #f5f1ec; /* Fondo principal */
+  --color-arena: #e8e1d9; /* Secciones alternas, tarjetas */
+  --color-marino: #1f3a44; /* Texto principal, header/footer, contraste */
+  --color-dorado: #c6a87d; /* ÚNICO acento global */
+  --color-oliva: #7a8f7c; /* Acento secundario (solo Spa) */
+  --color-salvia: #a3b5a0; /* Etiquetas, fondos suaves de bienestar */
+  --color-piedra: #6e6e6e; /* Texto secundario */
+
+  /* Tipografía (spec §3) */
+  --font-display: "Cormorant Garamond", "Georgia", serif;
+  --font-body: "Jost", "Avenir Next", "Segoe UI", sans-serif;
+
+  /* ------------------------------------------------------------
+     Animaciones (brief §6) — solo transform/opacity.
+     Usarlas siempre con el prefijo motion-safe: para que con
+     prefers-reduced-motion ni siquiera se apliquen.
+     ------------------------------------------------------------ */
+
+  /* Ken Burns del hero (§6.8): zoom casi imperceptible, una vez. */
+  --animate-kenburns: kenburns 22s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.06);
+    }
+  }
+
+  /* Indicador de scroll del hero (§6.1): la línea dorada se dibuja
+     de arriba hacia abajo y se desvanece. Único loop permitido.
+     Requiere la clase origin-top en el elemento. */
+  --animate-scroll-pulse: scroll-pulse 2.6s ease-in-out infinite;
+
+  @keyframes scroll-pulse {
+    0% {
+      transform: scaleY(0);
+      opacity: 0.9;
+    }
+    55% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 0;
+    }
+  }
+
+  /* Despliegue del panel móvil de la BookingBar (§6.7). */
+  --animate-fade-rise: fade-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes fade-rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-marfil);
+    color: var(--color-marino);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-dorado);
+    color: var(--color-marino);
+  }
+
+  /* currentColor, no dorado: el dorado da 1.86:1 sobre marfil y 1.61:1
+     sobre arena — por debajo del 3:1 de WCAG 1.4.11 para indicadores
+     de foco. Con currentColor el anillo hereda el color del texto
+     (marino sobre claros, marfil sobre marino), siempre ≥4.5:1. */
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  /* El movimiento es opcional: quien lo pide reducido, lo recibe reducido. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================================
+   Utilidades de marca
+   ============================================================ */
+
+/* Eyebrow: etiqueta corta sobre títulos (brief §1.2).
+   El color se asigna aparte (text-dorado por defecto, salvia/oliva en Spa). */
+@utility eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* Variantes de color del logo (Logo.svg es raster embebido: el color
+   se controla con filter, nunca con fill). El original es dorado. */
+@utility logo-claro {
+  filter: brightness(0) invert(1);
+}
+
+@utility logo-marino {
+  filter: brightness(0) saturate(100%) invert(20%) sepia(21%) saturate(1080%)
+    hue-rotate(152deg) brightness(95%) contrast(91%);
+}

@@ -1,0 +1,20 @@
+import { useEffect } from 'react';
+
+/**
+ * Actualiza <title> y <meta name="description"> por página,
+ * sin dependencias externas. Cada página lo invoca con sus
+ * metadatos de docs/copy.md §10.
+ */
+export function usePageMeta(title, description) {
+  useEffect(() => {
+    document.title = title;
+
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', description);
+  }, [title, description]);
+}
