@@ -122,11 +122,11 @@ function FieldUnderline({ filled }) {
    Mensaje de error de campo. Aparece con fade ≤150ms (brief §6:
    "la validación es seria, no juguetona"; sin animación de entrada
    por campo más allá del fundido del mensaje). El color de error se
-   deriva de la paleta: texto `marino` (no rojo genérico fuera de
-   tokens) y el borde `dorado` del campo es la señal de estado. La
-   intención semántica se transmite por `role="alert"`, no por el
-   color, para no depender de él (WCAG 1.4.1). Coordinar con el
-   visual-designer.
+   deriva de la paleta (no rojo fuera de tokens): texto `marino` y un
+   ícono `dorado` que mantiene el hilo de marca; la señal de estado del
+   campo es su borde `marino` de 2px (ver borderClass y su nota de
+   decisión). La intención semántica se transmite por `role="alert"`, no
+   por el color, para no depender de él (WCAG 1.4.1).
    ============================================================ */
 function FieldError({ id, mensaje }) {
   /* Fade-in real de ≤150ms al aparecer (brief §6: "los mensajes de error
@@ -280,16 +280,19 @@ function ConfirmacionModal({ resumen, onClose, returnFocusRef }) {
           className="mt-6 text-base leading-relaxed text-marino/80"
         >
           Gracias, {resumen.nombre}. Recibimos tu solicitud para{' '}
-          <span className="text-marino">{resumen.tipoHabitacion}</span> ·{' '}
-          <span className="text-marino">
+          <span className="font-medium text-marino">
+            {resumen.tipoHabitacion}
+          </span>{' '}
+          ·{' '}
+          <span className="font-medium text-marino">
             {resumen.fechaLlegada} – {resumen.fechaSalida}
           </span>{' '}
-          · <span className="text-marino">{resumen.huespedes}</span>. Nuestro
-          concierge revisará la disponibilidad y te escribirá a{' '}
-          <span className="text-marino">{resumen.email}</span> en el transcurso
-          del día para confirmar los detalles. Por ahora no se ha realizado
-          ningún cargo ni reservación definitiva — falta lo mejor: ponerle fecha
-          al mar.
+          · <span className="font-medium text-marino">{resumen.huespedes}</span>
+          . Nuestro concierge revisará la disponibilidad y te escribirá a{' '}
+          <span className="font-medium text-marino">{resumen.email}</span> en el
+          transcurso del día para confirmar los detalles. Por ahora no se ha
+          realizado ningún cargo ni reservación definitiva — falta lo mejor:
+          ponerle fecha al mar.
         </p>
 
         <div className="mt-9 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -462,11 +465,28 @@ export default function Contacto() {
   const labelClass = 'eyebrow block text-[0.7rem] text-piedra';
   const baseInputClass =
     'mt-2 block min-h-[48px] w-full bg-transparent px-3 py-2.5 font-body text-base text-marino [color-scheme:light] transition-colors duration-200';
-  /* El borde es la señal de estado del campo (brief §4.7: borde dorado
-     en error, en lugar de rojo fuera de tokens). El foco visible lo da
-     el :focus-visible global; nunca focus:outline-none. */
+  /* DECISIÓN FINAL DEL ESTADO DE ERROR (visual-designer, valida brief §4.7):
+     El estado de error NO usa rojo (fuera de los 7 tokens) y se mantiene
+     dentro de la paleta. Se ajustó la propuesta del ui-engineer (borde
+     dorado + bg-dorado/5) porque el dorado es el acento POSITIVO de toda la
+     marca —botones, hover, líneas decorativas y, aquí mismo, el subrayado
+     `FieldUnderline` que aparece dorado al enfocar—. Repetir dorado para el
+     error lo volvía ambiguo: el ojo no distinguía "campo activo/correcto" de
+     "campo en error".
+     Diferenciación elegida, dentro de tokens y sin depender solo del color:
+       · borde `marino` de 2px (oscuro = señal de atención, en contraste con
+         el borde `arena` claro del reposo —mismo grosor de 2px para que no
+         haya salto de layout al entrar en error— y con el subrayado dorado
+         del foco);
+       · fondo `arena/40` cálido y discreto (no compite con el dorado);
+       · ícono dorado en el mensaje, que mantiene el hilo de marca.
+     La semántica real la sostienen `role="alert"` + `aria-invalid` (WCAG
+     1.4.1: el color no es el único portador del significado). El foco visible
+     lo da el :focus-visible global; nunca focus:outline-none. */
   const borderClass = (campo) =>
-    errs[campo] ? 'border border-dorado bg-dorado/5' : 'border border-arena';
+    errs[campo]
+      ? 'border-2 border-marino bg-arena/40'
+      : 'border-2 border-arena';
 
   const describedBy = (campo) => (errs[campo] ? errId(campo) : undefined);
 
@@ -509,7 +529,9 @@ export default function Contacto() {
               </div>
               {resumenError && (
                 <p
-                  className="mb-8 flex items-start gap-2.5 border-l-2 border-dorado bg-arena/60 px-4 py-3.5 text-sm text-marino transition-opacity duration-150"
+                  /* Mismo lenguaje de error que los campos: barra y borde
+                     marino (no dorado), fondo arena, ícono dorado de marca. */
+                  className="mb-8 flex items-start gap-2.5 border-l-2 border-marino bg-arena/60 px-4 py-3.5 text-sm text-marino transition-opacity duration-150"
                   aria-hidden="true"
                 >
                   <svg
@@ -738,7 +760,7 @@ export default function Contacto() {
                       }
                       className={[
                         baseInputClass,
-                        'border border-arena',
+                        'border-2 border-arena',
                       ].join(' ')}
                     >
                       <option value="">
@@ -768,7 +790,7 @@ export default function Contacto() {
                     onChange={(event) => setCampo('mensaje', event.target.value)}
                     className={[
                       baseInputClass,
-                      'border border-arena resize-y',
+                      'border-2 border-arena resize-y',
                     ].join(' ')}
                   />
                   <FieldUnderline filled={Boolean(valores.mensaje)} />
@@ -815,6 +837,13 @@ export default function Contacto() {
 
             {/* ===== Columna derecha — contexto ===== */}
             <Reveal as="aside" delay={0.16} className="lg:pt-1">
+              {/* object-[50%_32%]: lobby_05 es una arquitectura simétrica
+                  (cúpula artesonada, candelabros, escultura central) con un
+                  sofá de huéspedes al pie. En recorte vertical, centrar la
+                  composición horizontalmente (la foto es simétrica) y subir el
+                  encuadre conserva lo monumental —cúpula y candelabros— y deja
+                  fuera la franja inferior de personas sentadas, que distraería
+                  del tono editorial. */}
               <div className="overflow-hidden">
                 <img
                   src={contactoInfo.foto.src}
@@ -822,16 +851,20 @@ export default function Contacto() {
                   loading="lazy"
                   width="900"
                   height="1100"
-                  className="aspect-[4/5] w-full bg-arena object-cover"
+                  className="aspect-[4/5] w-full bg-arena object-cover object-[50%_32%]"
                 />
               </div>
 
-              <div className="mt-9 border-t border-arena pt-9">
-                <h2 className="font-display text-2xl font-light text-marino">
+              <div className="mt-10 border-t border-arena pt-10">
+                <h2 className="font-display text-[1.75rem] font-light leading-tight text-marino">
                   {contactoInfo.encabezado}
                 </h2>
+                {/* Línea dorada de 48px: el hilo conductor de marca (brief
+                    §1.2/§1.5) ata esta columna al sistema visual del sitio y la
+                    aleja de la estética de "sidebar genérico". */}
+                <div className="mt-5 h-px w-12 bg-dorado" aria-hidden="true" />
 
-                <dl className="mt-7 space-y-7 text-base text-marino/80">
+                <dl className="mt-8 space-y-7 text-base text-marino/80">
                   <div>
                     <dt className="eyebrow text-piedra">Dirección</dt>
                     <dd className="mt-2 leading-relaxed">
