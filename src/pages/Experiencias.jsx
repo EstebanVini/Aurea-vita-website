@@ -228,11 +228,13 @@ export default function Experiencias() {
               <p>{atardeceres.texto}</p>
             </SectionHeading>
             {/* Link cruzado a /gastronomia (copy §6.3): hover a
-                marino/70 (4.5:1 sobre arena), no a dorado — el dorado
-                como texto sobre claros falla AA (brief §1.5). */}
+                marino/75 (4.8:1 sobre arena, AA), no a dorado — el dorado
+                como texto sobre claros falla AA (brief §1.5). marino/70
+                sobre arena solo da 4.23:1 (falla); sobre marfil pasaría,
+                pero esta banda es arena. */}
             <Link
               to={atardeceres.cta.to}
-              className="eyebrow group mt-9 inline-flex min-h-[44px] items-center gap-2.5 text-marino transition-colors duration-300 hover:text-marino/70"
+              className="eyebrow group mt-9 inline-flex min-h-[44px] items-center gap-2.5 text-marino transition-colors duration-300 hover:text-marino/75"
             >
               {atardeceres.cta.label}
               <ArrowIcon />
@@ -246,7 +248,7 @@ export default function Experiencias() {
           horizontales: foto con aspect-ratio fijo + object-cover para
           uniformar orientaciones mixtas, título serif y descripción en
           marfil tenue. Stagger de 90ms entre cards (brief §6.3); el
-          eyebrow va en dorado sobre marino (5.8:1, AA). */}
+          eyebrow va en dorado sobre marino (5.32:1, AA). */}
       <section className="bg-marino py-20 lg:py-32">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <Reveal>
@@ -301,7 +303,7 @@ export default function Experiencias() {
                     menú "Marea" de /gastronomia, misma familia visual):
                     da jerarquía editorial y guía el ojo sin introducir
                     color fuera de los 7 tokens. El dorado sobre marino
-                    da 5.8:1, AA. En cards pares el texto pasa al lado
+                    da 5.32:1, AA. En cards pares el texto pasa al lado
                     opuesto para alternar con la foto. */}
                 <div className={indice % 2 === 1 ? 'sm:order-1' : ''}>
                   <span
