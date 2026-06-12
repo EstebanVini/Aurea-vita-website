@@ -64,7 +64,11 @@ export default function Spa() {
           width="940"
           height="627"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover"
+          /* Encuadre levemente alto (42%): el masaje sobre la camilla
+             vive en la banda central de la foto; subirlo lo aleja del
+             pie, donde el overlay denso y el título lo taparían. El
+             borde inferior queda en el mármol claro, no en el sujeto. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_42%]"
         />
         {/* Overlay degradado marino solo donde hay texto (brief §1.1):
             denso al pie, ligero arriba para que la penumbra serena de
@@ -224,7 +228,10 @@ export default function Spa() {
                 width="940"
                 height="627"
                 loading="lazy"
-                className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
+                /* spa_06 es horizontal (4:3) en un marco vertical 4:5:
+                   encuadre bajo (62%) para conservar el agua de la
+                   alberca y el muro de arena, no el techo vacío. */
+                className="aspect-[4/5] w-full object-cover object-[50%_62%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
             </RevealItem>
             <RevealItem className="overflow-hidden lg:relative lg:z-10 lg:-mt-28 lg:ml-auto lg:w-[58%] lg:border-[10px] lg:border-oliva">
@@ -234,7 +241,15 @@ export default function Spa() {
                 width="940"
                 height="627"
                 loading="lazy"
-                className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
+                /* spa_03 trae azulejo turquesa y un grifo cromado-dorado
+                   a la derecha, ajenos a la paleta serena del bloque
+                   oliva. Encuadre a la izquierda y bajo (34%/58%) en
+                   marco 4:5: centra la tina blanca orgánica (el sujeto
+                   real), recorta el grifo de la derecha y las cuerdas/
+                   persiana laterales, y reduce el turquesa visible.
+                   Va montada al 58% con marco oliva: la foto serena
+                   (spa_06) manda en tamaño; esta queda como detalle. */
+                className="aspect-[4/5] w-full object-cover object-[34%_58%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
             </RevealItem>
           </RevealGroup>
@@ -273,7 +288,11 @@ export default function Spa() {
                 width="940"
                 height="627"
                 loading="lazy"
-                className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
+                /* spa_15 es panorámica (16:9) en marco vertical 4:5: el
+                   still-life de botellas vive en la mitad inferior, bajo
+                   el arco. Encuadre bajo (66%) para conservar el bodegón
+                   y la luz de las varillas, no la pared superior vacía. */
+                className="aspect-[4/5] w-full object-cover object-[50%_66%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
             </RevealItem>
             <RevealItem className="overflow-hidden lg:relative lg:z-10 lg:-mt-28 lg:ml-auto lg:w-[58%] lg:border-[10px] lg:border-marfil">
@@ -283,7 +302,10 @@ export default function Spa() {
                 width="940"
                 height="627"
                 loading="lazy"
-                className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
+                /* spa_09 horizontal (3:2) en marco 4:5: el difusor y la
+                   llama están al centro-bajo. Encuadre a 58% para anclar
+                   la vela y la veta de madera, no el fondo en penumbra. */
+                className="aspect-[4/5] w-full object-cover object-[50%_58%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
             </RevealItem>
           </RevealGroup>
@@ -306,15 +328,22 @@ export default function Spa() {
       </section>
 
       {/* 7 · Banda CTA de cierre (copy §5.7): marino sólido — ningún
-          recorrido termina en callejón sin salida (brief §2.2). Botón
-          dorado estándar (patrón de Gastronomia.jsx), por disciplina de
-          paleta.
-          NOTA para visual-designer: el brief §4.4 permite, como única
-          excepción del sitio, que este botón sea OLIVA en lugar de
-          dorado. Se deja en dorado por defecto; si se valida el oliva,
-          sustituir bg-dorado→bg-oliva, text-marino→text-marfil y revisar
-          el contraste del label marfil sobre oliva (≈3.1:1: válido para
-          texto grande/eyebrow ≥14px bold, al límite para 12px). */}
+          recorrido termina en callejón sin salida (brief §2.2).
+
+          DECISIÓN visual-designer (botón, brief §4.4): el brief permite,
+          como única excepción del sitio, un botón OLIVA aquí. Se RECHAZA.
+          Motivo de contraste (verificado): el label usa la utilidad
+          `eyebrow` (0.75rem/12px, peso 500 — texto PEQUEÑO, AA exige
+          4.5:1). Sobre oliva da 3.09:1 con marfil y 3.46:1 con marino:
+          ambos fallan AA para ese tamaño. El brief es explícito: "si
+          oliva no alcanza AA con marfil para el texto pequeño del botón,
+          NO lo uses." Por tanto el botón se queda DORADO (marino sobre
+          dorado = 5.32:1, AA holgado) — patrón global de Gastronomia/
+          Habitaciones, disciplina de paleta (regla dura §0.2) intacta.
+          La identidad verde de Spa NO se pierde en el cierre: se gana en
+          el eyebrow salvia y la línea oliva de esta banda (decorativos
+          sobre marino, donde el verde respira sin label accionable), de
+          modo que la página cierra en verde aunque el CTA siga dorado. */}
       <section className="bg-marino py-24 lg:py-36">
         <RevealGroup
           stagger={0.12}
@@ -325,6 +354,10 @@ export default function Spa() {
               align="center"
               tone="dark"
               eyebrow="Reservaciones"
+              /* Eyebrow salvia (no dorado) sobre marino: cierra la página
+                 en su acento verde. salvia sobre marino respira sin ser
+                 texto accionable; el dorado se reserva al botón. */
+              eyebrowClassName="text-salvia"
               title={spaCta.titulo}
             >
               <p>{spaCta.texto}</p>
