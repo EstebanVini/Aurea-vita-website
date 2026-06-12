@@ -122,7 +122,7 @@ export default function Galeria() {
       </section>
 
       {/* Fila de filtros (brief §4.6, copy §7.2): pills con scroll
-          horizontal en móvil. Sticky bajo la navbar (top-20 = 80px). Un
+          horizontal en móvil. Sticky bajo la navbar (top-24 = 96px). Un
           solo filete arena abajo —no doble borde— para que la barra se
           lea como una continuación del header, no como una caja. El
           activo lleva aria-pressed y fondo marino sólido (marfil sobre
@@ -131,7 +131,7 @@ export default function Galeria() {
           links de la navbar—, evitando la estética de "botón genérico".
           Scroll horizontal sin barra fea (patrón del Home/Experiencias).
           Touch targets ≥44px. role="group" con etiqueta para el lector. */}
-      <section className="sticky top-20 z-30 border-b border-arena bg-marfil/95 backdrop-blur-sm">
+      <section className="sticky top-24 z-30 border-b border-arena bg-marfil/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <div
             role="group"

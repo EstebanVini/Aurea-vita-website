@@ -131,11 +131,16 @@ export default function Navbar() {
     >
       <nav
         aria-label="Navegación principal"
-        className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-5 sm:px-8"
+        className="mx-auto flex h-24 max-w-[1400px] items-center justify-between px-5 sm:px-8"
       >
         <Link
           to="/"
           aria-label="Aurea Vita — Inicio"
+          /* Click en el logo: navega a Inicio y sube al tope de la página
+             (cubre el caso de estar ya en "/", donde no hay cambio de ruta
+             que dispare ScrollToTop). El scroll respeta prefers-reduced-
+             motion vía la regla global de scroll-behavior. */
+          onClick={() => window.scrollTo(0, 0)}
           className="relative z-50 shrink-0"
         >
           <img
@@ -144,7 +149,7 @@ export default function Navbar() {
             width="96"
             height="96"
             className={[
-              'h-14 w-14 transition-[filter] duration-300',
+              'h-20 w-20 transition-[filter] duration-300',
               onDark ? 'logo-claro' : 'logo-marino',
             ].join(' ')}
           />
