@@ -23,7 +23,7 @@ Build verde. `npm run dev` → http://localhost:5173/
 | **Spa** | ✅ Completo y auditado |
 | **Experiencias** | ✅ Completo y auditado |
 | **Galería** (masonry + filtros + Lightbox con teclado) | ✅ Completo y auditado |
-| **Contacto** (form validado + precarga query params + confirmación simulada) | ✅ Completo y auditado |
+| **/contacto** | ⚙️ Cambiado por petición: ya NO es formulario de reserva, ahora es página **"Aún en construcción"** (todos los CTAs de Reservar apuntan aquí). El formulario validado vive en el historial de git si se necesita restaurar. |
 | Pase global final (qa-auditor + visual-designer) | ✅ Completo |
 
 ## Decisiones relevantes del cierre
