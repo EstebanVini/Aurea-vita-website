@@ -118,7 +118,13 @@ export default function Footer() {
                   }}
                   placeholder="nombre@correo.com"
                   autoComplete="email"
-                  className="min-h-[44px] w-full border border-marfil/25 bg-transparent px-4 text-sm text-marfil placeholder:text-marfil/40 focus:border-dorado focus:outline-none"
+                  /* placeholder marfil/60 (≥4.5:1 sobre marino, AA): el
+                     /40 anterior quedaba muy por debajo del contraste.
+                     El borde dorado al enfocar es refuerzo decorativo
+                     (1.86:1, no es indicador de foco válido); el anillo
+                     global :focus-visible (currentColor=marfil, AA) es el
+                     indicador real, por eso no se anula con outline-none. */
+                  className="min-h-[44px] w-full border border-marfil/25 bg-transparent px-4 text-sm text-marfil placeholder:text-marfil/60 focus:border-dorado"
                 />
                 <button
                   type="submit"
