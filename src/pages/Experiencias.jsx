@@ -176,7 +176,7 @@ export default function Experiencias() {
                     width="940"
                     height="627"
                     loading="lazy"
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out hover:scale-[1.04]"
+                    className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
                   />
                 </div>
               </RevealItem>
@@ -317,7 +317,11 @@ export default function Experiencias() {
           <RevealItem>
             <Link
               to="/contacto"
-              className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85"
+              /* Feedback del CTA (patrón BookingBar/Gastronomia): cambio de
+                 tono al hover + leve "asentamiento" al presionar, solo
+                 motion-safe. La banda es arena, así que el anillo de foco
+                 marino por defecto contrasta bien (no necesita outline-marfil). */
+              className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99]"
             >
               {experienciasCta.boton}
             </Link>
