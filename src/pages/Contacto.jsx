@@ -374,6 +374,10 @@ export default function Contacto() {
   const [enviando, setEnviando] = useState(false);
   const [resumen, setResumen] = useState(null);
   const [resumenError, setResumenError] = useState(false);
+  /* Contador de intentos fallidos: fuerza al lector de pantalla a
+     reanunciar el resumen aria-live aunque el texto sea idéntico entre
+     envíos (el contenido de una región live solo se anuncia si cambia). */
+  const [intentoFallido, setIntentoFallido] = useState(0);
 
   /* Refs a los campos para llevar el foco al primero con error. */
   const refs = {
@@ -439,6 +443,7 @@ export default function Contacto() {
     const camposConError = ORDEN_CAMPOS.filter((campo) => next[campo]);
     if (camposConError.length > 0) {
       setResumenError(true);
+      setIntentoFallido((n) => n + 1);
       /* Foco al primer campo con error, en el orden visual del form. */
       refs[camposConError[0]]?.current?.focus();
       return;
@@ -523,8 +528,13 @@ export default function Contacto() {
             <Reveal delay={0.08}>
               {/* Resumen aria-live al enviar con errores (copy §8.3). Se
                   mantiene en el DOM para que los lectores de pantalla
-                  anuncien el cambio; visible solo cuando hay error. */}
-              <div aria-live="assertive" className="sr-only" role="status">
+                  anuncien el cambio; visible solo cuando hay error. Usa
+                  role="alert" (asertivo por sí mismo: evita el conflicto de
+                  declarar aria-live="assertive" sobre role="status", que es
+                  polite por definición). La key con el contador de intentos
+                  fuerza el reanuncio aunque el texto sea idéntico entre
+                  envíos fallidos consecutivos. */}
+              <div className="sr-only" role="alert" key={intentoFallido}>
                 {resumenError ? errores.resumen : ''}
               </div>
               {resumenError && (
