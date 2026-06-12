@@ -25,8 +25,12 @@ import { EASE_OUT } from '../lib/motion.js';
  * Motion (brief §6.6, intensidad 6/10, solo transform/opacity):
  * - Overlay: fade ~250ms.
  * - Foto: slide horizontal corto entre fotos ~300ms; la dirección la
- *   marca `direction` (+1 siguiente, −1 anterior). Con reduced-motion
- *   todo es instantáneo (sin slide, sin fade de duración perceptible).
+ *   marca `direction` (+1 siguiente, −1 anterior). El cambio es un
+ *   crossfade-slide (AnimatePresence sync, no `wait`): entrante y
+ *   saliente se solapan brevemente sobre el mismo escenario absoluto,
+ *   sin "hueco" de overlay vacío a mitad de camino y sin layout shift.
+ *   Con reduced-motion todo es instantáneo (sin slide, sin fade de
+ *   duración perceptible).
  * - Precarga de la foto siguiente y anterior para que el slide no
  *   muestre un flash de carga.
  *
@@ -177,11 +181,13 @@ export default function Lightbox({
         ease: EASE_OUT,
       },
     },
+    /* En crossfade sync la saliente comparte duración con la entrante:
+       ambas legs ~300ms para un cruce limpio (no un corte abrupto). */
     exit: (dir) => ({
       opacity: 0,
       x: dir > 0 ? -offset : offset,
       transition: {
-        duration: reduceMotion ? 0 : SLIDE_DURATION * 0.8,
+        duration: reduceMotion ? 0 : SLIDE_DURATION,
         ease: EASE_OUT,
       },
     }),
@@ -294,27 +300,30 @@ export default function Lightbox({
               className="absolute inset-y-0 right-0 z-20 w-1/4 focus-visible:outline-marfil sm:hidden"
             />
 
-            {/* La foto: contenedor con AnimatePresence en modo wait para
-                que entrante y saliente no se solapen durante el slide.
-                custom=direction pasa el sentido a los variants. */}
+            {/* La foto: escenario relativo donde entrante y saliente se
+                apilan en absoluto (inset-0 + flex centrado) durante el
+                crossfade-slide. AnimatePresence en modo sync (default):
+                las dos coexisten ~300ms sin dejar el overlay vacío y sin
+                provocar layout shift. custom=direction pasa el sentido a
+                los variants. */}
             <div className="relative flex h-full w-full items-center justify-center">
-              <AnimatePresence
-                custom={direction}
-                mode="wait"
-                initial={false}
-              >
-                <motion.img
+              <AnimatePresence custom={direction} initial={false}>
+                <motion.div
                   key={photo.src}
-                  src={photo.src}
-                  alt={photo.alt}
                   custom={direction}
                   variants={slideVariants}
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  draggable={false}
-                  className="max-h-[85vh] max-w-full object-contain shadow-2xl"
-                />
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    draggable={false}
+                    className="max-h-[85vh] max-w-full object-contain shadow-2xl"
+                  />
+                </motion.div>
               </AnimatePresence>
             </div>
 
