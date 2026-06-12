@@ -9,14 +9,11 @@
       content="Hotel de lujo sereno en la bahía de Acapulco: habitaciones frente al mar, cocina del Pacífico, spa y atardeceres en terraza. Consulta disponibilidad."
     />
     <link rel="icon" type="image/svg+xml" href="/Logo.svg" />
-    <!-- LCP del Home: en una SPA el <img> del hero se descubre hasta que
-         carga el bundle; el preload lo arranca con el HTML (brief §3.3) -->
-    <link
-      rel="preload"
-      as="image"
-      href="/fotos_hotel/aereas/aereas_11.jpeg"
-      fetchpriority="high"
-    />
+    <!-- El preload del LCP (aereas_11) vivía aquí, pero se descargaba en
+         TODAS las rutas (~108KB inútiles en páginas ≠ Home). Ahora lo
+         inyecta el propio componente Home al montar (src/pages/Home.jsx):
+         el head-start se conserva en la landing y las rutas interiores
+         no pagan el coste. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
