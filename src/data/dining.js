@@ -117,7 +117,7 @@ export const cielo = {
     },
     lounge: {
       src: '/fotos_hotel/terraza/terraza_10.jpeg',
-      alt: 'Lounge de palapas de Cielo, con cojines turquesa bajo la luz cálida de la tarde',
+      alt: 'Lounge de Cielo con asientos bajos e iluminación cálida de noche',
     },
     diurna: {
       src: '/fotos_hotel/terraza/terraza_03.jpeg',
