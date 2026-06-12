@@ -17,7 +17,7 @@ const NAV_LINKS = [
  * transparente (Estado A, brief §5.1). Se ampliará conforme cada
  * página interior reciba su hero; /galeria y /contacto nunca entran.
  */
-const HERO_ROUTES = ['/', '/habitaciones', '/gastronomia'];
+const HERO_ROUTES = ['/', '/habitaciones', '/gastronomia', '/spa', '/experiencias'];
 
 /** Umbral de scroll (fracción del viewport) para pasar a Estado B. */
 const HERO_SCROLL_RATIO = 0.7;
