@@ -57,12 +57,20 @@ export default function BookingBar() {
   const [huespedesElegidos, setHuespedesElegidos] = useState(false);
   const [openMovil, setOpenMovil] = useState(false);
   const llegadaRef = useRef(null);
+  const triggerRef = useRef(null);
 
   /* El botón colapsado se desmonta al abrir el panel: sin esto el foco
      del teclado caía en <body> y la persona perdía su posición. */
   useEffect(() => {
     if (openMovil) llegadaRef.current?.focus();
   }, [openMovil]);
+
+  /* Cierre del panel móvil: devuelve el foco al botón colapsado, que se
+     vuelve a montar (patrón inverso al de apertura). */
+  const cerrarMovil = () => {
+    setOpenMovil(false);
+    requestAnimationFrame(() => triggerRef.current?.focus());
+  };
 
   const hoy = hoyISO();
 
@@ -92,6 +100,7 @@ export default function BookingBar() {
       {/* Botón colapsado (solo móvil, panel cerrado) */}
       {!openMovil && (
         <button
+          ref={triggerRef}
           type="button"
           onClick={() => setOpenMovil(true)}
           aria-expanded={openMovil}
@@ -113,6 +122,35 @@ export default function BookingBar() {
           'md:grid md:grid-cols-[1.1fr_1.1fr_1fr_auto] md:items-stretch md:gap-0 md:divide-x md:divide-arena md:p-0',
         ].join(' ')}
       >
+        {/* Cierre del panel (solo móvil): el botón colapsado se desmonta
+            al abrir, así que sin esto no había forma de volver a contraer
+            la barra (brief §3.3). No afecta al layout de 4 zonas en
+            desktop, donde el panel siempre está montado y openMovil no
+            cambia. */}
+        <div className="col-span-2 -mt-1 flex justify-end md:hidden">
+          <button
+            type="button"
+            onClick={cerrarMovil}
+            aria-controls="bookingbar-campos"
+            aria-expanded={openMovil}
+            className="eyebrow flex min-h-[44px] items-center gap-1.5 px-1 text-[0.65rem] text-piedra transition-colors duration-300 hover:text-marino"
+          >
+            Cerrar
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              aria-hidden="true"
+            >
+              <line x1="6" y1="6" x2="18" y2="18" />
+              <line x1="18" y1="6" x2="6" y2="18" />
+            </svg>
+          </button>
+        </div>
+
         <div className="group relative md:px-6 md:py-4">
           <label htmlFor="bookingbar-llegada" className={fieldLabelClass}>
             Llegada
