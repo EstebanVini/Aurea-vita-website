@@ -98,13 +98,18 @@ export default function Galeria() {
     <>
       {/* Header compacto (copy §7.1): sin foto. La galería ES la foto,
           así que el header no compite — mismo lenguaje tipográfico que
-          SectionHeading (eyebrow dorado → H1 serif ligera → línea dorada
+          SectionHeading (eyebrow marino → H1 serif ligera → línea dorada
           de 48px → intro), sólo que como H1 de página. pt-32 libra la
           navbar fija sólida de /galeria; pb generoso para que el cambio
           a la retícula de fotos se sienta como una exhalación (§1.3). */}
       <section className="bg-marfil pt-32 pb-12 lg:pt-40 lg:pb-16">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
-          <p className="eyebrow text-dorado">Galería</p>
+          {/* Eyebrow en marino (no dorado): sobre marfil el dorado a 12px
+              da 1.86:1 y falla WCAG AA — el dorado del header vive en la
+              línea decorativa, no en el texto pequeño. Mismo lenguaje que
+              el header de /contacto (su página hermana sin hero) y que
+              SectionHeading por defecto sobre fondos claros. */}
+          <p className="eyebrow text-marino">Galería</p>
           <h1 className="mt-4 max-w-2xl font-display text-4xl font-light leading-[1.1] text-balance text-marino sm:text-5xl lg:text-6xl">
             La casa, en imágenes
           </h1>
