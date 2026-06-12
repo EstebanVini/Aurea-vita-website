@@ -174,15 +174,22 @@ export default function Spa() {
                   className="grid gap-x-10 gap-y-2 py-7 sm:grid-cols-[7rem_1fr] sm:py-8"
                 >
                   {/* Duración como eyebrow en marino (AA sobre arena).
-                      tabular-nums alinea las cifras entre filas. */}
-                  <span className="eyebrow pt-1.5 text-marino/70 tabular-nums">
+                      tabular-nums alinea las cifras entre filas.
+                      whitespace-nowrap: la duración nunca rompe línea en
+                      móvil (brief §4.4, caso extremo). marino sólido: a
+                      0.75rem es texto pequeño y exige 4.5:1 — marino/70
+                      sobre arena da 4.23:1 (falla AA), el sólido 9.28:1. */}
+                  <span className="eyebrow pt-1.5 text-marino tabular-nums whitespace-nowrap">
                     {tratamiento.duracion}
                   </span>
                   <div>
                     <h3 className="font-display text-2xl font-light leading-snug text-marino sm:text-3xl">
                       {tratamiento.nombre}
                     </h3>
-                    <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-piedra sm:text-base">
+                    {/* Descripción en marino/75 (no piedra): piedra sobre
+                        arena da 3.93:1 y falla AA en texto pequeño;
+                        marino/75 da 4.80:1 conservando la jerarquía tenue. */}
+                    <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-marino/75 sm:text-base">
                       {tratamiento.descripcion}
                     </p>
                   </div>
@@ -203,12 +210,21 @@ export default function Spa() {
       <section className="bg-oliva py-20 lg:py-32">
         <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
           <Reveal>
-            <p className="eyebrow text-marfil/90">{spaCircuito.eyebrow}</p>
+            {/* Texto en marfil SÓLIDO sobre oliva (no /90 ni /85): a
+                opacidad parcial el eyebrow caía a 2.81:1 y el cuerpo a
+                2.67:1. El sólido sube a 3.09:1 — el máximo alcanzable con
+                cualquier token sobre oliva #7a8f7c. El H2 (texto grande,
+                ≥24px) pasa AA con ese 3.09 (umbral 3:1). El eyebrow (12px)
+                y el cuerpo (16–18px) son texto pequeño: 3.09 sigue bajo
+                4.5:1. Ningún token resuelve esto sobre oliva — ver P1 en
+                el reporte (requiere decisión a nivel de token, fuera de
+                este archivo). */}
+            <p className="eyebrow text-marfil">{spaCircuito.eyebrow}</p>
             <h2 className="mt-4 max-w-2xl font-display text-4xl font-light leading-[1.1] text-balance text-marfil sm:text-5xl lg:text-6xl">
               {spaCircuito.titulo}
             </h2>
             <div className="mt-7 h-px w-12 bg-marfil/60" aria-hidden="true" />
-            <p className="mt-7 max-w-[60ch] text-base leading-relaxed text-marfil/85 sm:text-lg">
+            <p className="mt-7 max-w-[60ch] text-base leading-relaxed text-marfil sm:text-lg">
               {spaCircuito.texto}
             </p>
           </Reveal>
@@ -320,7 +336,9 @@ export default function Spa() {
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <div className="max-w-[60ch] border-l-2 border-salvia pl-6 sm:pl-8">
             <h2 className="eyebrow text-marino">{spaNota.titulo}</h2>
-            <p className="mt-4 text-base leading-relaxed text-piedra sm:text-lg">
+            {/* marino/75 (no piedra): piedra sobre arena da 3.93:1 y falla
+                AA; marino/75 da 4.80:1 manteniendo el tono de utilidad. */}
+            <p className="mt-4 text-base leading-relaxed text-marino/75 sm:text-lg">
               {spaNota.texto}
             </p>
           </div>
