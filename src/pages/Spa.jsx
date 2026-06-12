@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
-import { fadeRise, staggerGroup } from '../lib/motion.js';
+import { drawLine, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
   spaAromaterapia,
   spaCircuito,
@@ -117,8 +117,10 @@ export default function Spa() {
           vertical estilo SHA — nombre en Cormorant, duración como
           eyebrow, descripción en piedra, separadores 1px arena. Sin foto
           por tratamiento. El eyebrow va en marino (AA sobre arena); la
-          línea bajo el encabezado, en salvia. Stagger sutil de 80ms
-          (brief §6.3): el menú se "lee" tratamiento a tratamiento. */}
+          regla salvia que abre el menú se DIBUJA (drawLine, §6.8) — eco
+          verde del menú "Marea", el único deleite puntual de /spa.
+          Stagger sutil de 80ms (brief §6.3): el menú se "lee"
+          tratamiento a tratamiento. */}
       <section className="bg-arena py-20 lg:py-32">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <Reveal className="max-w-2xl">
@@ -126,7 +128,6 @@ export default function Spa() {
             <h2 className="mt-4 font-display text-4xl font-light leading-[1.1] text-balance text-marino sm:text-5xl lg:text-6xl">
               {spaMenu.titulo}
             </h2>
-            <div className="mt-7 h-px w-12 bg-salvia" aria-hidden="true" />
           </Reveal>
           {/* amount bajo (0.15): la lista es alta; evita que en móvil
               tarde en aparecer. Los variants atraviesan el <ul> plano
@@ -137,6 +138,21 @@ export default function Spa() {
             amount={0.15}
             className="mx-auto mt-14 max-w-4xl lg:mt-16"
           >
+            {/* Regla salvia que abre el menú: se dibuja de izquierda a
+                derecha (solo scaleX + opacity), eco verde del momento de
+                deleite del menú "Marea" en /gastronomia (brief §6.8).
+                Aquí es la página más calmada del sitio: la línea se traza
+                más lento (1.1s) que la dorada de Marea, sin brusquedad.
+                Entra dentro del RevealGroup, así hereda el initial/
+                whileInView del grupo y queda visible desde el primer
+                frame con prefers-reduced-motion (initial={false} en
+                RevealGroup). El delay del propio drawLine corre desde el
+                disparo del grupo, no se suma al delayChildren. */}
+            <motion.div
+              variants={drawLine({ duration: 1.1, delay: 0.1 })}
+              className="mb-14 h-px w-12 origin-left bg-salvia lg:mb-16"
+              aria-hidden="true"
+            />
             {/* role="list" explícito: el list-style:none del preflight
                 hace que Safari/VoiceOver deje de anunciar la lista. */}
             <ul
