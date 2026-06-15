@@ -49,6 +49,14 @@ Dorado solo en: eyebrows, botones primarios, líneas decorativas de 1px (separad
 
 ### 2.1 Orden del menú (fijo, desktop e hamburguesa móvil)
 
+> **Actualizado en la ronda del 15 jun 2026 (ver §9).** El orden vigente es:
+>
+> ```
+> Inicio · Habitaciones · Wellness · Experiencias · Galería · Contacto    [ Reservar ]
+> ```
+>
+> "Gastronomía" sale del menú (su contenido vive ahora en la tarjeta "Alimentación Consciente" del Home). La etiqueta "Spa" se renombra a **"Wellness"**; la ruta sigue siendo `/spa` (D4). Orden original conservado abajo como referencia histórica.
+
 ```
 Inicio · Habitaciones · Gastronomía · Spa · Experiencias · Galería · Contacto    [ Reservar ]
 ```
@@ -339,3 +347,79 @@ Tono: "el sitio respira, no actúa". Todo con `transform` y `opacity` únicament
 **Este brief pasa primero al `ux-writer`** — necesita producir: tagline del hero (+2 variantes), copy editorial de las 7 páginas, nombres y descripciones de 3 habitaciones / menú degustación de Origen / carta de Cielo / 5–6 tratamientos de Spa Vita, labels de BookingBar y formulario, mensajes de validación y confirmación simulada, y los textos alt en español de todas las fotos aprobadas.
 
 Después, en paralelo tras el copy: **`ui-engineer`** (setup + componentes §5 + páginas en orden Home → Habitaciones → Gastronomía → Spa → Experiencias → Galería → Contacto) con el **`visual-designer`** validando la dirección de arte (§1) página por página y el **`motion-engineer`** aplicando §6 tras cada implementación.
+
+---
+
+## 9. Ronda de cambios del cliente — 15 jun 2026
+
+El cliente revisó el sitio ya construido y pidió una ronda de ajustes. Esta sección documenta los cambios **estructurales** y las decisiones de diseño; el copy nuevo lo redacta el `ux-writer` y la implementación el `ui-engineer`. **No se reescribe el brief original**: lo de arriba sigue siendo la referencia de patrones (paleta, motion, fotos, componentes); aquí se anota qué cambia.
+
+> Reglas duras de §0 y de `docs/estado-sesion.md` siguen 100% vigentes: solo `/Logo.svg` por filtro CSS, 7 tokens, dorado único acento global (oliva/salvia solo en `/spa`), AA ≥4.5:1, animaciones solo transform/opacity, sin emojis, `min-h-[100dvh]` solo en hero Home / interiores `min-h-[70vh]`, MOTION_INTENSITY 6/10.
+
+### 9.1 Decisiones D1–D4 (resueltas)
+
+- **D1 — Gastronomía / "Alimentación Consciente": SE CONSERVA la ruta `/gastronomia`, rebrandeada.** La página existe y está auditada; eliminarla sería tirar trabajo bueno y romper el link cruzado de Experiencias (§4.5). Sale del menú principal (decisión del cliente) pero sigue accesible desde la **tarjeta 2 del Home**, ahora titulada **"Alimentación Consciente"**. Se rebrandean título visible de la tarjeta, el `<h1>`/eyebrow del hero de la página y los metadatos (`usePageMeta`) a la nueva voz; la estructura interna (Origen / Cielo / menú Marea) NO se toca esta ronda. Justificación: máxima coherencia con mínimo riesgo; el contenido conserva su valor y deja de competir por un slot en el menú.
+- **D2 — Alcance "en construcción": bandera reversible, no placeholder de página completa.** Se gatea el contenido tras una bandera/constante (patrón reversible, mismo espíritu que `/contacto`), NO se borra del repo. Para **Wellness** se ocultan tres bloques (menú de tratamientos, circuito de aguas, aromaterapia) dejando la página coherente y con cierre. Para **Experiencias** ver §9.6. Justificación: el cliente pidió "en construcción", no "eliminar"; reversible = una sola línea para revivirlo cuando el contenido esté listo.
+- **D3 — Datos del destino (300 / 27° / 12 min): SE CONSERVAN.** Son estética SHA (números en serif gigante, §1) y refuerzan la credibilidad del destino. El encuadre que el cliente pidió arreglar es el de la **foto/eyebrow** de la sección, no los datos. Si en implementación los datos rompen el nuevo encuadre, el `ui-engineer` los reacomoda (no los elimina) y lo reporta. Default: conservar.
+- **D4 — Ruta `/spa` vs `/wellness`: solo se renombra la ETIQUETA visible a "Wellness".** La ruta sigue siendo `/spa`. Cambiar la ruta obligaría a tocar `App.jsx`, `HERO_ROUTES`, los `to:` de Navbar/Footer, los CTAs y arriesgar enlaces; el beneficio (URL "bonita") no compensa. Si más adelante se quiere `/wellness`, se añade como **alias con redirect 301** a `/spa`, nunca un rename a secas.
+
+### 9.2 Cambios globales
+
+- **G1 · Logo más grande + cascada de altura.** El logo de la Navbar crece. Como hoy el header es `h-24` (96px) con logo `h-20 w-20` (80px), agrandar el logo obliga a subir la altura del header de forma **coordinada y sin saltos de layout** (la transición Estado A↔B de §5.1 anima solo color/background, nunca altura). **Acoplamientos que el `ui-engineer` debe mantener sincronizados** (si cambia la altura de la Navbar, cambian todos):
+  - `Navbar.jsx`: `<nav class="h-24">`, `<img class="h-20 w-20">` y el `pt-28` del panel móvil.
+  - `Galeria.jsx`: `sticky top-24` (96px, debe igualar la nueva altura de navbar) y `pt-32`/`lg:pt-40` del header (debe librar la navbar).
+  - Heros interiores: el `pt-44` del bloque de texto (Spa/Experiencias/Gastronomía/Habitaciones) puede necesitar ajuste si la navbar crece notablemente.
+  - **Footer:** evaluar el logo del Footer (`h-20 w-20`); puede crecer en proporción o quedarse — no tiene acoplamientos de layout, decisión estética del `visual-designer`. Default: mantener proporción coherente con la Navbar.
+- **G2 · Botón "Reservar" persistente más grande.** Coherente con los CTAs dorados de las bandas finales (`min-h-[48px] px-8`). Hoy en Navbar es `min-h-[44px] px-6`. Subir a la misma escala que las bandas (≥48px, padding mayor) **manteniendo touch target ≥44px** y la disciplina del dorado (sigue siendo el único CTA persistente; no multiplicar dorados en la navbar). Conservar el anillo de foco `marfil` en Estado A.
+- **G3 · Navegación a 6 entradas.** `NAV_LINKS` en **`Navbar.jsx` y `Footer.jsx`** (ambos arrays, mantener idénticos): `Inicio · Habitaciones · Wellness · Experiencias · Galería · Contacto`. Quitar la entrada `/gastronomia`; cambiar `label` de `/spa` de "Spa" a "Wellness" (el `to` sigue `/spa`). `HERO_ROUTES` en Navbar NO cambia (sigue incluyendo `/spa` y `/experiencias`).
+
+### 9.3 Inicio (`Home.jsx`, `home.js`)
+
+- **Hero:** quitar el eyebrow "Aurea Vita · Acapulco"; mantener H1 "Santuario frente al Pacífico"; **subtítulo nuevo** (lo provee el cliente / `ux-writer`). **Subir la BookingBar** para que se lea completa: hoy `-mt-7 md:-mt-11` la "muerde" y la corta — reducir o eliminar el solape negativo para que las 4 zonas se vean enteras (sigue siendo barra que muerde la transición, pero sin recortar contenido).
+- **Bienvenido:** quitar eyebrow "El hotel"; cambiar título "Bienvenido a Aurea Vita" → **"Descubre Aurea Vita"**; cuerpo nuevo (3 párrafos del cliente, vía `ux-writer`). El layout 50/50 con `fachadas_05` se conserva.
+- **Grid de 3 tarjetas:** las fotos se hacen **más pequeñas** para que la composición entre completa (hoy `aspect-[3/4]` vía `FeatureCard`; pasar a un ratio más bajo, p.ej. `aspect-[4/3]` o `aspect-square` — lo afina el `visual-designer`, debe ser consistente en las 3). Cambios por tarjeta (en `home.js`):
+  - Tarjeta 1 (Habitaciones): texto nuevo.
+  - Tarjeta 2: título "Gastronomía" → **"Alimentación Consciente"** (`to:` sigue `/gastronomia` — D1). Eyebrow y texto: revisar con `ux-writer` para que rime con el rebranding.
+  - Tarjeta 3: título "Spa Vita" → **"Experiencia Aurea Vita"** + texto nuevo (`to:` sigue `/spa`).
+- **El destino — Acapulco:** arreglar el encuadre (hoy se corta eyebrow/texto — revisar el `lg:items-stretch` y el recorte de `aereas_15`); texto nuevo. Datos 300/27°/12 min **se conservan** (D3).
+- **Momentos — "El agua a su propio ritmo":** **ELIMINAR la sección completa** (era la §6 strip scroll-snap de alberca/terraza). Quitar el JSX de Home y `momentosFotos` de `home.js`.
+- **Banda CTA final:** botón más grande (alinear con G2); texto central nuevo.
+
+### 9.4 Habitaciones (`rooms.js`)
+
+- Reemplazar/expandir `habitacionesHeader.intro` con el copy largo del cliente (intro editorial + subtítulo). El bloque de intro hoy es una sola cadena; el `ui-engineer` decide si pasa a `{ intro, subtitulo }` para soportar dos niveles. **Las 3 categorías de habitación NO cambian.**
+
+### 9.5 Wellness (`Spa.jsx`, `spa.js`) — ruta `/spa`
+
+- **Hero:** título "Spa Vita" → **"Wellness"** + subtítulo "Donde el bienestar sucede de forma natural" (eyebrow se mantiene o lo ajusta el `ux-writer`). Texto central nuevo.
+- **EN CONSTRUCCIÓN (gateado tras bandera, reversible, NO eliminar del repo):** los tres bloques quedan ocultos:
+  - Menú de tratamientos — "El menú de la calma" (sección 3 del JSX).
+  - Circuito de aguas — "Frío, calor y nada más" (sección 4).
+  - Aromaterapia — "Aromas de la costa" (sección 5).
+- **La página debe quedar coherente y con cierre:** queda **hero + texto central (filosofía) + banda CTA**. La nota práctica (sección 6) puede quedarse si el texto sigue siendo cierto sin el menú, o gatearse; lo decide el `ux-writer` con el copy. El botón **"Agendar mi ritual" sigue a `/contacto`**.
+- **Identidad verde:** se conserva donde no esté gateado (línea salvia de la filosofía, eyebrows). No introducir dorado de más.
+
+### 9.6 Experiencias (`Experiencias.jsx`)
+
+- "Maneras de pasar el día" entra **en construcción**. **Resolución de D2 para esta página:** se gatean los bloques temáticos (Alberca infinita, Atardeceres en Cielo, Descubre Acapulco) tras la bandera reversible, dejando **hero + intro editorial + un cierre "próximamente" + banda CTA**. **Cuidado clave (regla de §2.2: ningún recorrido en callejón sin salida):** como "Experiencias" sigue en el menú, su entrada NO puede llevar a una página vacía — debe quedar hero + mensaje breve "próximamente" en voz de marca + banda CTA a `/contacto`. No es un placeholder de pantalla completa tipo `/contacto` (Experiencias conserva su hero fotográfico y su jerarquía de página interior).
+
+### 9.7 Secciones "en construcción" — inventario
+
+| Página | Qué se gatea | Qué queda visible |
+|---|---|---|
+| `/spa` (Wellness) | Menú de tratamientos, circuito de aguas, aromaterapia | Hero + texto central + (nota práctica opcional) + banda CTA |
+| `/experiencias` | Alberca infinita, Atardeceres, Descubre Acapulco | Hero + intro + "próximamente" + banda CTA |
+| `/contacto` | (ya hecho en ronda previa) | Página "Aún en construcción" completa |
+
+Patrón de reversibilidad: bandera/constante por bloque (no borrar JSX ni datos), mismo espíritu que `/contacto`. Reactivar = quitar la bandera.
+
+### 9.8 Mejora futura (NO esta ronda)
+
+- **Integración del flujo de reserva con calendario / Odoo.** Hoy todos los CTAs ("Reservar", "Consultar disponibilidad", "Agendar mi ritual") y la BookingBar apuntan a `/contacto` ("Aún en construcción"). La integración real (disponibilidad, calendario, Odoo) se evalúa en **ronda aparte**, considerando `odoo-development-skill` y `n8n-workflow-generator`. No se implementa ni se diseña aquí; solo se deja anotada para no perder el hilo.
+
+### 9.9 Handoff de la ronda
+
+1. **`ux-writer`** primero: subtítulo del hero Home, 3 párrafos de "Descubre Aurea Vita", textos de las 3 tarjetas (incl. "Alimentación Consciente" y "Experiencia Aurea Vita"), texto nuevo de "El destino", texto de la banda CTA final, intro larga de Habitaciones, hero+texto central de Wellness, mensaje "próximamente" de Experiencias, y revisión del rebranding de `/gastronomia` (h1/eyebrow/metadatos).
+2. **`ui-engineer`** después: G1–G3 (cascada de altura del logo es lo más delicado — sincronizar Navbar/Galeria/heros), eliminación de "Momentos", bandera reversible de Wellness/Experiencias, rebranding de tarjetas y `/gastronomia`, ajuste de la BookingBar.
+3. **`visual-designer`** valida: nuevo ratio del grid de tarjetas, tamaño del logo y proporción del logo del Footer, encuadre corregido de "El destino", escala del botón Reservar.
+4. **`motion-engineer`**: revisar que quitar "Momentos" y gatear bloques no deje stagger/reveals huérfanos.

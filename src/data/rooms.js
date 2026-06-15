@@ -150,12 +150,21 @@ export const rooms = [
   },
 ];
 
-/** Encabezado de la página (copy §3.1). */
+/**
+ * Encabezado de la página (copy §3.1 / §12). Ronda 15 jun: la `intro`
+ * de una línea se expandió a dos niveles —`subtitulo` corto (bajo el
+ * H1) + `cuerpo` editorial de 3 párrafos del cliente— según la
+ * recomendación del ux-writer. Las 3 categorías no cambian.
+ */
 export const habitacionesHeader = {
   eyebrow: 'Descanso',
   titulo: 'Habitaciones & Suites',
-  intro:
-    'Tres maneras de habitar la costa: entre jardines, frente al mar o en la suite que da nombre a la casa. Todas comparten lo esencial —silencio, luz y una cama en la que amanece tarde—.',
+  subtitulo: 'Diseñadas para el descanso, inspiradas por el mar.',
+  cuerpo: [
+    'Cada habitación de Aurea Vita ha sido concebida como un refugio privado donde la tranquilidad y el bienestar se convierten en parte de la experiencia. Las amplias vistas al Pacífico acompañan cada amanecer, los espacios generosos y los detalles cuidadosamente seleccionados invitan a desconectar del ritmo cotidiano y reconectar con uno mismo en armonía.',
+    'Todas nuestras habitaciones cuentan con vista al mar, baño con tina, amplio clóset de caoba, estación de té, pantalla de entretenimiento y una cama de masaje integrada a la experiencia wellness de tu propia habitación.',
+    'Aquí, cada espacio ha sido diseñado para favorecer el descanso profundo, la relajación y la sensación de bienestar que define la esencia de Aurea Vita. Porque descansar no es solamente dormir. Es balancear los sentidos y sentirse en paz.',
+  ],
   hero: {
     src: '/fotos_hotel/habitaciones/habitaciones_02.jpeg',
     alt: 'Interior de suite en Aurea Vita con textiles claros y luz natural',

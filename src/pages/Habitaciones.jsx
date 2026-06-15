@@ -76,14 +76,23 @@ export default function Habitaciones() {
         </motion.div>
       </section>
 
-      {/* 2 · Intro editorial corta (marfil, brief §4.2): serif grande,
-          el "respiro" entre la inmersión del hero y la comparación. */}
+      {/* 2 · Intro editorial (marfil, brief §4.2, ronda 15 jun §9.4):
+          dos niveles — subtítulo en serif grande (el "respiro" entre la
+          inmersión del hero y la comparación) + cuerpo editorial de 3
+          párrafos en Jost. La línea dorada separa el subtítulo del
+          cuerpo, manteniendo el lenguaje de SectionHeading sin forzar el
+          componente (aquí el subtítulo NO es un H2). */}
       <section className="bg-marfil pt-16 lg:pt-24">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <p className="max-w-3xl font-display text-2xl font-light leading-snug text-balance text-marino sm:text-3xl lg:text-4xl">
-            {habitacionesHeader.intro}
+            {habitacionesHeader.subtitulo}
           </p>
           <div className="mt-9 h-px w-12 bg-dorado" aria-hidden="true" />
+          <div className="mt-9 max-w-[65ch] space-y-5 text-base leading-relaxed text-marino/80 sm:text-lg">
+            {habitacionesHeader.cuerpo.map((parrafo) => (
+              <p key={parrafo}>{parrafo}</p>
+            ))}
+          </div>
         </Reveal>
       </section>
 

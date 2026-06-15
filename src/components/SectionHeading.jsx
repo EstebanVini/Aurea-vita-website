@@ -33,7 +33,12 @@ export default function SectionHeading({
 
   return (
     <div className={centered ? 'flex flex-col items-center text-center' : ''}>
-      <p className={['eyebrow', eyebrowColor].join(' ')}>{eyebrow}</p>
+      {/* eyebrow opcional: si se omite (p. ej. "Descubre Aurea Vita" de la
+          ronda 15 jun, que va sin eyebrow) no se renderiza un <p> vacío
+          que rompería el ritmo vertical del bloque. */}
+      {eyebrow && (
+        <p className={['eyebrow', eyebrowColor].join(' ')}>{eyebrow}</p>
+      )}
       <Tag
         className={[
           /* Escala display generosa (brief §1.2): la serif ligera a gran

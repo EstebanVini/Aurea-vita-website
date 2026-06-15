@@ -67,8 +67,8 @@ function Horarios({ items, nota, label }) {
  */
 export default function Gastronomia() {
   usePageMeta(
-    'Gastronomía — Origen y Cielo · Aurea Vita Acapulco',
-    'Origen, cocina del Pacífico con menú degustación de siete tiempos, y Cielo, bar de terraza con cocteles de autor a la hora del atardecer.',
+    'Alimentación Consciente · Aurea Vita Acapulco',
+    'Alimentación consciente frente al Pacífico: cocina sana y de temporada en Origen y atardeceres en la terraza de Cielo. Comer bien como parte del descanso.',
   );
 
   const reduceMotion = useReducedMotion();

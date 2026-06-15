@@ -17,8 +17,10 @@ import {
  * Lightbox accesible.
  *
  * La navbar inicia sólida en /galeria (no está en HERO_ROUTES), así
- * que el contenido arranca bajo la barra fija de ~80px: el header
- * lleva `pt-32` (≈128px) para respirar sin quedar tapado.
+ * que el contenido arranca bajo la barra fija de 128px (h-32, ronda
+ * 15 jun G1 + logo 120px, punto intermedio): el header lleva
+ * `pt-36`/`lg:pt-44` para respirar sin quedar tapado, y los filtros
+ * sticky van en `top-32` (= 128px) para pegarse justo bajo la navbar.
  *
  * Masonry (brief §4.6): se resuelve con CSS `columns`, no con JS de
  * layout ni librería. Cada foto es un `<button>` con su `aspect-ratio`
@@ -99,10 +101,11 @@ export default function Galeria() {
       {/* Header compacto (copy §7.1): sin foto. La galería ES la foto,
           así que el header no compite — mismo lenguaje tipográfico que
           SectionHeading (eyebrow marino → H1 serif ligera → línea dorada
-          de 48px → intro), sólo que como H1 de página. pt-32 libra la
-          navbar fija sólida de /galeria; pb generoso para que el cambio
-          a la retícula de fotos se sienta como una exhalación (§1.3). */}
-      <section className="bg-marfil pt-32 pb-12 lg:pt-40 lg:pb-16">
+          de 48px → intro), sólo que como H1 de página. pt-36/lg:pt-44
+          libra la navbar fija sólida de /galeria (h-32 = 128px); pb
+          generoso para que el cambio a la retícula de fotos se sienta
+          como una exhalación (§1.3). */}
+      <section className="bg-marfil pt-36 pb-12 lg:pt-44 lg:pb-16">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           {/* Eyebrow en marino (no dorado): sobre marfil el dorado a 12px
               da 1.86:1 y falla WCAG AA — el dorado del header vive en la
@@ -122,7 +125,8 @@ export default function Galeria() {
       </section>
 
       {/* Fila de filtros (brief §4.6, copy §7.2): pills con scroll
-          horizontal en móvil. Sticky bajo la navbar (top-24 = 96px). Un
+          horizontal en móvil. Sticky bajo la navbar (top-32 = 128px,
+          ronda 15 jun G1 + logo 120px). Un
           solo filete arena abajo —no doble borde— para que la barra se
           lea como una continuación del header, no como una caja. El
           activo lleva aria-pressed y fondo marino sólido (marfil sobre
@@ -131,7 +135,7 @@ export default function Galeria() {
           links de la navbar—, evitando la estética de "botón genérico".
           Scroll horizontal sin barra fea (patrón del Home/Experiencias).
           Touch targets ≥44px. role="group" con etiqueta para el lector. */}
-      <section className="sticky top-24 z-30 border-b border-arena bg-marfil/95 backdrop-blur-sm">
+      <section className="sticky top-32 z-30 border-b border-arena bg-marfil/95 backdrop-blur-sm">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <div
             role="group"

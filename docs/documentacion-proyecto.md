@@ -4,7 +4,7 @@
 
 > Documento técnico integral: identidad, arquitectura, sistema de diseño, sistema de
 > animación, componentes, páginas, accesibilidad, performance y decisiones de diseño.
-> Última actualización: 2026-06-12.
+> Última actualización: 2026-06-15.
 
 ---
 
@@ -30,6 +30,16 @@ espacio generoso y fotografía a sangre completa.
 performance, responsive). Por petición posterior del cliente, `/contacto` dejó de ser
 el formulario de reserva y ahora es una página **"Aún en construcción"** a la que
 apuntan todos los CTAs de reservar.
+
+Tras la **ronda de cambios del cliente del 15 jun 2026** (ver `docs/brief.md` §9 y
+`docs/estado-sesion.md`): el menú se redujo a 6 entradas (sin "Gastronomía",
+"Spa"→"Wellness"); el logo y el botón "Reservar" son más grandes; el Home se simplificó
+(hero sin eyebrow, sección "Momentos" eliminada, grid de tarjetas más horizontal); y dos
+páginas quedan parcialmente **"en construcción" tras bandera reversible**: `/spa`
+(Wellness, con tratamientos / circuito de aguas / aromaterapia ocultos) y `/experiencias`
+(bloques temáticos ocultos). La ruta `/gastronomia` se conserva, rebrandeada a
+"Alimentación Consciente" y accesible solo desde la tarjeta del Home. Detalle completo
+en la §15 de este documento.
 
 ---
 
@@ -598,6 +608,56 @@ marino sobre fondo oscuro.
    construcción"**; todos los CTAs de reservar (Navbar, BookingBar, RoomCard y las bandas
    de cada página) ya apuntaban ahí, así que el flujo quedó coherente con un solo cambio.
    Se eliminó `src/data/contact.js`.
+
+### 12.1 Ronda de cambios del cliente — 15 jun 2026
+
+Segunda ronda de revisión del cliente, ejecutada con el pipeline completo (§15) en orden
+estricto. Decisiones de arquitectura en `docs/brief.md` §9; copy en `docs/copy.md`
+(marcas `[RONDA 15 JUN]` + §12 consolidado); estado en `docs/estado-sesion.md`.
+
+**Navegación y globales:**
+- Menú reducido a **6 entradas** en Navbar y Footer: Inicio · Habitaciones · Wellness ·
+  Experiencias · Galería · Contacto. Se quitó "Gastronomía" del menú; "Spa" se renombró a
+  **"Wellness"** como etiqueta visible, pero la ruta sigue siendo `/spa` (decisión D4).
+- **Logo más grande** (G1): navbar `h-24`→`h-28` (112px), logo `h-20`→`h-24 w-24` (96px),
+  con altura de navbar constante en la transición A↔B (cero CLS). Cascada propagada al
+  sticky de Galería (`top-28`), panel móvil (`pt-32`) y heros interiores (`pt-44`). Logo
+  del Footer a `h-24`.
+- **Botón "Reservar" más grande** (G2): `min-h-[48px] px-8`, touch target ≥44px, sin
+  sumar dorados a la navbar.
+
+**Home:** hero sin eyebrow + subtítulo nuevo; BookingBar subida para que se lea completa
+(`-mt-3/md:-mt-5`); "Bienvenido a Aurea Vita" → **"Descubre Aurea Vita"** con cuerpo nuevo;
+grid de tarjetas de `aspect-[3/4]` a **`aspect-[4/3]`** (la composición entra completa en
+pantalla); tarjetas rebrandeadas ("Alimentación Consciente", "Experiencia Aurea Vita");
+sección "El destino — Acapulco" reencuadrada (foto sticky acotada en alto, sin recortes en
+viewports medianos), datos 300/27°/12 min conservados (D3); **sección "Momentos" eliminada
+por completo**; banda CTA con texto nuevo.
+
+**Habitaciones:** intro editorial expandida (`{ subtitulo, cuerpo:[3 párrafos] }`).
+
+**Wellness (`/spa`) y Experiencias — "en construcción" reversible (D2):** secciones
+ocultas tras una bandera booleana por página (`SECCIONES_EN_CONSTRUCCION`), conservando
+JSX y datos en el repo (mismo patrón que `/contacto`). En Wellness se ocultan el menú de
+tratamientos, el circuito de aguas y la aromaterapia; queda hero ("Wellness" + subtítulo)
++ texto central + nota "Lo mejor, en camino" + banda CTA. En Experiencias se ocultan los
+bloques temáticos; queda hero + intro + bloque "Estamos afinando los días" + banda CTA.
+Ninguna ruta queda sin salida a `/contacto`.
+
+**Gastronomía:** ruta `/gastronomia` conservada y **rebrandeada a "Alimentación
+Consciente"** (eyebrow, h1, intro, metadatos); estructura interna intacta; accesible solo
+desde la tarjeta del Home (decisión D1).
+
+**Mejora futura registrada:** el botón "Agendar mi ritual" de Wellness podría conectarse a
+un calendario (app móvil u **Odoo**) para gestionar los tiempos de la terapeuta y evitar
+empalmes. Excede el alcance del sitio estático actual (requiere backend/integración); se
+evaluará en una ronda aparte con `odoo-development-skill` / `n8n-workflow-generator`. Por
+ahora el botón sigue apuntando a `/contacto`.
+
+**Auditoría QA:** sin P0. Se corrigieron 4 P1 (contraste AA de subtítulos nuevos sobre
+foto en heros Home/Wellness y banda CTA, vía refuerzo de overlay + `text-shadow` marino; y
+recorte del sticky de "El destino" en viewports medianos). Deuda P2/P3 anotada en
+`docs/estado-sesion.md`.
 
 ---
 

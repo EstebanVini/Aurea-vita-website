@@ -7,7 +7,14 @@ import FeatureCard from '../components/FeatureCard.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { EASE_OUT, fadeRise, staggerGroup } from '../lib/motion.js';
-import { destinoStats, homeCards, momentosFotos } from '../data/home.js';
+import {
+  bienvenida,
+  ctaFinal,
+  destino,
+  destinoStats,
+  heroHome,
+  homeCards,
+} from '../data/home.js';
 
 /** Flecha lineal para links editoriales (sin emojis; brief: iconos SVG). */
 function ArrowIcon() {
@@ -28,17 +35,25 @@ function ArrowIcon() {
   );
 }
 
-/* Secuencia de carga del hero (brief §6.1): eyebrow → tagline →
-   subtítulo → indicador, con stagger de ~120ms; la BookingBar cierra
-   la secuencia. Total < 1.2s. Variants compartidos de src/lib/motion. */
+/* Secuencia de carga del hero (brief §6.1): H1 → subtítulo →
+   indicador, con stagger de ~120ms; la BookingBar cierra la secuencia.
+   Variants compartidos de src/lib/motion.
+   Ronda 15 jun (§9.3): el eyebrow superior se eliminó, así que la
+   secuencia perdió su primer hijo. Los tres hijos del hero entran ahora
+   a 0.10s / 0.22s / 0.34s (delayChildren 0.1 + stagger 0.12). La
+   BookingBar baja su delay de 0.55s a 0.46s para seguir al indicador a
+   un paso de stagger (0.34 + 0.12), no con el hueco de ~0.21s que dejó
+   quitar el eyebrow. Total ~1.16s: sigue < 1.2s y la entrada se lee como
+   una sola exhalación, sin que la barra arranque tarde. */
 const heroSequence = staggerGroup({ stagger: 0.12, delayChildren: 0.1 });
 const heroItem = fadeRise({ y: 18, duration: 0.7 });
-const bookingBarEntrance = fadeRise({ y: 16, duration: 0.7, delay: 0.55 });
+const bookingBarEntrance = fadeRise({ y: 16, duration: 0.7, delay: 0.46 });
 
 /**
- * Página de inicio (brief §3 y §4.1). Estructura en secciones planas:
- * hero → BookingBar → bienvenida → grid de 3 → destino (marino)
- * → strip de momentos → banda CTA final.
+ * Página de inicio (brief §3 y §4.1, ronda 15 jun §9.3). Estructura en
+ * secciones planas: hero → BookingBar → bienvenida → grid de 3 →
+ * destino (marino) → banda CTA final. La sección "Momentos" (strip
+ * scroll-snap) se eliminó en la ronda 15 jun (§9.3).
  *
  * Motion (§6): reveals de una sola vez con <Reveal>/<RevealGroup>;
  * con prefers-reduced-motion todo el contenido se renderiza visible
@@ -74,7 +89,7 @@ export default function Home() {
       {/* El bloque de texto se ancla al tercio superior: ahí aereas_11
           tiene mar abierto despejado, ideal para el marfil (brief §3.1).
           overflow-hidden contiene el Ken Burns de la foto (§6.8). */}
-      <section className="relative flex min-h-[100dvh] flex-col justify-start overflow-hidden bg-marino pt-[max(20vh,8rem)]">
+      <section className="relative flex min-h-[100dvh] flex-col justify-start overflow-hidden bg-marino pt-[max(20vh,9rem)]">
         {/* Ken Burns muy lento (scale 1 → 1.06 en ~22s), solo motion-safe */}
         <img
           src="/fotos_hotel/aereas/aereas_11.jpeg"
@@ -92,10 +107,15 @@ export default function Home() {
             "solo donde hay texto encima"): la zona centro-izquierda de
             aereas_11 es agua turquesa clara y el marfil no alcanzaba AA.
             Combinado con el degradado vertical, el texto queda sobre
-            ~60% de marino efectivo (≥4.5:1); la mitad derecha de la
-            foto sigue limpia. */}
+            ~60% de marino efectivo; la mitad derecha de la foto sigue
+            limpia. QA 15 jun (P1): la franja del texto promedia oscura
+            (~6:1) PERO contiene glints de sol/espuma puntuales (~1% del
+            área) donde el overlay solo da ~2–3:1 → falla AA local. Se
+            refuerza el ancla izquierda del scrim (45→60) para subir el
+            piso de marino bajo la columna; el text-shadow del copy
+            (abajo) cubre los glints residuales sin oscurecer la foto. */}
         <div
-          className="absolute inset-0 bg-linear-to-r from-marino/45 via-marino/25 to-transparent"
+          className="absolute inset-0 bg-linear-to-r from-marino/60 via-marino/30 to-transparent"
           aria-hidden="true"
         />
         <motion.div
@@ -104,21 +124,25 @@ export default function Home() {
           animate="visible"
           className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-28 sm:px-8"
         >
-          <motion.p variants={heroItem} className="eyebrow text-marfil/90">
-            Aurea Vita · Acapulco
-          </motion.p>
+          {/* Eyebrow "Aurea Vita · Acapulco" eliminado en la ronda 15 jun
+              (§9.3): el H1 abre la secuencia. */}
+          {/* text-shadow marino (QA 15 jun, P1): garantía AA del marfil
+              sobre los glints de sol/espuma puntuales de aereas_11, que el
+              overlay no puede cubrir sin oscurecer toda la foto. El halo
+              marino sostiene el contraste en el borde de cada glifo aun
+              sobre el pixel más claro, conservando "la foto manda" en la
+              mitad derecha limpia (brief §1.1). */}
           <motion.h1
             variants={heroItem}
-            className="mt-5 max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.05] text-marfil"
+            className="max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.05] text-marfil [text-shadow:0_1px_18px_rgb(31_58_68_/_0.55)]"
           >
-            Santuario frente al Pacífico
+            {heroHome.titulo}
           </motion.h1>
           <motion.p
             variants={heroItem}
-            className="mt-6 max-w-xl text-lg text-marfil/90"
+            className="mt-6 max-w-2xl text-lg text-marfil/90 [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
           >
-            Un refugio de calma sobre la bahía de Acapulco, donde el tiempo se
-            mide en mareas.
+            {heroHome.subtitulo}
           </motion.p>
           {/* Indicador de scroll: línea dorada que se dibuja y desvanece
               en loop lento — el único loop permitido (brief §6) */}
@@ -133,35 +157,30 @@ export default function Home() {
       </section>
 
       {/* 2 · BookingBar mordiendo el borde foto→marfil (brief §5.2).
-          Entra al final de la secuencia del hero (§6.1). */}
+          Entra al final de la secuencia del hero (§6.1). Ronda 15 jun
+          (§9.3): se redujo el solape negativo (antes -mt-7/-mt-11, que
+          recortaba la barra) a -mt-3/-mt-5 — sigue "mordiendo" la
+          transición sin cortar las 4 zonas, que ahora se leen completas. */}
       <motion.div
         variants={bookingBarEntrance}
         initial={reduceMotion ? false : 'hidden'}
         animate="visible"
-        className="relative z-20 mx-auto -mt-7 w-full max-w-5xl px-5 sm:px-8 md:-mt-11"
+        className="relative z-20 mx-auto -mt-3 w-full max-w-5xl px-5 sm:px-8 md:-mt-5"
       >
         <BookingBar />
       </motion.div>
 
-      {/* 3 · Editorial "Bienvenido a Aurea Vita" (marfil, 50/50) */}
+      {/* 3 · Editorial "Descubre Aurea Vita" (marfil, 50/50). Ronda 15
+          jun (§9.3): sin eyebrow "El hotel"; título y cuerpo nuevos
+          (centralizados en home.js). SectionHeading sin prop eyebrow:
+          el patrón degrada a título + línea + cuerpo. */}
       <section className="bg-marfil py-20 lg:py-32">
         <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
           <Reveal>
-            <SectionHeading eyebrow="El hotel" title="Bienvenido a Aurea Vita">
-              <p>
-                Hay lugares que se visitan y lugares que se habitan. Aurea Vita
-                pertenece a los segundos: una casa frente al mar donde la
-                arquitectura se abre a la luz del Pacífico y cada espacio
-                invita a quedarse un poco más. Aquí el lujo no se anuncia; se
-                siente en la temperatura del mármol, en el silencio de los
-                pasillos, en la distancia exacta entre tu terraza y el
-                horizonte.
-              </p>
-              <p>
-                Llegar es sencillo. Soltar el ritmo de afuera toma apenas una
-                tarde. Lo demás —las mañanas largas, la mesa frente a la bahía,
-                el agua quieta de la alberca— sucede solo.
-              </p>
+            <SectionHeading title={bienvenida.titulo}>
+              {bienvenida.cuerpo.map((parrafo) => (
+                <p key={parrafo}>{parrafo}</p>
+              ))}
             </SectionHeading>
             <Link
               to="/habitaciones"
@@ -208,29 +227,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 · Contraste "El destino — Acapulco" (marino, brief §4.1).
-          El texto revela en bloque (§6: no animar texto en lectura). */}
+      {/* 5 · Contraste "El destino — Acapulco" (marino, brief §4.1,
+          ronda 15 jun §9.3). El texto revela en bloque (§6: no animar
+          texto en lectura). Título y cuerpo nuevos; los datos
+          300/27°/12 min se conservan (D3).
+
+          Arreglo de encuadre (cliente: "se corta el eyebrow arriba o no
+          se ve el texto abajo"): el cuerpo creció a dos párrafos + stats
+          + CTA, así que la columna de texto es más alta que la foto. Se
+          cambió `items-center`+`items-stretch` (que estiraba la foto
+          dejando el texto descuadrado) por `lg:items-start` con
+          `lg:sticky`: la foto se alinea arriba con el eyebrow y se queda
+          fija mientras el texto largo fluye a su lado — toda la sección
+          queda visible, sin recortes. La foto usa aspect-[4/5] (más
+          vertical) para sostener la columna sin estirarse. */}
       <section className="bg-marino py-20 lg:py-32">
-        {/* lg:items-stretch: la foto llena la altura de la columna de texto
-            (composición editorial sólida, no una foto flotando pequeña) */}
-        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-stretch lg:gap-20">
+        <div className="mx-auto grid max-w-[1400px] gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-start lg:gap-20">
           <Reveal>
             <SectionHeading
               tone="dark"
-              eyebrow="El destino"
-              title="Acapulco, la bahía que enseñó al mundo a mirar el mar"
+              eyebrow={destino.eyebrow}
+              title={destino.titulo}
             >
-              <p>
-                Antes de los reflectores, Acapulco ya era esto: una bahía honda
-                y tibia, montañas que caen al agua y una luz que dura todo el
-                año. Aurea Vita se asoma a esa herencia desde la parte alta de
-                la costa, lo bastante cerca para vivirla y lo bastante lejos
-                para escucharla apenas.
-              </p>
+              {destino.cuerpo.map((parrafo) => (
+                <p key={parrafo}>{parrafo}</p>
+              ))}
             </SectionHeading>
             {/* Datos en serif gigante (brief §1: "como SHA") con línea
-                fina de 1px al margen — detalle editorial deliberado */}
-            <dl className="mt-14 grid grid-cols-3 gap-5 sm:gap-8">
+                fina de 1px al margen — detalle editorial deliberado (D3) */}
+            <dl className="mt-12 grid grid-cols-3 gap-5 sm:gap-8">
               {destinoStats.map((stat) => (
                 <div
                   key={stat.detalle}
@@ -253,77 +278,42 @@ export default function Home() {
               <ArrowIcon />
             </Link>
           </Reveal>
-          <Reveal delay={0.12} className="overflow-hidden lg:h-full">
+          {/* QA 15 jun (P1): la foto sticky (top-32 = 8rem) con aspect-4/5
+              a 1280px mide ~676px de alto; en viewports cortos (≤800px)
+              su base quedaba recortada bajo el pliegue mientras está
+              pinada y nunca se veía completa. Se acota su alto a
+              calc(100dvh-9rem) (la holgura bajo top-32) con object-cover:
+              la foto siempre cabe entera en pantalla, sin recortes, y la
+              columna de texto larga sigue fluyendo a su lado. */}
+          <Reveal
+            delay={0.12}
+            className="overflow-hidden lg:sticky lg:top-32 lg:max-h-[calc(100dvh-9rem)]"
+          >
             <img
-              src="/fotos_hotel/aereas/aereas_15.jpeg"
-              alt="Vista aérea de la bahía de Acapulco al atardecer, con el sol bajo sobre el Pacífico"
+              src={destino.foto.src}
+              alt={destino.foto.alt}
               width="867"
               height="650"
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-full"
+              className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-[calc(100dvh-9rem)] lg:max-h-[34rem]"
             />
           </Reveal>
         </div>
       </section>
 
-      {/* 6 · Strip de alberca/terraza con scroll-snap nativo (marfil) */}
-      <section className="bg-marfil py-20 lg:py-32">
-        <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Momentos"
-              title="El agua, a su propio ritmo"
-            >
-              <p>
-                De la alberca infinita al amanecer a la terraza de Cielo cuando
-                cae la tarde: el día en Aurea Vita transcurre entre dos aguas,
-                la dulce y la del Pacífico.
-              </p>
-            </SectionHeading>
-          </Reveal>
-        </div>
-        <div
-          role="region"
-          aria-label="Momentos de la alberca y la terraza"
-          tabIndex={0}
-          className="mt-14 snap-x snap-mandatory overflow-x-auto scroll-pl-5 sm:scroll-pl-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {/* 5 fotos: dentro del límite de stagger del brief (§6.3) */}
-          <RevealGroup
-            as="ul"
-            stagger={0.1}
-            amount={0.1}
-            className="flex w-max gap-5 px-5 sm:px-8"
-          >
-            {momentosFotos.map((foto) => (
-              <RevealItem
-                as="li"
-                key={foto.src}
-                className="w-[78vw] max-w-[560px] shrink-0 snap-start sm:w-[46vw] lg:w-[30vw]"
-              >
-                <div className="overflow-hidden">
-                  <img
-                    src={foto.src}
-                    alt={foto.alt}
-                    width="940"
-                    height="627"
-                    loading="lazy"
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out hover:scale-[1.04]"
-                  />
-                </div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
+      {/* Sección "Momentos — El agua, a su propio ritmo" (strip
+          scroll-snap de alberca/terraza) ELIMINADA en la ronda 15 jun
+          (§9.3): JSX retirado de Home y `momentosFotos` de home.js. */}
 
-      {/* 7 · Banda CTA final de reserva (foto con overlay marino).
+      {/* 6 · Banda CTA final de reserva (foto con overlay marino).
           Momento de deleite permitido (§6.8): la foto asienta de
-          scale 1.08 → 1.0 al entrar al viewport, una sola vez. */}
+          scale 1.08 → 1.0 al entrar al viewport, una sola vez. Ronda 15
+          jun (§9.3): texto de apoyo nuevo (centralizado en home.js); el
+          botón ya está a la escala G2 (min-h-[48px] px-8). */}
       <section className="relative overflow-hidden bg-marino">
         <motion.img
-          src="/fotos_hotel/aereas/aereas_09.jpeg"
-          alt="Costa de Acapulco bajo la luz dorada de la mañana, vista desde el aire"
+          src={ctaFinal.foto.src}
+          alt={ctaFinal.foto.alt}
           width="940"
           height="529"
           loading="lazy"
@@ -333,22 +323,30 @@ export default function Home() {
           transition={{ duration: 1.4, ease: EASE_OUT }}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-marino/60" aria-hidden="true" />
+        {/* QA 15 jun (P1): aereas_09 tiene un cielo amplio muy claro
+            (no un glint puntual); el texto centrado lo cruza. El flat
+            marino/60 dejaba el cuerpo (marfil/85) en 3.14:1 y el eyebrow
+            dorado en 1.84:1 sobre el cielo → falla AA. Se sube el overlay
+            a /72 (sube el piso del cuerpo) y el text-shadow del bloque
+            (abajo) garantiza el borde de los glifos del eyebrow dorado,
+            que sobre cualquier fondo claro no alcanza 4.5:1 por sí solo
+            (regla dura: dorado como texto solo sobre marino). /78 deja el
+            cuerpo (marfil/85) en ~4.6:1 incluso sobre el pixel de cielo
+            más claro; el eyebrow dorado, que ningún overlay lleva a 4.5:1
+            sobre claro, se apoya en el halo marino del text-shadow. */}
+        <div className="absolute inset-0 bg-marino/78" aria-hidden="true" />
         <RevealGroup
           stagger={0.12}
-          className="relative z-10 mx-auto flex max-w-[1400px] flex-col items-center px-5 py-28 sm:px-8 lg:py-40"
+          className="relative z-10 mx-auto flex max-w-[1400px] flex-col items-center px-5 py-28 text-center sm:px-8 lg:py-40 [text-shadow:0_1px_14px_rgb(31_58_68_/_0.85)]"
         >
           <RevealItem>
             <SectionHeading
               align="center"
               tone="dark"
-              eyebrow="Reservaciones"
-              title="El Pacífico no se apura. Tú tampoco deberías."
+              eyebrow={ctaFinal.eyebrow}
+              title={ctaFinal.titulo}
             >
-              <p>
-                Cuéntanos tus fechas y deja el resto en manos de nuestro
-                concierge.
-              </p>
+              <p>{ctaFinal.texto}</p>
             </SectionHeading>
           </RevealItem>
           <RevealItem>
@@ -358,7 +356,7 @@ export default function Home() {
                  marino) es invisible; se fuerza marfil para el foco visible. */
               className="eyebrow mt-11 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85 focus-visible:outline-marfil"
             >
-              Reservar mi estancia
+              {ctaFinal.boton}
             </Link>
           </RevealItem>
         </RevealGroup>

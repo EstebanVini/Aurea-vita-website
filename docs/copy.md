@@ -2,9 +2,11 @@
 **Todo el contenido textual del sitio, listo para `src/data/`**
 
 - **Autor:** ux-writer
-- **Fecha:** 12 de junio de 2026
+- **Fecha:** 12 de junio de 2026 · **Revisión de ronda:** 15 de junio de 2026
 - **Idioma:** español (México), tono editorial sereno
-- **Input:** `prompt-claude-code-aurea-vita.md` + `docs/brief.md` (§8)
+- **Input:** `prompt-claude-code-aurea-vita.md` + `docs/brief.md` (§8 y §9 ronda 15 jun)
+
+> **Nota de la ronda 15 jun 2026:** los cambios de esta ronda están marcados a lo largo del documento con el prefijo **`[RONDA 15 JUN]`** e incluyen el texto viejo (tachado o etiquetado "ANTES") y el nuevo ("AHORA/DESPUÉS"). El resumen de qué archivo de datos toca cada cambio está en §12. Los textos largos del cliente van LITERALES; la división en párrafos y la ubicación titular/subtítulo/cuerpo son decisión del ux-writer (patrón SectionHeading).
 
 ---
 
@@ -43,78 +45,98 @@ Reglas de voz:
 
 ### 1.2 Bloque del hero
 
-- **Eyebrow:** `AUREA VITA · ACAPULCO`
-- **H1 (tagline):** `Santuario frente al Pacífico`
-- **Subtítulo:** `Un refugio de calma sobre la bahía de Acapulco, donde el tiempo se mide en mareas.`
-- **Indicador de scroll (aria-label):** `Desplázate para descubrir`
+> **`[RONDA 15 JUN]`** Se ELIMINA el eyebrow del hero. Se conserva el H1. Subtítulo reemplazado por el texto literal del cliente.
+
+- **Eyebrow:** ~~`AUREA VITA · ACAPULCO`~~ → **ELIMINADO** (sin eyebrow en el hero).
+- **H1 (tagline):** `Santuario frente al Pacífico` *(sin cambios)*
+- **Subtítulo (ANTES):** ~~`Un refugio de calma sobre la bahía de Acapulco, donde el tiempo se mide en mareas.`~~
+- **Subtítulo (AHORA — literal):** `Un santuario frente al mar donde no existen los horarios, solo el descanso, el bienestar y el placer de vivir plenamente.`
+- **Indicador de scroll (aria-label):** `Desplázate para descubrir` *(sin cambios)*
 
 ---
 
 ## 2. Home — `/`
 
-### 2.1 Sección "Bienvenido a Aurea Vita"
+### 2.1 Sección "Descubre Aurea Vita" *(antes "Bienvenido a Aurea Vita")*
 
-- **Eyebrow:** `EL HOTEL`
-- **Título (H2):** `Bienvenido a Aurea Vita`
-- **Párrafo 1:** `Hay lugares que se visitan y lugares que se habitan. Aurea Vita pertenece a los segundos: una casa frente al mar donde la arquitectura se abre a la luz del Pacífico y cada espacio invita a quedarse un poco más. Aquí el lujo no se anuncia; se siente en la temperatura del mármol, en el silencio de los pasillos, en la distancia exacta entre tu terraza y el horizonte.`
-- **Párrafo 2:** `Llegar es sencillo. Soltar el ritmo de afuera toma apenas una tarde. Lo demás —las mañanas largas, la mesa frente a la bahía, el agua quieta de la alberca— sucede solo.`
-- **CTA (link):** `Conoce nuestras habitaciones →`
-- **Alt foto (`fachadas_10.jpeg` o `fachadas_05.jpeg`):** `Fachada de Aurea Vita entre vegetación, bañada por la luz de la tarde`
+> **`[RONDA 15 JUN]`** Se ELIMINA el eyebrow "EL HOTEL". El título cambia. El cuerpo se reemplaza por el texto literal del cliente (3 párrafos del cliente; respeto su división natural por buen ritmo). El CTA link y el alt se conservan.
+
+- **Eyebrow (ANTES):** ~~`EL HOTEL`~~ → **ELIMINADO** (sin eyebrow en esta sección).
+- **Título (H2) (ANTES):** ~~`Bienvenido a Aurea Vita`~~
+- **Título (H2) (AHORA):** `Descubre Aurea Vita`
+- **Párrafo 1 (literal):** `En Aurea Vita creemos que el verdadero lujo es disponer de tiempo para uno mismo. Frente al Pacífico, hemos creado un refugio donde los días transcurren sin prisas y cada experiencia está pensada para reconectar con lo esencial. Aquí no existen itinerarios rígidos ni horarios que seguir. El mar marca el ritmo, la tranquilidad guía cada momento y el bienestar surge de forma natural.`
+- **Párrafo 2 (literal):** `Comienza la mañana con una vista infinita al océano, disfruta una gastronomía saludable y llena de sabor, relájate con terapias y masajes diseñados para restaurar cuerpo y mente, o simplemente encuentra un espacio para descansar profundamente mientras la brisa acompaña el día.`
+- **Párrafo 3 (literal):** `Aurea Vita es una invitación a vivir despacio, a nutrirse conscientemente y a redescubrir el placer de estar presente. Porque algunas experiencias no se miden por lo que haces, sino por cómo te hacen sentir.`
+- **CTA (link):** `Conoce nuestras habitaciones →` *(sin cambios)*
+- **Alt foto (`fachadas_05.jpeg`):** `Fachada de Aurea Vita entre vegetación, bañada por la luz de la tarde` *(sin cambios; el brief D9.3 confirma `fachadas_05` en el layout 50/50)*
 
 ### 2.2 Grid de 3 tarjetas
 
+> **`[RONDA 15 JUN]`** T1: texto nuevo (eyebrow y título se conservan). T2: título "Gastronomía" → "Alimentación Consciente" (eyebrow "LA MESA" se conserva; texto ajustado para rimar con el rebranding; `to:` sigue `/gastronomia`, D1). T3: título "Spa Vita" → "Experiencia Aurea Vita" (eyebrow "BIENESTAR" se conserva; texto nuevo; `to:` sigue `/spa`).
+
 **Tarjeta 1 — Habitaciones**
-- Eyebrow: `DESCANSO`
-- Título: `Habitaciones & Suites`
-- Texto: `Espacios serenos con vista al jardín o al mar, pensados para dormir con la ventana abierta.`
+- Eyebrow: `DESCANSO` *(sin cambios)*
+- Título: `Habitaciones & Suites` *(sin cambios)*
+- Texto (ANTES): ~~`Espacios serenos con vista al jardín o al mar, pensados para dormir con la ventana abierta.`~~
+- Texto (AHORA): `Amplios espacios para descansar y relajarse con absoluta privacidad.`
 - Link: `Descubrir →`
 - Alt (`habitaciones_12.jpeg`): `Suite con cama amplia en tonos arena y vista abierta al mar`
 
-**Tarjeta 2 — Gastronomía**
-- Eyebrow: `LA MESA`
-- Título: `Gastronomía`
-- Texto: `Cocina del Pacífico en Origen y atardeceres con coctel en mano en la terraza de Cielo.`
+**Tarjeta 2 — Alimentación Consciente** *(antes "Gastronomía")*
+- Eyebrow: `LA MESA` *(se conserva)*
+- Título (ANTES): ~~`Gastronomía`~~
+- Título (AHORA): `Alimentación Consciente`
+- Texto (ANTES): ~~`Cocina del Pacífico en Origen y atardeceres con coctel en mano en la terraza de Cielo.`~~
+- Texto (AHORA): `Cocina saludable y llena de sabor, pensada para nutrir el cuerpo al ritmo del Pacífico.`
 - Link: `Descubrir →`
+- `to:` `/gastronomia` *(la ruta se conserva, D1)*
 - Alt (`restaurante_11.jpeg`): `Mesa servida del restaurante Origen con vista a la bahía al atardecer`
 
-**Tarjeta 3 — Spa**
-- Eyebrow: `BIENESTAR`
-- Título: `Spa Vita`
-- Texto: `Rituales de descanso profundo entre piedra, agua y aromas de la costa.`
+**Tarjeta 3 — Experiencia Aurea Vita** *(antes "Spa Vita")*
+- Eyebrow: `BIENESTAR` *(se conserva)*
+- Título (ANTES): ~~`Spa Vita`~~
+- Título (AHORA): `Experiencia Aurea Vita`
+- Texto (ANTES): ~~`Rituales de descanso profundo entre piedra, agua y aromas de la costa.`~~
+- Texto (AHORA): `Descubre el descanso profundo a tu propio ritmo.`
 - Link: `Descubrir →`
+- `to:` `/spa` *(la ruta se conserva, D4)*
 - Alt (`spa_01.jpeg`): `Sala de masaje del Spa Vita con camilla sobre piso de mármol`
 
 ### 2.3 Sección "El destino — Acapulco" (fondo marino)
 
-- **Eyebrow:** `EL DESTINO`
-- **Título (H2):** `Acapulco, la bahía que enseñó al mundo a mirar el mar`
-- **Párrafo:** `Antes de los reflectores, Acapulco ya era esto: una bahía honda y tibia, montañas que caen al agua y una luz que dura todo el año. Aurea Vita se asoma a esa herencia desde la parte alta de la costa, lo bastante cerca para vivirla y lo bastante lejos para escucharla apenas.`
-- **Datos en serif grande:**
+> **`[RONDA 15 JUN]`** Eyebrow "EL DESTINO" se conserva. Título nuevo (más fiel al copy del cliente, que abre con "Acapulco Diamante"). Cuerpo reemplazado por el texto literal del cliente (2 párrafos). Los datos 300/27°/12 min SE CONSERVAN (D3); van entre el párrafo 1 y el 2, o como columna lateral —el `ui-engineer` los reacomoda si rompen el encuadre, pero no los elimina—. CTA y alt se conservan.
+
+- **Eyebrow:** `EL DESTINO` *(se conserva)*
+- **Título (H2) (ANTES):** ~~`Acapulco, la bahía que enseñó al mundo a mirar el mar`~~
+- **Título (H2) (AHORA):** `Acapulco Diamante`
+- **Párrafo 1 (literal):** `Acapulco Diamante, una de las zonas más privilegiadas y mejor conservadas del Pacífico mexicano. Aquí, la naturaleza sigue siendo la protagonista. Kilómetros de playa prácticamente ininterrumpida, extensas áreas de vegetación tropical y la presencia constante del océano crean un entorno donde el tiempo parece transcurrir de forma diferente. El sonido de las olas, la brisa marina y los colores del paisaje acompañan cada momento, invitando a reducir el ritmo y reconectar con lo esencial.`
+- **Párrafo 2 (literal):** `En Aurea Vita, creemos que el bienestar comienza con el lugar que nos rodea y con la capacidad de detenernos para apreciarlo. Más que un destino, este es un espacio para respirar profundamente, reconectar con uno mismo y dejar que la naturaleza marque el ritmo del día.`
+- **Datos en serif grande (SE CONSERVAN — D3):**
   - `300` — `días de sol al año`
   - `27°` — `temperatura media del agua`
   - `12 min` — `de la bahía de Santa Lucía`
-- **CTA (link):** `Explora las experiencias →`
-- **Alt (`aereas_15.jpeg`):** `Vista aérea de la bahía de Acapulco al atardecer, con el sol bajo sobre el Pacífico`
+- **CTA (link):** `Explora las experiencias →` *(sin cambios)*
+- **Alt (`aereas_15.jpeg`):** `Vista aérea de la bahía de Acapulco al atardecer, con el sol bajo sobre el Pacífico` *(sin cambios)*
 
-### 2.4 Strip alberca / terraza
+### 2.4 Strip alberca / terraza — ~~"El agua, a su propio ritmo"~~ **ELIMINADA**
 
-- **Eyebrow:** `MOMENTOS`
-- **Título (H2):** `El agua, a su propio ritmo`
-- **Texto breve:** `De la alberca infinita al amanecer a la terraza de Cielo cuando cae la tarde: el día en Aurea Vita transcurre entre dos aguas, la dulce y la del Pacífico.`
-- **Alts del carrusel:**
-  - `alberca_05.jpeg`: `Alberca infinita de Aurea Vita fundiéndose con el horizonte del Pacífico`
-  - `alberca_02.jpeg`: `Camastros junto a la alberca bajo la sombra de palmeras`
-  - `alberca_14.jpeg`: `Alberca iluminada al caer la noche, con el cielo en tonos azules`
-  - `alberca_10.jpeg`: `Detalle del agua quieta de la alberca reflejando la luz de la tarde`
-  - `terraza_13.jpeg`: `Terraza del bar Cielo al crepúsculo, con luces cálidas y vista abierta`
+> **`[RONDA 15 JUN]`** Sección ELIMINADA por completo (§9.3). El `ui-engineer` quita el JSX de Home y `momentosFotos` de `home.js`. Copy archivado aquí solo como referencia histórica; no se implementa.
+
+- ~~**Eyebrow:** `MOMENTOS`~~
+- ~~**Título (H2):** `El agua, a su propio ritmo`~~
+- ~~**Texto breve:** `De la alberca infinita al amanecer a la terraza de Cielo cuando cae la tarde: el día en Aurea Vita transcurre entre dos aguas, la dulce y la del Pacífico.`~~
+- ~~Alts del carrusel (alberca_05, alberca_02, alberca_14, alberca_10, terraza_13)~~
 
 ### 2.5 CTA final de reserva
 
-- **Eyebrow:** `RESERVACIONES`
-- **Título (H2):** `El Pacífico no se apura. Tú tampoco deberías.`
-- **Texto:** `Cuéntanos tus fechas y deja el resto en manos de nuestro concierge.`
-- **Botón:** `Reservar mi estancia`
-- **Alt (`aereas_09.jpeg`, si se usa foto):** `Costa de Acapulco bajo la luz dorada de la mañana, vista desde el aire`
+> **`[RONDA 15 JUN]`** Se conserva el titular y el eyebrow. El texto de apoyo se reemplaza por la frase literal del cliente, que funciona como subtítulo cálido bajo el titular (resume la promesa del hotel). El botón se conserva (más grande por G2, decisión de implementación).
+
+- **Eyebrow:** `RESERVACIONES` *(sin cambios)*
+- **Título (H2):** `El Pacífico no se apura. Tú tampoco deberías.` *(se conserva como titular)*
+- **Texto (ANTES):** ~~`Cuéntanos tus fechas y deja el resto en manos de nuestro concierge.`~~
+- **Texto (AHORA — literal):** `Un refugio frente al mar para descansar, reconectar y disfrutar al ritmo de las olas.`
+- **Botón:** `Reservar mi estancia` *(sin cambios de texto)*
+- **Alt (`aereas_09.jpeg`, si se usa foto):** `Costa de Acapulco bajo la luz dorada de la mañana, vista desde el aire` *(sin cambios)*
 
 ---
 
@@ -122,10 +144,16 @@ Reglas de voz:
 
 ### 3.1 Encabezado de página
 
-- **Eyebrow:** `DESCANSO`
-- **Título (H1):** `Habitaciones & Suites`
-- **Intro:** `Tres maneras de habitar la costa: entre jardines, frente al mar o en la suite que da nombre a la casa. Todas comparten lo esencial —silencio, luz y una cama en la que amanece tarde—.`
-- **Alt hero (`habitaciones_02.jpeg`):** `Interior de suite en Aurea Vita con textiles claros y luz natural`
+> **`[RONDA 15 JUN]`** Se REEMPLAZA/EXPANDE `habitacionesHeader.intro` con el copy largo del cliente, estructurado en dos niveles (patrón SectionHeading): un **subtítulo** corto (la línea con guion que dio el cliente, dividida en su parte conceptual) y el **cuerpo editorial** en 4 párrafos. Recomiendo al `ui-engineer` pasar `intro` a un objeto `{ subtitulo, cuerpo: [p1, p2, p3, p4] }` (o `cuerpo` como string con saltos), para soportar los dos niveles. Eyebrow y título H1 se conservan.
+
+- **Eyebrow:** `DESCANSO` *(sin cambios)*
+- **Título (H1):** `Habitaciones & Suites` *(sin cambios)*
+- **Subtítulo (literal, va bajo el H1):** `Diseñadas para el descanso, inspiradas por el mar.`
+- **Cuerpo — Párrafo 1 (literal):** `Cada habitación de Aurea Vita ha sido concebida como un refugio privado donde la tranquilidad y el bienestar se convierten en parte de la experiencia. Las amplias vistas al Pacífico acompañan cada amanecer, los espacios generosos y los detalles cuidadosamente seleccionados invitan a desconectar del ritmo cotidiano y reconectar con uno mismo en armonía.`
+- **Cuerpo — Párrafo 2 (literal):** `Todas nuestras habitaciones cuentan con vista al mar, baño con tina, amplio clóset de caoba, estación de té, pantalla de entretenimiento y una cama de masaje integrada a la experiencia wellness de tu propia habitación.`
+- **Cuerpo — Párrafo 3 (literal):** `Aquí, cada espacio ha sido diseñado para favorecer el descanso profundo, la relajación y la sensación de bienestar que define la esencia de Aurea Vita. Porque descansar no es solamente dormir. Es balancear los sentidos y sentirse en paz.`
+- **Intro (ANTES):** ~~`Tres maneras de habitar la costa: entre jardines, frente al mar o en la suite que da nombre a la casa. Todas comparten lo esencial —silencio, luz y una cama en la que amanece tarde—.`~~
+- **Alt hero (`habitaciones_02.jpeg`):** `Interior de suite en Aurea Vita con textiles claros y luz natural` *(sin cambios)*
 
 ### 3.2 Habitación Vista Jardín (acento salvia)
 
@@ -196,14 +224,19 @@ Reglas de voz:
 
 ---
 
-## 4. Gastronomía — `/gastronomia`
+## 4. Alimentación Consciente — `/gastronomia` *(antes "Gastronomía")*
+
+> **`[RONDA 15 JUN]`** REBRANDING (D1). La ruta `/gastronomia` SE CONSERVA. La estructura interna (Origen / Cielo / menú degustación Marea / cartas / horarios / bandas) NO se toca esta ronda. Solo cambian: el **eyebrow** y el **H1** del hero, la **intro** y los **metadatos** (§10), hacia la nueva voz "Alimentación Consciente". El resto de §4.2–§4.4 queda intacto.
 
 ### 4.1 Encabezado de página
 
-- **Eyebrow:** `LA MESA`
-- **Título (H1):** `Gastronomía`
-- **Intro:** `Dos lugares, dos horas del día. Origen cocina lo que el Pacífico entrega cada mañana; Cielo lo celebra cuando el sol empieza a caer.`
-- **Alt hero (`restaurante_11.jpeg`):** `Mesa servida del restaurante Origen frente a la bahía, bajo la luz dorada de la tarde`
+- **Eyebrow (ANTES):** ~~`LA MESA`~~
+- **Eyebrow (AHORA):** `ALIMENTACIÓN CONSCIENTE`
+- **Título (H1) (ANTES):** ~~`Gastronomía`~~
+- **Título (H1) (AHORA):** `Alimentación Consciente`
+- **Intro (ANTES):** ~~`Dos lugares, dos horas del día. Origen cocina lo que el Pacífico entrega cada mañana; Cielo lo celebra cuando el sol empieza a caer.`~~
+- **Intro (AHORA):** `Comer bien es parte del descanso. Origen cocina lo que el Pacífico entrega cada mañana —sano, de temporada y con sabor— y Cielo lo acompaña cuando el sol empieza a caer.`
+- **Alt hero (`restaurante_11.jpeg`):** `Mesa servida del restaurante Origen frente a la bahía, bajo la luz dorada de la tarde` *(sin cambios)*
 
 ### 4.2 Restaurante "Origen" — cocina del Pacífico
 
@@ -269,22 +302,30 @@ Reglas de voz:
 
 ---
 
-## 5. Spa & Bienestar — `/spa`
+## 5. Wellness — `/spa` *(antes "Spa Vita" / "Spa & Bienestar")*
+
+> **`[RONDA 15 JUN]`** La ruta sigue siendo `/spa` (D4); solo cambia la etiqueta/título visible a "Wellness". Hero: nuevo título + subtítulo. Texto central nuevo (literal del cliente) que reemplaza la filosofía. Tres bloques EN CONSTRUCCIÓN gateados (§5.3 menú, §5.4 circuito de aguas, §5.5 aromaterapia): NO se borran, se ocultan tras bandera reversible. La página queda: hero + texto central + nota de cierre "próximamente" + banda CTA. Identidad verde (salvia/oliva) se conserva donde queda visible.
 
 ### 5.1 Encabezado de página
 
-- **Eyebrow (salvia):** `BIENESTAR`
-- **Título (H1):** `Spa Vita`
-- **Alt hero (`spa_01.jpeg`):** `Camilla de masaje sobre piso de mármol en el Spa Vita, en penumbra serena`
+- **Eyebrow (salvia):** `BIENESTAR` *(se conserva; en salvia)*
+- **Título (H1) (ANTES):** ~~`Spa Vita`~~
+- **Título (H1) (AHORA):** `Wellness`
+- **Subtítulo (literal, más pequeño, bajo el H1):** `Donde el bienestar sucede de forma natural.`
+- **Alt hero (`spa_01.jpeg`):** `Camilla de masaje sobre piso de mármol del Wellness de Aurea Vita, en penumbra serena`
 
-### 5.2 Filosofía de bienestar
+### 5.2 Texto central *(reemplaza "Filosofía de bienestar")*
 
-- **Eyebrow:** `NUESTRA FILOSOFÍA`
-- **Título (H2):** `El descanso también se aprende`
-- **Párrafo 1:** `En Spa Vita no prometemos transformaciones. Trabajamos con algo más modesto y más difícil: que durante unas horas tu cuerpo no tenga nada que resolver. Piedra, agua tibia, aceites de la costa y manos que saben esperar. El resto lo hace el propio cuerpo, que recuerda descansar en cuanto se le permite.`
-- **Párrafo 2:** `Cada ritual comienza con una conversación breve y un té de hierbas de la región. No hay música genérica ni prisa entre citas: la siguiente hora es tuya, completa. Te pedimos solo una cosa al entrar —dejar el teléfono en la canasta de la entrada—. Nadie lo ha lamentado.`
+> **`[RONDA 15 JUN]`** El bloque de filosofía (antes "El descanso también se aprende", 2 párrafos) se REEMPLAZA por el texto central literal del cliente. El eyebrow salvia y la línea decorativa se conservan como tratamiento visual del bloque.
 
-### 5.3 Menú de tratamientos
+- **Eyebrow (salvia):** `NUESTRA FILOSOFÍA` *(se conserva; opción del `ui-engineer` dejarlo o quitarlo — el texto funciona con o sin eyebrow)*
+- **Título (H2) (ANTES):** ~~`El descanso también se aprende`~~ *(retirado; el texto central va sin H2, o con uno breve a criterio del `visual-designer`)*
+- **Texto central (AHORA — literal):** `Disfruta nuestros masajes, terapias y experiencias que han sido diseñados para ayudarte a desacelerar, liberar tensiones y reconectar contigo mismo. Date el tiempo necesario para descansar y relajarte profundamente, armonizando con el sonido del Pacífico sin horarios y en tranquilidad total.`
+- **Párrafos viejos (ARCHIVADOS, no se usan):** ~~`En Spa Vita no prometemos transformaciones...`~~ · ~~`Cada ritual comienza con una conversación breve...`~~
+
+### 5.3 Menú de tratamientos — **EN CONSTRUCCIÓN (gateado, reversible)**
+
+> **`[RONDA 15 JUN]`** Bloque OCULTO tras bandera. NO se borra el JSX ni los datos de `spa.js`. Reactivar = quitar la bandera. Copy intacto abajo para cuando reviva.
 
 - **Eyebrow del bloque:** `RITUALES Y TRATAMIENTOS`
 - **Título:** `El menú de la calma`
@@ -298,7 +339,9 @@ Reglas de voz:
 | `Rostro al Amanecer` | `60 MIN` | `Facial de limpieza profunda e hidratación con miel de la montaña de Guerrero y aloe. Luz nueva para la piel que ha tomado sol con entusiasmo.` |
 | `Circuito de Aguas` | `120 MIN` | `Recorrido guiado por vapor, tina de inmersión fría y alberca templada de flotación, con pausas de té e higos. Puede tomarse solo o como preludio de cualquier ritual.` |
 
-### 5.4 Bloque "Circuito de aguas" (sección oliva)
+### 5.4 Bloque "Circuito de aguas" (sección oliva) — **EN CONSTRUCCIÓN (gateado, reversible)**
+
+> **`[RONDA 15 JUN]`** Bloque OCULTO tras bandera. NO se borra. Copy intacto abajo.
 
 - **Eyebrow:** `EL AGUA COMO MEDICINA`
 - **Título (H2):** `Frío, calor y nada más`
@@ -307,7 +350,9 @@ Reglas de voz:
   - `spa_06.jpeg`: `Alberca de inmersión del circuito de aguas en ambiente de penumbra`
   - `spa_03.jpeg`: `Tina de piedra orgánica del Spa Vita junto a un muro de textura natural`
 
-### 5.5 Bloque rituales / aromaterapia
+### 5.5 Bloque rituales / aromaterapia — **EN CONSTRUCCIÓN (gateado, reversible)**
+
+> **`[RONDA 15 JUN]`** Bloque OCULTO tras bandera. NO se borra. Copy intacto abajo.
 
 - **Eyebrow:** `LOS DETALLES`
 - **Título (H2):** `Aromas de la costa`
@@ -316,10 +361,13 @@ Reglas de voz:
   - `spa_15.jpeg`: `Composición de aceites y sales del Spa Vita en tonos arena`
   - `spa_09.jpeg`: `Vela encendida y difusor de aromaterapia en el Spa Vita`
 
-### 5.6 Nota práctica
+### 5.6 Nota de cierre "próximamente" *(reemplaza la "Nota práctica" mientras el menú está gateado)*
 
-- **Título pequeño:** `Para tu visita`
-- **Texto:** `El spa abre todos los días de 9:00 a 20:00. Te sugerimos reservar tus rituales con 24 horas de anticipación con el concierge o desde el formulario de contacto, y llegar 20 minutos antes para comenzar sin prisa. Los tratamientos están disponibles para huéspedes y visitantes con reservación.`
+> **`[RONDA 15 JUN]`** La nota práctica original prometía reservar rituales y describía el menú —que ahora está oculto—, así que dejaría de ser cierta. Se GATEA y, en su lugar, va una nota de cierre sobria en voz de marca, sin disculpas, que da continuidad a la página y guía hacia el concierge. Cuando el menú reviva, vuelve la nota práctica original (archivada abajo).
+
+- **Título pequeño:** `Lo mejor, en camino`
+- **Texto (AHORA):** `Estamos afinando cada detalle de nuestro Wellness: el menú de tratamientos, el circuito de aguas y los rituales de la costa llegarán muy pronto. Mientras tanto, nuestro concierge puede contarte qué preparamos y reservar tu lugar para cuando decidas venir.`
+- **Nota práctica original (ARCHIVADA, revive con el menú):** ~~`El spa abre todos los días de 9:00 a 20:00. Te sugerimos reservar tus rituales con 24 horas de anticipación con el concierge o desde el formulario de contacto, y llegar 20 minutos antes para comenzar sin prisa. Los tratamientos están disponibles para huéspedes y visitantes con reservación.`~~
 
 ### 5.7 Banda CTA de la página
 
@@ -331,14 +379,27 @@ Reglas de voz:
 
 ## 6. Experiencias — `/experiencias`
 
+> **`[RONDA 15 JUN]`** Página EN CONSTRUCCIÓN. Se gatean los 3 bloques temáticos (§6.2 Alberca infinita, §6.3 Atardeceres en Cielo, §6.4 Descubre Acapulco), reversibles, sin borrar JSX. Como "Experiencias" sigue en el menú, la página NO puede quedar vacía ni ser un callejón sin salida: queda **hero + intro + mensaje "próximamente" (§6.1bis) + banda CTA** (§6.5, sin cambios → `/contacto`). Conserva su hero fotográfico y jerarquía de página interior (no es un placeholder de pantalla completa).
+
 ### 6.1 Encabezado de página
 
-- **Eyebrow:** `EXPERIENCIAS`
-- **Título (H1):** `Maneras de pasar el día`
-- **Intro:** `Dentro de la casa o bahía adentro: aquí nadie programa tu agenda, pero sí la habilitamos.`
-- **Alt hero (`alberca_05.jpeg`):** `Alberca infinita de Aurea Vita extendiéndose hacia el horizonte del Pacífico`
+- **Eyebrow:** `EXPERIENCIAS` *(se conserva)*
+- **Título (H1):** `Maneras de pasar el día` *(se conserva)*
+- **Intro (ANTES):** ~~`Dentro de la casa o bahía adentro: aquí nadie programa tu agenda, pero sí la habilitamos.`~~
+- **Intro (AHORA):** `Dentro de la casa o bahía adentro: estamos dando forma a las maneras de pasar el día en Aurea Vita.`
+- **Alt hero (`alberca_05.jpeg`):** `Alberca infinita de Aurea Vita extendiéndose hacia el horizonte del Pacífico` *(sin cambios)*
 
-### 6.2 Bloque "Alberca infinita"
+### 6.1bis Mensaje "próximamente" *(nuevo — bloque visible entre la intro y la banda CTA)*
+
+> **`[RONDA 15 JUN]`** Bloque NUEVO en voz de marca: sereno, sin disculparse, que promete que vale la pena esperar. Va sobre fondo marfil, máximo ~60ch, con eyebrow opcional.
+
+- **Eyebrow (opcional):** `PRÓXIMAMENTE`
+- **Título (H2):** `Estamos afinando los días`
+- **Texto:** `La alberca infinita, los atardeceres en la terraza y las salidas para descubrir Acapulco están casi listos. Preferimos contarlos cuando cada detalle esté en su sitio. Vuelve pronto; el mar, mientras tanto, sigue en su lugar.`
+
+### 6.2 Bloque "Alberca infinita" — **EN CONSTRUCCIÓN (gateado, reversible)**
+
+> **`[RONDA 15 JUN]`** Bloque OCULTO tras bandera. NO se borra. Copy intacto abajo.
 
 - **Eyebrow:** `EL AGUA DULCE`
 - **Título (H2):** `La alberca infinita`
@@ -350,7 +411,9 @@ Reglas de voz:
   - `alberca_14.jpeg`: `Alberca iluminada de noche bajo un cielo azul profundo`
   - `alberca_07.jpeg`: `Desayuno servido en una mesa junto a la alberca por la mañana`
 
-### 6.3 Bloque "Atardeceres en Cielo"
+### 6.3 Bloque "Atardeceres en Cielo" — **EN CONSTRUCCIÓN (gateado, reversible)**
+
+> **`[RONDA 15 JUN]`** Bloque OCULTO tras bandera. NO se borra. Copy intacto abajo.
 
 - **Eyebrow:** `LA HORA DORADA`
 - **Título (H2):** `Atardeceres en Cielo`
@@ -360,7 +423,9 @@ Reglas de voz:
   - `terraza_13.jpeg`: `Atardecer desde la terraza de Cielo con el cielo encendido en tonos cálidos`
   - `terraza_10.jpeg`: `Ambiente nocturno del lounge de Cielo con iluminación tenue`
 
-### 6.4 Bloque "Descubre Acapulco" (sección marino)
+### 6.4 Bloque "Descubre Acapulco" (sección marino) — **EN CONSTRUCCIÓN (gateado, reversible)**
+
+> **`[RONDA 15 JUN]`** Bloque OCULTO tras bandera. NO se borra. Copy intacto abajo.
 
 - **Eyebrow:** `EL DESTINO`
 - **Título (H2):** `Descubre Acapulco`
@@ -487,7 +552,10 @@ Patrón general: lugar + qué se ve + atmósfera, en una frase. Lista completa p
 
 ### 9.1 Navbar
 
-- Links: `Inicio` · `Habitaciones` · `Gastronomía` · `Spa` · `Experiencias` · `Galería` · `Contacto`
+> **`[RONDA 15 JUN]`** Navegación a 6 entradas (G3). Sale "Gastronomía" del menú (su contenido vive en la tarjeta 2 del Home, "Alimentación Consciente"; la ruta `/gastronomia` sigue accesible). "Spa" se renombra a "Wellness" (el `to:` sigue `/spa`). Mantener idénticos los arrays `NAV_LINKS` de `Navbar.jsx` y `Footer.jsx`.
+
+- Links (ANTES): ~~`Inicio` · `Habitaciones` · `Gastronomía` · `Spa` · `Experiencias` · `Galería` · `Contacto`~~
+- Links (AHORA): `Inicio` · `Habitaciones` · `Wellness` *(→ `/spa`)* · `Experiencias` · `Galería` · `Contacto`
 - Botón persistente: `Reservar`
 - aria-label hamburguesa: `Abrir menú de navegación` / `Cerrar menú`
 - aria-label del logo (link a inicio): `Aurea Vita — Inicio`
@@ -513,7 +581,7 @@ Patrón general: lugar + qué se ve + atmósfera, en una frase. Lista completa p
 ### 9.4 Footer
 
 - **Frase de marca (junto al logo):** `Donde el día baja la voz.`
-- **Columna 1 — título:** `Navegación` → repite los 7 links del menú.
+- **Columna 1 — título:** `Navegación` → repite los **6** links del menú (§9.1, ronda 15 jun): `Inicio · Habitaciones · Wellness · Experiencias · Galería · Contacto`. **`[RONDA 15 JUN]`** ~~antes eran 7 (incluía "Gastronomía" y "Spa")~~.
 - **Columna 2 — título:** `Contacto`
   - `Av. Escénica 1200, Lomas del Pacífico`
   - `Acapulco de Juárez, Guerrero, México`
@@ -544,8 +612,8 @@ Patrón general: lugar + qué se ve + atmósfera, en una frase. Lista completa p
 |---|---|---|
 | `/` | `Aurea Vita · Santuario frente al Pacífico — Acapulco` | `Hotel de lujo sereno en la bahía de Acapulco: habitaciones frente al mar, cocina del Pacífico, spa y atardeceres en terraza. Consulta disponibilidad.` |
 | `/habitaciones` | `Habitaciones & Suites · Aurea Vita Acapulco` | `Tres maneras de habitar la costa: Habitación Vista Jardín, Suite Vista al Mar y la Suite Aurea, nuestra insignia con alberca privada y vista a la bahía.` |
-| `/gastronomia` | `Gastronomía — Origen y Cielo · Aurea Vita Acapulco` | `Origen, cocina del Pacífico con menú degustación de siete tiempos, y Cielo, bar de terraza con cocteles de autor a la hora del atardecer.` |
-| `/spa` | `Spa Vita — Spa & Bienestar · Aurea Vita Acapulco` | `Rituales de descanso profundo frente al Pacífico: masajes, envolturas, faciales y circuito de aguas. Abierto todos los días de 9:00 a 20:00.` |
+| `/gastronomia` | **`[RONDA 15 JUN]`** ~~`Gastronomía — Origen y Cielo · Aurea Vita Acapulco`~~ → `Alimentación Consciente · Aurea Vita Acapulco` | ~~`Origen, cocina del Pacífico con menú degustación de siete tiempos, y Cielo, bar de terraza con cocteles de autor a la hora del atardecer.`~~ → `Alimentación consciente frente al Pacífico: cocina sana y de temporada en Origen y atardeceres en la terraza de Cielo. Comer bien como parte del descanso.` |
+| `/spa` | **`[RONDA 15 JUN]`** ~~`Spa Vita — Spa & Bienestar · Aurea Vita Acapulco`~~ → `Wellness · Aurea Vita Acapulco` | ~~`Rituales de descanso profundo frente al Pacífico: masajes, envolturas, faciales y circuito de aguas. Abierto todos los días de 9:00 a 20:00.`~~ → `Wellness frente al Pacífico: masajes, terapias y experiencias para desacelerar y reconectar contigo mismo, al ritmo del mar. Muy pronto, el menú completo.` |
 | `/experiencias` | `Experiencias · Aurea Vita Acapulco` | `Alberca infinita, atardeceres en la terraza de Cielo y salidas por Acapulco: vela en la bahía, La Quebrada, manglares de Coyuca y el viejo puerto.` |
 | `/galeria` | `Galería · Aurea Vita Acapulco` | `Un recorrido visual por Aurea Vita: vistas aéreas de la bahía, habitaciones, alberca infinita, gastronomía, spa y atardeceres en terraza.` |
 | `/contacto` | `Reservaciones y contacto · Aurea Vita Acapulco` | `Cuéntanos tus fechas y nuestro concierge te responde el mismo día con disponibilidad. Av. Escénica 1200, Acapulco, Guerrero, México.` |
@@ -558,3 +626,102 @@ Patrón general: lugar + qué se ve + atmósfera, en una frase. Lista completa p
 - Los ids de filtros (§7.2) coinciden con los nombres de carpeta de `public/fotos_hotel/` salvo `fachadas` → etiqueta `Arquitectura`.
 - Mantener mayúsculas SOLO en eyebrows (vía CSS `uppercase`, no escribir en mayúsculas en los datos, salvo las duraciones del spa que ya van como eyebrow).
 - Cualquier copy nuevo que surja durante la implementación debe pasar por el glosario de §0.
+
+---
+
+## 12. Handoff de la ronda 15 jun — copy nuevo por archivo de datos
+
+Resumen para el `ui-engineer`: qué cambia, en qué archivo, con el texto listo para pegar. Las referencias a secciones detalladas están entre paréntesis.
+
+### `src/data/home.js`
+
+**Hero (§1.2)**
+- ELIMINAR el eyebrow del hero (antes `AUREA VITA · ACAPULCO`).
+- H1 sin cambios: `Santuario frente al Pacífico`.
+- Subtítulo nuevo: `Un santuario frente al mar donde no existen los horarios, solo el descanso, el bienestar y el placer de vivir plenamente.`
+
+**Sección "Descubre Aurea Vita" (§2.1)**
+- ELIMINAR eyebrow `EL HOTEL`.
+- Título: `Bienvenido a Aurea Vita` → `Descubre Aurea Vita`.
+- Cuerpo (3 párrafos):
+  1. `En Aurea Vita creemos que el verdadero lujo es disponer de tiempo para uno mismo. Frente al Pacífico, hemos creado un refugio donde los días transcurren sin prisas y cada experiencia está pensada para reconectar con lo esencial. Aquí no existen itinerarios rígidos ni horarios que seguir. El mar marca el ritmo, la tranquilidad guía cada momento y el bienestar surge de forma natural.`
+  2. `Comienza la mañana con una vista infinita al océano, disfruta una gastronomía saludable y llena de sabor, relájate con terapias y masajes diseñados para restaurar cuerpo y mente, o simplemente encuentra un espacio para descansar profundamente mientras la brisa acompaña el día.`
+  3. `Aurea Vita es una invitación a vivir despacio, a nutrirse conscientemente y a redescubrir el placer de estar presente. Porque algunas experiencias no se miden por lo que haces, sino por cómo te hacen sentir.`
+
+**Grid de 3 tarjetas (§2.2)**
+- T1 (Habitaciones): texto → `Amplios espacios para descansar y relajarse con absoluta privacidad.`
+- T2: título `Gastronomía` → `Alimentación Consciente` (`to:` sigue `/gastronomia`); eyebrow `LA MESA` se conserva; texto → `Cocina saludable y llena de sabor, pensada para nutrir el cuerpo al ritmo del Pacífico.`
+- T3: título `Spa Vita` → `Experiencia Aurea Vita` (`to:` sigue `/spa`); eyebrow `BIENESTAR` se conserva; texto → `Descubre el descanso profundo a tu propio ritmo.`
+
+**Sección "El destino — Acapulco" (§2.3)**
+- Eyebrow `EL DESTINO` se conserva.
+- Título → `Acapulco Diamante`.
+- Cuerpo (2 párrafos):
+  1. `Acapulco Diamante, una de las zonas más privilegiadas y mejor conservadas del Pacífico mexicano. Aquí, la naturaleza sigue siendo la protagonista. Kilómetros de playa prácticamente ininterrumpida, extensas áreas de vegetación tropical y la presencia constante del océano crean un entorno donde el tiempo parece transcurrir de forma diferente. El sonido de las olas, la brisa marina y los colores del paisaje acompañan cada momento, invitando a reducir el ritmo y reconectar con lo esencial.`
+  2. `En Aurea Vita, creemos que el bienestar comienza con el lugar que nos rodea y con la capacidad de detenernos para apreciarlo. Más que un destino, este es un espacio para respirar profundamente, reconectar con uno mismo y dejar que la naturaleza marque el ritmo del día.`
+- Datos `300` / `27°` / `12 min` SE CONSERVAN (D3).
+
+**Sección "Momentos" (§2.4)**
+- ELIMINAR por completo (JSX en `Home.jsx` + `momentosFotos` en `home.js`).
+
+**Banda CTA final (§2.5)**
+- Titular se conserva: `El Pacífico no se apura. Tú tampoco deberías.`
+- Texto de apoyo → `Un refugio frente al mar para descansar, reconectar y disfrutar al ritmo de las olas.`
+- Botón se conserva: `Reservar mi estancia`.
+
+### `src/data/rooms.js`
+
+**`habitacionesHeader` (§3.1)** — reemplazar/expandir `intro`. Recomendación: `{ subtitulo, cuerpo: [...] }`.
+- Subtítulo: `Diseñadas para el descanso, inspiradas por el mar.`
+- Cuerpo (3 párrafos):
+  1. `Cada habitación de Aurea Vita ha sido concebida como un refugio privado donde la tranquilidad y el bienestar se convierten en parte de la experiencia. Las amplias vistas al Pacífico acompañan cada amanecer, los espacios generosos y los detalles cuidadosamente seleccionados invitan a desconectar del ritmo cotidiano y reconectar con uno mismo en armonía.`
+  2. `Todas nuestras habitaciones cuentan con vista al mar, baño con tina, amplio clóset de caoba, estación de té, pantalla de entretenimiento y una cama de masaje integrada a la experiencia wellness de tu propia habitación.`
+  3. `Aquí, cada espacio ha sido diseñado para favorecer el descanso profundo, la relajación y la sensación de bienestar que define la esencia de Aurea Vita. Porque descansar no es solamente dormir. Es balancear los sentidos y sentirse en paz.`
+- Las 3 categorías de habitación NO cambian.
+
+### `src/data/spa.js` (ruta `/spa`, etiqueta "Wellness")
+
+**Hero (§5.1)**
+- Título `Spa Vita` → `Wellness`.
+- Subtítulo nuevo (más pequeño): `Donde el bienestar sucede de forma natural.`
+- Eyebrow salvia `BIENESTAR` se conserva.
+
+**Texto central (§5.2)** — reemplaza la filosofía:
+- `Disfruta nuestros masajes, terapias y experiencias que han sido diseñados para ayudarte a desacelerar, liberar tensiones y reconectar contigo mismo. Date el tiempo necesario para descansar y relajarte profundamente, armonizando con el sonido del Pacífico sin horarios y en tranquilidad total.`
+
+**Gateado (NO borrar):** menú de tratamientos (§5.3), circuito de aguas (§5.4), aromaterapia (§5.5).
+
+**Nota de cierre "próximamente" (§5.6)** — reemplaza la nota práctica mientras el menú esté gateado:
+- Título: `Lo mejor, en camino`
+- Texto: `Estamos afinando cada detalle de nuestro Wellness: el menú de tratamientos, el circuito de aguas y los rituales de la costa llegarán muy pronto. Mientras tanto, nuestro concierge puede contarte qué preparamos y reservar tu lugar para cuando decidas venir.`
+
+**Banda CTA (§5.7)** — sin cambios; botón `Agendar mi ritual` → `/contacto`.
+
+### `src/data/` de Experiencias (`Experiencias.jsx` / su data)
+
+**Hero (§6.1)** — eyebrow `EXPERIENCIAS` y H1 `Maneras de pasar el día` se conservan.
+- Intro nueva: `Dentro de la casa o bahía adentro: estamos dando forma a las maneras de pasar el día en Aurea Vita.`
+
+**Mensaje "próximamente" nuevo (§6.1bis)** — bloque visible entre intro y banda CTA:
+- Eyebrow (opcional): `PRÓXIMAMENTE`
+- Título: `Estamos afinando los días`
+- Texto: `La alberca infinita, los atardeceres en la terraza y las salidas para descubrir Acapulco están casi listos. Preferimos contarlos cuando cada detalle esté en su sitio. Vuelve pronto; el mar, mientras tanto, sigue en su lugar.`
+
+**Gateado (NO borrar):** Alberca infinita (§6.2), Atardeceres en Cielo (§6.3), Descubre Acapulco (§6.4).
+**Banda CTA (§6.5)** — sin cambios → `/contacto`.
+
+### Rebranding `/gastronomia` (dining.js / gastronomia.js — solo hero + metadatos, D1)
+
+- Eyebrow del hero: `LA MESA` → `ALIMENTACIÓN CONSCIENTE`.
+- H1: `Gastronomía` → `Alimentación Consciente`.
+- Intro: `Comer bien es parte del descanso. Origen cocina lo que el Pacífico entrega cada mañana —sano, de temporada y con sabor— y Cielo lo acompaña cuando el sol empieza a caer.`
+- Estructura interna (Origen / Cielo / menú Marea / cartas) NO se toca.
+- Metadatos (§10): `<title>` → `Alimentación Consciente · Aurea Vita Acapulco`; description → `Alimentación consciente frente al Pacífico: cocina sana y de temporada en Origen y atardeceres en la terraza de Cielo. Comer bien como parte del descanso.`
+
+### Componentes globales (`Navbar.jsx` + `Footer.jsx`)
+
+- `NAV_LINKS` (idénticos en ambos): `Inicio · Habitaciones · Wellness (→ /spa) · Experiencias · Galería · Contacto`. Quitar `Gastronomía`; renombrar label de `/spa` a `Wellness`.
+- Metadatos `/spa` (§10): `<title>` → `Wellness · Aurea Vita Acapulco`; description → `Wellness frente al Pacífico: masajes, terapias y experiencias para desacelerar y reconectar contigo mismo, al ritmo del mar. Muy pronto, el menú completo.`
+
+### Verificación de glosario (§0)
+Todo el copy nuevo respeta el glosario y palabras vetadas: sin "paraíso", "experiencia inolvidable", "lujo sin igual", etc. Se usa "reservar", "habitación/suite", "huéspedes". El término "wellness" se introduce como nombre de la página por decisión del cliente (D4) y "alimentación consciente" como rebranding de la tarjeta/página de gastronomía (D1). El motivo narrativo del mar/tiempo está presente en cada bloque nuevo.

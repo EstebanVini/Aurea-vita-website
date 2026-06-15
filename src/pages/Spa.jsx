@@ -14,6 +14,16 @@ import {
   spaNota,
 } from '../data/spa.js';
 
+/**
+ * Bandera reversible "en construcción" (ronda 15 jun §9.5 / D2). En true
+ * oculta los tres bloques gateados (menú de tratamientos, circuito de
+ * aguas, aromaterapia) SIN borrar su JSX ni sus datos: reactivar = poner
+ * en false. Mismo espíritu que la página /contacto. La página queda
+ * coherente y con cierre: hero + texto central + nota "próximamente" +
+ * banda CTA. NO implementa calendario/Odoo (mejora futura, §9.8).
+ */
+const SECCIONES_EN_CONSTRUCCION = true;
+
 /* Entrada del hero interior: eyebrow → H1, mismo lenguaje que
    /habitaciones y /gastronomia (brief §6.1). Spa es la página más
    pausada del sitio — más espacio en blanco que ninguna otra. */
@@ -46,8 +56,8 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
  */
 export default function Spa() {
   usePageMeta(
-    'Spa Vita — Spa & Bienestar · Aurea Vita Acapulco',
-    'Rituales de descanso profundo frente al Pacífico: masajes, envolturas, faciales y circuito de aguas. Abierto todos los días de 9:00 a 20:00.',
+    'Wellness · Aurea Vita Acapulco',
+    'Wellness frente al Pacífico: masajes, terapias y experiencias para desacelerar y reconectar contigo mismo, al ritmo del mar. Muy pronto, el menú completo.',
   );
 
   const reduceMotion = useReducedMotion();
@@ -77,11 +87,17 @@ export default function Spa() {
           className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/15 to-marino/65"
           aria-hidden="true"
         />
+        {/* text-shadow marino (QA 15 jun, P1): el pie de spa_01 promedia
+            muy oscuro (marfil/90 ~10:1) pero el mármol tiene reflejos
+            especulares puntuales donde marfil/90 cae a ~3.4:1 → falla AA
+            local en el eyebrow/subtítulo (texto pequeño). El halo marino
+            garantiza el contraste en el borde de cada glifo sobre esos
+            reflejos sin oscurecer el overlay del hero. */}
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
           animate="visible"
-          className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20"
+          className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20 [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
         >
           <motion.p variants={heroItem} className="eyebrow text-marfil/90">
             {spaHeader.eyebrow}
@@ -92,6 +108,16 @@ export default function Spa() {
           >
             {spaHeader.titulo}
           </motion.h1>
+          {/* Subtítulo nuevo (ronda 15 jun §9.5): más pequeño, bajo el H1,
+              dentro de la secuencia de entrada. marfil/90 sobre el overlay
+              denso al pie del hero pasa AA en la mediana; el text-shadow
+              del bloque cubre los reflejos del mármol. */}
+          <motion.p
+            variants={heroItem}
+            className="mt-5 max-w-xl text-lg text-marfil/90"
+          >
+            {spaHeader.subtitulo}
+          </motion.p>
         </motion.div>
       </section>
 
@@ -104,16 +130,15 @@ export default function Spa() {
       <section className="bg-marfil py-20 lg:py-32">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <p className="eyebrow text-marino">{spaFilosofia.eyebrow}</p>
-          <h2 className="mt-4 max-w-[20ch] font-display text-4xl font-light leading-[1.1] text-balance text-marino sm:text-5xl lg:text-6xl">
-            {spaFilosofia.titulo}
-          </h2>
           {/* Línea salvia: el verde se gana en lo decorativo (brief
               §4.4), no en el texto pequeño sobre claros. */}
           <div className="mt-7 h-px w-12 bg-salvia" aria-hidden="true" />
-          <div className="mt-8 max-w-[65ch] space-y-6 font-display text-xl font-light leading-relaxed text-marino/90 sm:text-2xl">
-            <p>{spaFilosofia.parrafos[0]}</p>
-            <p>{spaFilosofia.parrafos[1]}</p>
-          </div>
+          {/* Texto central nuevo (ronda 15 jun §9.5): va sin H2 (copy
+              §5.2), como párrafo editorial en serif protagonista —el
+              silencio visual es el mensaje. */}
+          <p className="mt-8 max-w-[42ch] font-display text-2xl font-light leading-snug text-balance text-marino sm:text-3xl lg:text-4xl">
+            {spaFilosofia.texto}
+          </p>
         </Reveal>
       </section>
 
@@ -124,7 +149,14 @@ export default function Spa() {
           regla salvia que abre el menú se DIBUJA (drawLine, §6.8) — eco
           verde del menú "Marea", el único deleite puntual de /spa.
           Stagger sutil de 80ms (brief §6.3): el menú se "lee"
-          tratamiento a tratamiento. */}
+          tratamiento a tratamiento.
+
+          GATEADO (ronda 15 jun §9.5, D2): este bloque y los dos
+          siguientes (circuito de aguas, aromaterapia) quedan ocultos
+          tras SECCIONES_EN_CONSTRUCCION; el JSX y los datos se conservan
+          íntegros. Reactivar = poner la bandera en false. */}
+      {!SECCIONES_EN_CONSTRUCCION && (
+        <>
       <section className="bg-arena py-20 lg:py-32">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <Reveal className="max-w-2xl">
@@ -302,11 +334,15 @@ export default function Spa() {
           </RevealGroup>
         </div>
       </section>
+        </>
+      )}
 
-      {/* 6 · Nota práctica (arena, copy §5.6): información de servicio en
-          formato sobrio, no editorial. Título pequeño como eyebrow en
-          marino, texto en piedra. Ancho contenido (60ch) para lectura
-          de utilidad, no de inmersión. */}
+      {/* 6 · Nota de cierre "próximamente" (arena, copy §5.6 / §12, ronda
+          15 jun): reemplaza la nota práctica mientras el menú está
+          gateado. Voz de marca, sin disculpas; cierra la página y guía
+          al concierge. Título pequeño como eyebrow en marino, texto en
+          marino/75 (AA sobre arena). Ancho contenido (60ch). NO está
+          gateada: es la que da cierre coherente a la página. */}
       <section className="bg-arena py-16 lg:py-24">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <div className="max-w-[60ch] border-l-2 border-salvia pl-6 sm:pl-8">

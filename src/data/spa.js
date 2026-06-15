@@ -21,18 +21,36 @@
  * el menú de tratamientos es tipográfico, no transaccional (brief §4.4).
  */
 
-/** Encabezado de la página (copy §5.1). */
+/**
+ * Encabezado de la página (copy §5.1 / §12, ronda 15 jun). Título
+ * "Spa Vita" → "Wellness"; subtítulo nuevo (más pequeño, bajo el H1);
+ * eyebrow salvia "Bienestar" se conserva. La ruta sigue /spa (D4).
+ */
 export const spaHeader = {
   eyebrow: 'Bienestar',
-  titulo: 'Spa Vita',
+  titulo: 'Wellness',
+  subtitulo: 'Donde el bienestar sucede de forma natural.',
   hero: {
     src: '/fotos_hotel/spa/spa_01.jpeg',
-    alt: 'Camilla de masaje sobre piso de mármol en el Spa Vita, en penumbra serena',
+    alt: 'Camilla de masaje sobre piso de mármol en el Wellness de Aurea Vita, en penumbra serena',
   },
 };
 
-/** Filosofía de bienestar — bloque solo-texto sobre marfil (copy §5.2). */
+/**
+ * Texto central — bloque solo-texto sobre marfil (copy §5.2 / §12,
+ * ronda 15 jun). Reemplaza la filosofía anterior por el texto literal
+ * del cliente. El eyebrow salvia se conserva como tratamiento visual.
+ * Los párrafos viejos quedan archivados en `spaFilosofiaArchivada`
+ * (reviven con el menú; no se borran del repo).
+ */
 export const spaFilosofia = {
+  eyebrow: 'Nuestra filosofía',
+  texto:
+    'Disfruta nuestros masajes, terapias y experiencias que han sido diseñados para ayudarte a desacelerar, liberar tensiones y reconectar contigo mismo. Date el tiempo necesario para descansar y relajarte profundamente, armonizando con el sonido del Pacífico sin horarios y en tranquilidad total.',
+};
+
+/** Filosofía anterior — ARCHIVADA (copy §5.2): revive con el menú. */
+export const spaFilosofiaArchivada = {
   eyebrow: 'Nuestra filosofía',
   titulo: 'El descanso también se aprende',
   parrafos: [
@@ -122,8 +140,20 @@ export const spaAromaterapia = {
   },
 };
 
-/** Nota práctica para la visita (copy §5.6). */
+/**
+ * Nota de cierre "próximamente" (copy §5.6 / §12, ronda 15 jun).
+ * Reemplaza la nota práctica mientras el menú está gateado: voz de
+ * marca, sin disculpas, que da continuidad a la página y guía al
+ * concierge. Cuando el menú reviva, vuelve `spaNotaArchivada`.
+ */
 export const spaNota = {
+  titulo: 'Lo mejor, en camino',
+  texto:
+    'Estamos afinando cada detalle de nuestro Wellness: el menú de tratamientos, el circuito de aguas y los rituales de la costa llegarán muy pronto. Mientras tanto, nuestro concierge puede contarte qué preparamos y reservar tu lugar para cuando decidas venir.',
+};
+
+/** Nota práctica original — ARCHIVADA (copy §5.6): revive con el menú. */
+export const spaNotaArchivada = {
   titulo: 'Para tu visita',
   texto:
     'El spa abre todos los días de 9:00 a 20:00. Te sugerimos reservar tus rituales con 24 horas de anticipación con el concierge o desde el formulario de contacto, y llegar 20 minutos antes para comenzar sin prisa. Los tratamientos están disponibles para huéspedes y visitantes con reservación.',

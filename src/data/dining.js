@@ -13,12 +13,18 @@
  * la carta es tipográfica, no transaccional (brief §4.3).
  */
 
-/** Encabezado de la página (copy §4.1). */
+/**
+ * Encabezado de la página (copy §4.1 / §12, ronda 15 jun — rebranding
+ * D1). La ruta /gastronomia se conserva; solo se rebrandea el hero:
+ * eyebrow "La mesa" → "Alimentación Consciente", H1 "Gastronomía" →
+ * "Alimentación Consciente", intro nueva. La estructura interna
+ * (Origen / Cielo / menú Marea / cartas) NO se toca esta ronda.
+ */
 export const gastronomiaHeader = {
-  eyebrow: 'La mesa',
-  titulo: 'Gastronomía',
+  eyebrow: 'Alimentación Consciente',
+  titulo: 'Alimentación Consciente',
   intro:
-    'Dos lugares, dos horas del día. Origen cocina lo que el Pacífico entrega cada mañana; Cielo lo celebra cuando el sol empieza a caer.',
+    'Comer bien es parte del descanso. Origen cocina lo que el Pacífico entrega cada mañana —sano, de temporada y con sabor— y Cielo lo acompaña cuando el sol empieza a caer.',
   hero: {
     src: '/fotos_hotel/restaurante/restaurante_11.jpeg',
     alt: 'Mesa servida del restaurante Origen frente a la bahía, bajo la luz dorada de la tarde',

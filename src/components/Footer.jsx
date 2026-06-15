@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Navegación del pie (copy §9.4, ronda 15 jun §9.2 G3): 6 entradas,
+ * IDÉNTICAS al array NAV_LINKS de Navbar.jsx. Sin "Gastronomía";
+ * "Spa" renombrado a "Wellness" (el `to` sigue /spa).
+ */
 const NAV_LINKS = [
   { to: '/', label: 'Inicio' },
   { to: '/habitaciones', label: 'Habitaciones' },
-  { to: '/gastronomia', label: 'Gastronomía' },
-  { to: '/spa', label: 'Spa' },
+  { to: '/spa', label: 'Wellness' },
   { to: '/experiencias', label: 'Experiencias' },
   { to: '/galeria', label: 'Galería' },
   { to: '/contacto', label: 'Contacto' },
@@ -43,7 +47,11 @@ export default function Footer() {
                 alt=""
                 width="96"
                 height="96"
-                className="h-20 w-20"
+                /* Proporción coherente con el logo de la Navbar (ronda
+                   15 jun G1, h-24): el footer no tiene acoplamientos de
+                   layout, solo se iguala la escala. Color por defecto del
+                   SVG (marfil sobre marino), sin filtro necesario aquí. */
+                className="h-24 w-24"
                 loading="lazy"
               />
             </Link>

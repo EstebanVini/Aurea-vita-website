@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
-/** Orden del menú fijo (brief §2.1). */
+/**
+ * Orden del menú fijo (brief §2.1, ronda 15 jun §9.2 G3): 6 entradas.
+ * Sale "Gastronomía" del menú (su contenido vive en la tarjeta
+ * "Alimentación Consciente" del Home; la ruta /gastronomia sigue
+ * accesible). "Spa" se renombra a "Wellness"; el `to` sigue /spa (D4).
+ * Este array debe mantenerse IDÉNTICO al de Footer.jsx.
+ */
 const NAV_LINKS = [
   { to: '/', label: 'Inicio' },
   { to: '/habitaciones', label: 'Habitaciones' },
-  { to: '/gastronomia', label: 'Gastronomía' },
-  { to: '/spa', label: 'Spa' },
+  { to: '/spa', label: 'Wellness' },
   { to: '/experiencias', label: 'Experiencias' },
   { to: '/galeria', label: 'Galería' },
   { to: '/contacto', label: 'Contacto' },
@@ -129,9 +134,17 @@ export default function Navbar() {
           : 'border-b border-transparent bg-transparent',
       ].join(' ')}
     >
+      {/* Altura de navbar: h-32 (128px), constante en Estado A↔B (la
+          transición §5.1 anima solo color/background, nunca altura → sin
+          CLS). Punto intermedio (cliente, 15 jun): logo 120px en barra
+          128px, más grande que el original sin ocupar tanta pantalla.
+          Fuente única de la cascada de altura (ronda 15 jun G1; logo +50%):
+          - panel móvil: pt-36 (libra 128px con holgura)
+          - Galeria.jsx: sticky top-32 (= 128px) y pt-36/lg:pt-44 del header
+          - heros interiores: pt-44 (176px) libran los 128px con aire. */}
       <nav
         aria-label="Navegación principal"
-        className="mx-auto flex h-24 max-w-[1400px] items-center justify-between px-5 sm:px-8"
+        className="mx-auto flex h-32 max-w-[1400px] items-center justify-between px-5 sm:px-8"
       >
         <Link
           to="/"
@@ -146,10 +159,15 @@ export default function Navbar() {
           <img
             src="/Logo.svg"
             alt=""
-            width="96"
-            height="96"
+            width="120"
+            height="120"
+            /* Logo más grande (ronda 15 jun G1): 120px (punto intermedio
+               elegido por el cliente) dentro del header h-32 (128px) — más
+               grande que el original (96px) sin que la barra ocupe tanta
+               pantalla. Color por filtro CSS (logo-claro/logo-marino),
+               nunca fill. */
             className={[
-              'h-20 w-20 transition-[filter] duration-300',
+              'h-[120px] w-[120px] transition-[filter] duration-300',
               onDark ? 'logo-claro' : 'logo-marino',
             ].join(' ')}
           />
@@ -168,8 +186,12 @@ export default function Navbar() {
                hero) el anillo global currentColor=marino queda de bajo
                contraste sobre la fotografía; se fuerza marfil. En Estado B
                el botón vive sobre marfil y el anillo marino es correcto. */
+            /* Botón un poco más grande (ronda 15 jun G2): a la escala de
+               los CTAs dorados de las bandas finales (min-h-[48px] px-8);
+               touch target ≥44px se conserva. Sigue siendo el único CTA
+               persistente: no se multiplican dorados en la navbar. */
             className={[
-              'eyebrow inline-flex min-h-[44px] items-center bg-dorado px-6 text-marino transition-colors duration-300 hover:bg-dorado/85',
+              'eyebrow inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85',
               onDark ? 'focus-visible:outline-marfil' : '',
             ].join(' ')}
           >
@@ -226,7 +248,9 @@ export default function Navbar() {
         <div
           id="menu-movil"
           ref={panelRef}
-          className="fixed inset-0 z-40 flex min-h-[100dvh] flex-col bg-marino px-8 pb-10 pt-28 lg:hidden"
+          /* pt-36 (144px): libra la altura de navbar h-32 (128px) con
+             holgura (ronda 15 jun G1, cascada de altura; logo 120px). */
+          className="fixed inset-0 z-40 flex min-h-[100dvh] flex-col bg-marino px-8 pb-10 pt-36 lg:hidden"
         >
           <ul className="flex flex-col gap-2">
             {NAV_LINKS.map((link) => (

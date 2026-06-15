@@ -27,16 +27,31 @@
  * nunca estos datos (copy §11).
  */
 
-/** Encabezado de la página (copy §6.1). */
+/**
+ * Encabezado de la página (copy §6.1 / §12, ronda 15 jun). Eyebrow y
+ * H1 se conservan; intro nueva (los bloques temáticos están gateados).
+ */
 export const experienciasHeader = {
   eyebrow: 'Experiencias',
   titulo: 'Maneras de pasar el día',
   intro:
-    'Dentro de la casa o bahía adentro: aquí nadie programa tu agenda, pero sí la habilitamos.',
+    'Dentro de la casa o bahía adentro: estamos dando forma a las maneras de pasar el día en Aurea Vita.',
   hero: {
     src: '/fotos_hotel/alberca/alberca_05.jpeg',
     alt: 'Alberca infinita de Aurea Vita extendiéndose hacia el horizonte del Pacífico',
   },
+};
+
+/**
+ * Mensaje "próximamente" (copy §6.1bis / §12, ronda 15 jun). Bloque
+ * visible entre la intro y la banda CTA mientras los bloques temáticos
+ * están gateados: voz de marca, sereno, sin disculparse. Sobre marfil.
+ */
+export const experienciasProximamente = {
+  eyebrow: 'Próximamente',
+  titulo: 'Estamos afinando los días',
+  texto:
+    'La alberca infinita, los atardeceres en la terraza y las salidas para descubrir Acapulco están casi listos. Preferimos contarlos cuando cada detalle esté en su sitio. Vuelve pronto; el mar, mientras tanto, sigue en su lugar.',
 };
 
 /** Bloque "Alberca infinita" (copy §6.2). */

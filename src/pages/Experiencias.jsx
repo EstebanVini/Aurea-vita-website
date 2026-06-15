@@ -10,7 +10,18 @@ import {
   descubreAcapulco,
   experienciasCta,
   experienciasHeader,
+  experienciasProximamente,
 } from '../data/experiences.js';
+
+/**
+ * Bandera reversible "en construcción" (ronda 15 jun §9.6 / D2). En true
+ * oculta los tres bloques temáticos (Alberca infinita, Atardeceres en
+ * Cielo, Descubre Acapulco) SIN borrar su JSX ni sus datos. La página
+ * NO queda en callejón sin salida (regla §2.2): conserva su hero
+ * fotográfico + intro + bloque "próximamente" + banda CTA a /contacto.
+ * Reactivar = poner en false.
+ */
+const SECCIONES_EN_CONSTRUCCION = true;
 
 /** Flecha lineal para links editoriales (sin emojis; brief: iconos SVG). */
 function ArrowIcon() {
@@ -114,6 +125,30 @@ export default function Experiencias() {
         </Reveal>
       </section>
 
+      {/* 2bis · Mensaje "próximamente" (marfil, copy §6.1bis, ronda 15
+          jun §9.6): bloque NUEVO visible entre la intro y la banda CTA
+          mientras los bloques temáticos están gateados. Voz de marca,
+          sereno; máx ~60ch. NO está gateado: garantiza que la entrada
+          "Experiencias" del menú no lleve a una página vacía.
+          Ajuste visual-designer: la intro y este bloque comparten fondo
+          marfil; el doble pt (intro pt-24 + este pt-24) abría un hueco
+          de ~12rem que los leía como dos cabeceras sueltas. Se reduce el
+          pt aquí (10/14) para que la línea dorada de la intro fluya hacia
+          el "próximamente" como una sola unidad editorial, y la banda CTA
+          (arena) sea el verdadero cambio de ritmo. */}
+      <section className="bg-marfil pb-20 pt-10 lg:pb-28 lg:pt-14">
+        <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
+          <SectionHeading
+            eyebrow={experienciasProximamente.eyebrow}
+            title={experienciasProximamente.titulo}
+          >
+            <p>{experienciasProximamente.texto}</p>
+          </SectionHeading>
+        </Reveal>
+      </section>
+
+      {!SECCIONES_EN_CONSTRUCCION && (
+        <>
       {/* 3 · Bloque "Alberca infinita" (marfil): concepto junto a la
           foto principal (foto-izq / texto-der), con el apoyo editorial
           del desayuno junto al agua bajo el párrafo. En móvil la foto
@@ -328,11 +363,12 @@ export default function Experiencias() {
           </RevealGroup>
         </div>
       </section>
+        </>
+      )}
 
-      {/* 6 · Banda CTA de cierre (copy §6.5): arena tras el marino del
-          destino — exhalación final, no un segundo bloque marino
-          pegado (patrón /habitaciones); ningún recorrido termina en
-          callejón sin salida (brief §2.2). */}
+      {/* 6 · Banda CTA de cierre (copy §6.5): arena — exhalación final;
+          ningún recorrido termina en callejón sin salida (brief §2.2).
+          NO está gateada: cierra siempre la página hacia /contacto. */}
       <section className="bg-arena py-24 lg:py-36">
         <RevealGroup
           stagger={0.12}

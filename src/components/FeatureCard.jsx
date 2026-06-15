@@ -2,10 +2,21 @@ import { Link } from 'react-router-dom';
 
 /**
  * Tarjeta del grid del Home (brief §5.3, variante simple):
- * foto 3:4 + eyebrow + título serif + texto + "Descubrir".
+ * foto 4:5 + eyebrow + título serif + texto + "Descubrir".
  * Toda la tarjeta es un único link accesible; el zoom de la foto
  * vive dentro de un contenedor con overflow oculto para que el
  * hover no provoque saltos de layout.
+ *
+ * Ratio de la foto (ronda 15 jun §9.3, ajustado por visual-designer):
+ * el cliente pidió "fotos más pequeñas para que la composición de la
+ * sección entre completa en pantalla". El paso 3:4→4:5 iba al revés
+ * (4:5 = 0.80 es MÁS alto que 3:4 = 0.75). Se corrige a 4:3 (paisaje,
+ * 1.33): cada tarjeta baja casi a la mitad de su alto, las tres + su
+ * texto editorial entran completas en un viewport de escritorio y la
+ * composición se lee como una sola unidad horizontal (eco del grid
+ * editorial de SHA). Consistente en las tres tarjetas. El recorte
+ * horizontal favorece fotos panorámicas (mesa servida, sala de masaje)
+ * sin estirarlas; habitaciones_12 conserva su object-position 62%.
  *
  * Hover (brief §5.3 y §6.5): zoom de foto a scale(1.04) + elevación
  * sutil de toda la card (translateY, no layout) con sombra suave.
@@ -31,9 +42,9 @@ export default function FeatureCard({
           height="627"
           loading="lazy"
           /* image.position permite reencuadrar fotos horizontales dentro
-             del recorte 3:4 (p. ej. centrar la cama, no la cortina) */
+             del recorte 4:3 (p. ej. centrar la cama, no la cortina) */
           style={image.position ? { objectPosition: image.position } : undefined}
-          className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
       </div>
       <div className="mt-6">
