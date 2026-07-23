@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
+import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import BookingBar from '../components/BookingBar.jsx';
 import FeatureCard from '../components/FeatureCard.jsx';
+import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { EASE_OUT, fadeRise, staggerGroup } from '../lib/motion.js';
@@ -32,6 +33,56 @@ function ArrowIcon() {
       <line x1="0" y1="6" x2="16" y2="6" />
       <polyline points="11 1 16 6 11 11" />
     </svg>
+  );
+}
+
+/**
+ * Cifra de "El destino" con count-up sutil (ronda 23 jul, pase de
+ * motion, brief §6.8 — deleite puntual): el número sube de 0 a su
+ * valor UNA sola vez cuando entra al viewport (~1.2s, EASE_OUT), con
+ * animate() de framer — sin dependencias nuevas. El sufijo no
+ * numérico ('°') se pinta estático desde el primer frame.
+ *
+ * - prefers-reduced-motion: se renderiza el valor final directo, el
+ *   efecto nunca corre.
+ * - Accesibilidad: el lector de pantalla recibe SIEMPRE el valor
+ *   final (sr-only); la cifra animada va aria-hidden para que ningún
+ *   estado intermedio se anuncie.
+ * - StrictMode-safe: el cleanup detiene la animación del primer
+ *   montaje; useInView({ once }) rearma el segundo sin duplicar.
+ */
+function StatValue({ valor }) {
+  const ref = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const [mostrado, setMostrado] = useState(0);
+
+  /* '300' → 300 + '' · '27°' → 27 + '°'. Si algún dato futuro no
+     abriera con cifra, se pinta tal cual, sin efecto. */
+  const partes = /^(\d+)(.*)$/.exec(valor);
+  const objetivo = partes ? Number(partes[1]) : null;
+  const sufijo = partes ? partes[2] : '';
+
+  useEffect(() => {
+    if (objetivo === null || reduceMotion || !inView) return undefined;
+    const controls = animate(0, objetivo, {
+      duration: 1.2,
+      ease: EASE_OUT,
+      onUpdate: (v) => setMostrado(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, objetivo, reduceMotion]);
+
+  if (objetivo === null) return valor;
+
+  return (
+    <span ref={ref}>
+      <span className="sr-only">{valor}</span>
+      <span aria-hidden="true">
+        {reduceMotion ? objetivo : mostrado}
+        {sufijo}
+      </span>
+    </span>
   );
 }
 
@@ -66,6 +117,12 @@ export default function Home() {
   );
 
   const reduceMotion = useReducedMotion();
+
+  /* Referencia estable para el parallax de la foto sticky de "El
+     destino" (ronda 23 jul, pase de motion): la foto se "pina" con
+     lg:sticky y su propio rect no sirve para medir el progreso de
+     scroll — se mide la sección completa, que fluye normal. */
+  const destinoRef = useRef(null);
 
   /* Preload del LCP del hero (aereas_11) acotado a esta ruta: antes vivía
      en index.html y se descargaba en todas las páginas. Se inyecta al
@@ -193,18 +250,23 @@ export default function Home() {
             </Link>
           </Reveal>
           <Reveal delay={0.12} className="overflow-hidden">
-            <img
-              src="/fotos_hotel/fachadas/fachadas_05.jpeg"
-              alt="Fachada de Aurea Vita entre vegetación, bañada por la luz de la tarde"
-              width="940"
-              height="627"
-              loading="lazy"
-              /* object-right: el recorte 4:5 toma la mitad derecha de la
-                 fachada (enredadera + balcones) y deja fuera el letrero
-                 "HOTEL" del costado izquierdo (brief §4.1: minimizar
-                 marcas ajenas en encuadres) */
-              className="aspect-[4/5] w-full object-cover object-right"
-            />
+            {/* Parallax sutil (ronda 23 jul, pase de motion): la foto
+                responde al scroll ±4% dentro del marco recortado del
+                Reveal — la sección deja de sentirse plana sin tocar el
+                layout. Estático con reduced-motion (useParallax). */}
+            <Parallax>
+              <img
+                src={bienvenida.foto.src}
+                alt={bienvenida.foto.alt}
+                width="1920"
+                height="1440"
+                loading="lazy"
+                /* Dron Casa 21 (ronda 23 jul): el recorte 4:5 centra la
+                   alberca y la terraza; el encuadre bajo (62%) conserva el
+                   espejo de agua y los camastros, no el cielo. */
+                className="aspect-[4/5] w-full object-cover object-[50%_62%]"
+              />
+            </Parallax>
           </Reveal>
         </div>
       </section>
@@ -241,7 +303,7 @@ export default function Home() {
           fija mientras el texto largo fluye a su lado — toda la sección
           queda visible, sin recortes. La foto usa aspect-[4/5] (más
           vertical) para sostener la columna sin estirarse. */}
-      <section className="bg-marino py-20 lg:py-32">
+      <section ref={destinoRef} className="bg-marino py-20 lg:py-32">
         <div className="mx-auto grid max-w-[1400px] gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-start lg:gap-20">
           <Reveal>
             <SectionHeading
@@ -254,7 +316,10 @@ export default function Home() {
               ))}
             </SectionHeading>
             {/* Datos en serif gigante (brief §1: "como SHA") con línea
-                fina de 1px al margen — detalle editorial deliberado (D3) */}
+                fina de 1px al margen — detalle editorial deliberado (D3).
+                Ronda 23 jul (pase de motion): cada cifra hace count-up
+                sutil al entrar al viewport, una sola vez (StatValue);
+                con reduced-motion se pinta el valor final directo. */}
             <dl className="mt-12 grid grid-cols-3 gap-5 sm:gap-8">
               {destinoStats.map((stat) => (
                 <div
@@ -265,7 +330,7 @@ export default function Home() {
                     {stat.detalle}
                   </dt>
                   <dd className="font-display text-4xl font-light leading-[1.05] text-marfil sm:text-6xl">
-                    {stat.valor}
+                    <StatValue valor={stat.valor} />
                   </dd>
                 </div>
               ))}
@@ -289,14 +354,23 @@ export default function Home() {
             delay={0.12}
             className="overflow-hidden lg:sticky lg:top-32 lg:max-h-[calc(100dvh-9rem)]"
           >
-            <img
-              src={destino.foto.src}
-              alt={destino.foto.alt}
-              width="867"
-              height="650"
-              loading="lazy"
-              className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-[calc(100dvh-9rem)] lg:max-h-[34rem]"
-            />
+            {/* Parallax sutil (ronda 23 jul, pase de motion). Caso
+                especial: este marco es lg:sticky, así que su propio rect
+                no sirve de referencia estable — se mide el <section>
+                (destinoRef), que nunca se "pina". Mientras la foto está
+                fija, la imagen deriva apenas dentro del marco: sigue
+                viva sin pelearse con el sticky. Estático con
+                reduced-motion. */}
+            <Parallax target={destinoRef}>
+              <img
+                src={destino.foto.src}
+                alt={destino.foto.alt}
+                width="1920"
+                height="1396"
+                loading="lazy"
+                className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-[calc(100dvh-9rem)] lg:max-h-[34rem]"
+              />
+            </Parallax>
           </Reveal>
         </div>
       </section>

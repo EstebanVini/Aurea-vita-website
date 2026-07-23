@@ -29,17 +29,50 @@
 
 /**
  * Encabezado de la página (copy §6.1 / §12, ronda 15 jun). Eyebrow y
- * H1 se conservan; intro nueva (los bloques temáticos están gateados).
+ * H1 se conservan. Ronda 23 jul (docs/Fotos WEB AV.pdf): hero con foto
+ * definitiva Cámara Casa 16. La intro que vivía aquí ("Te sugerimos
+ * registrarte…", texto literal del cliente que reemplazó a la vieja)
+ * se movió a `experienciasEditorial.remate` en la recomposición del
+ * 23 jul: sola en su propia sección quedaba huérfana — ahora remata la
+ * unidad editorial bajo el hero como pull-quote serif.
  */
 export const experienciasHeader = {
   eyebrow: 'Experiencias',
   titulo: 'Maneras de pasar el día',
-  intro:
-    'Dentro de la casa o bahía adentro: estamos dando forma a las maneras de pasar el día en Aurea Vita.',
   hero: {
-    src: '/fotos_hotel/alberca/alberca_05.jpeg',
-    alt: 'Alberca infinita de Aurea Vita extendiéndose hacia el horizonte del Pacífico',
+    src: '/fotos_hotel/casa/casa_16.jpeg',
+    alt: 'Mesa servida para cuatro en la terraza de Aurea Vita, con el mar tras el barandal de cristal',
   },
+};
+
+/**
+ * Bloque editorial bajo el hero (ronda 23 jul, docs/Fotos WEB AV.pdf:
+ * "AGREGAR ESTE TEXTO JUSTO DEBAJO DE LA IMAGEN"). Cuerpo literal del
+ * cliente en dos párrafos; la foto acompañante es Cámara Casa 7 (la
+ * segunda foto que el PDF asigna a esta página). El botón "Reservar
+ * experiencia" apunta por ahora a /contacto — cuando exista el
+ * calendario de citas, basta cambiar aquí el destino (si es URL
+ * externa, cambiar el <Link> por <a> en Experiencias.jsx).
+ *
+ * Recomposición ronda 23 jul: `remate` es el texto literal del cliente
+ * que reemplazó a la intro vieja ("CAMBIAR TEXTO POR"; solo se acentúa
+ * "tú"). Vivía en experienciasHeader.intro y se renderizaba solo en su
+ * propia sección, donde quedaba huérfano — ahora cierra ESTA unidad
+ * editorial como pull-quote serif entre los párrafos y el botón.
+ */
+export const experienciasEditorial = {
+  cuerpo: [
+    'En Aurea Vita no existe una forma correcta de vivir el día. Algunas mañanas invitan a caminar junto al mar, otras a permanecer en silencio con un café entre las manos. Hay quienes eligen un masaje, una lectura bajo la sombra de las palmeras, una copa de vino al atardecer o simplemente dejar que las horas transcurran sin mirar el reloj.',
+    'Aquí, las mejores experiencias no siguen un itinerario; nacen de escuchar lo que el cuerpo necesita y permitir que el océano marque el tiempo.',
+  ],
+  remate:
+    'Te sugerimos registrarte en nuestras actividades guiadas durante el día, recuerda que tú marcas el ritmo dentro de la casa.',
+  foto: {
+    src: '/fotos_hotel/casa/casa_07.jpeg',
+    alt: 'Tipi iluminado con velas y copas de vino sobre el jardín de Aurea Vita al caer la tarde',
+  },
+  boton: 'Reservar experiencia',
+  to: '/contacto',
 };
 
 /**

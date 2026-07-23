@@ -18,24 +18,41 @@ const heroSequence = staggerGroup({ stagger: 0.12, delayChildren: 0.1 });
 const heroItem = fadeRise({ y: 18, duration: 0.7 });
 
 /**
- * Página /habitaciones (brief §4.2). Estructura:
- * hero interior 70vh → intro editorial (marfil) → tres bloques de
- * categoría en orden ascendente de lujo con fondos alternados
- * (marfil → arena → marino: la Suite Aurea ocupa el "momento de
- * profundidad" de la página) → banda CTA → footer.
+ * Página /habitaciones (brief §4.2, ronda 23 jul — docs/Fotos WEB
+ * AV.pdf). Estructura: hero interior 70vh → intro editorial (marfil) →
+ * las 7 habitaciones reales de la casa → banda CTA → footer.
  *
- * Tonos por categoría: Vista Jardín (salvia, marfil), Suite Vista al
- * Mar (marino, arena) y Suite Aurea (dorado, sobre marino — la única
- * donde acento y CTA coinciden; eso la hace insignia).
+ * Ritmo de fondos: las suites (accent dorado) ocupan los "momentos de
+ * profundidad" sobre marino (brief §1.4); el resto alterna
+ * marfil/arena, con la galería espejada (reverse) en las bandas arena
+ * para sostener el ritmo editorial de la ronda anterior.
  */
 export default function Habitaciones() {
   usePageMeta(
     'Habitaciones & Suites · Aurea Vita Acapulco',
-    'Tres maneras de habitar la costa: Habitación Vista Jardín, Suite Vista al Mar y la Suite Aurea, nuestra insignia con alberca privada y vista a la bahía.',
+    'Habitaciones y suites frente al mar en Acapulco Diamante: vista al Pacífico, baño con tina, clóset de caoba y suites con cuarto de masajes privado.',
   );
 
   const reduceMotion = useReducedMotion();
-  const [vistaJardin, vistaAlMar, suiteAurea] = rooms;
+
+  /* Fondos por habitación: las suites doradas van sobre marino (tone
+     dark); las claras alternan marfil ↔ arena entre sí, invirtiendo la
+     galería en las bandas arena. El cómputo vive aquí (no en datos):
+     es presentación, no contenido. */
+  let clarasVistas = 0;
+  const secciones = rooms.map((room) => {
+    if (room.accent === 'dorado') {
+      return { room, fondo: 'bg-marino py-20 lg:py-36', dark: true, reverse: false };
+    }
+    const esArena = clarasVistas % 2 === 1;
+    clarasVistas += 1;
+    return {
+      room,
+      fondo: esArena ? 'bg-arena py-16 lg:py-28' : 'bg-marfil py-16 lg:py-28',
+      dark: false,
+      reverse: esArena,
+    };
+  });
 
   return (
     <>
@@ -45,12 +62,17 @@ export default function Habitaciones() {
         <img
           src={habitacionesHeader.hero.src}
           alt={habitacionesHeader.hero.alt}
-          width="940"
-          height="627"
+          width="1920"
+          height="1280"
           fetchPriority="high"
-          /* El recorte panorámico del hero baja el encuadre (70%): más
-             cama y menos plafón — la promesa de la página es la cama. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_70%]"
+          /* Cámara Casa 41 (ronda 23 jul). El recorte panorámico baja el
+             encuadre (60%): la cama en primer plano y el muro de madera
+             cálida — la promesa de la página sigue siendo la cama.
+             Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
+             pulso que el hero del Home — CSS puro, no retrasa el LCP,
+             contenido por el overflow-hidden del section y solo
+             motion-safe (estático con reduced-motion). */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_60%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
             ligero arriba para que la foto respire. */}
@@ -96,23 +118,18 @@ export default function Habitaciones() {
         </Reveal>
       </section>
 
-      {/* 3 · Habitación Vista Jardín (acento salvia, marfil) */}
-      <section className="bg-marfil py-16 lg:py-28">
-        <RoomCard room={vistaJardin} />
-      </section>
-
-      {/* 4 · Suite Vista al Mar (acento marino, arena, espejo) */}
-      <section className="bg-arena py-16 lg:py-28">
-        <RoomCard room={vistaAlMar} reverse />
-      </section>
-
-      {/* 5 · Suite Aurea — insignia (acento dorado sobre marino:
-          el momento de profundidad de la página, brief §1.4).
-          Padding mayor que las otras dos categorías: el aire extra
-          es parte de la jerarquía (brief §1.3). */}
-      <section className="bg-marino py-20 lg:py-36">
-        <RoomCard room={suiteAurea} tone="dark" />
-      </section>
+      {/* 3 · Las 7 habitaciones de la casa (ronda 23 jul): fondos y
+          espejado calculados arriba; las suites doradas van sobre
+          marino con el padding mayor de la insignia (brief §1.3). */}
+      {secciones.map(({ room, fondo, dark, reverse }) => (
+        <section key={room.slug} className={fondo}>
+          <RoomCard
+            room={room}
+            tone={dark ? 'dark' : 'light'}
+            reverse={reverse}
+          />
+        </section>
+      ))}
 
       {/* 6 · Banda CTA de cierre (copy §3.5): arena tras el marino de
           la insignia — exhalación final, no segundo clímax. */}

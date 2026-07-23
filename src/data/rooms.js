@@ -1,150 +1,192 @@
 /**
- * Categorías de habitaciones (docs/copy.md §3, brief §4.2).
- * Orden ascendente de lujo: Vista Jardín → Vista al Mar → Suite Aurea.
+ * Habitaciones de la casa (ronda 23 jul, docs/Fotos WEB AV.pdf).
+ * Esta ronda REEMPLAZA las 3 categorías conceptuales (Vista Jardín /
+ * Suite Vista al Mar / Suite Aurea, ver git history) por las 7
+ * habitaciones REALES que el cliente definió, con sus textos literales
+ * y las fotos definitivas de la casa (public/fotos_hotel/casa/).
  *
- * Contrato con /contacto: el botón "Reservar" de cada categoría navega a
- * `/contacto?habitacion=<slug>` y el formulario usa `formLabel` como
+ * Contrato con /contacto: el botón "Reservar" de cada habitación navega
+ * a `/contacto?habitacion=<slug>` y el formulario usa `formLabel` como
  * opción del select "Tipo de habitación" (copy §8.2).
  *
- * `accent` (brief §4.2) se aplica SOLO a elementos decorativos
- * (línea, borde del thumbnail activo, filete de specs) y al eyebrow
- * únicamente donde el contraste lo permite — los botones siguen
- * siendo dorados; en la Suite Aurea acento y CTA coinciden adrede.
+ * `accent` se aplica SOLO a elementos decorativos (línea, borde del
+ * thumbnail activo) — los botones siguen siendo dorados; en las suites
+ * acento y CTA coinciden adrede (patrón "insignia" del brief §4.2).
+ *
+ * SIN `stats`: el cliente no entregó superficies ni cupos en esta ronda
+ * y no se inventan datos (RoomCard omite el bloque si no hay stats).
+ *
+ * Fotos pendientes (PDF): Habitación Familiar y la segunda Suite con
+ * Vista al Mar usan una foto genérica temporal del set anterior,
+ * marcada con `fotoPendiente: true` — reemplazar cuando lleguen.
  *
  * Las mayúsculas de los eyebrows las pone CSS (utilidad `eyebrow`),
  * nunca estos datos (copy §11). La primera foto es la principal.
- * habitaciones_08 y habitaciones_09 están en lista negra (brief §4.8).
- * habitaciones_06 (asignada a la Suite Aurea en el brief) se retiró en
- * la revisión visual: la Torre de Tokio domina su ventana y rompe la
- * continuidad de Acapulco — daña la credibilidad premium.
- *
- * `pos` (opcional): clase de object-position que RoomCard aplica a la
- * foto en principal y thumbnail, para centrar la cama y dejar fuera
- * elementos ajenos a la paleta. Sin `pos` → object-center.
  */
 export const rooms = [
   {
-    slug: 'vista-jardin',
+    slug: 'vista-al-mar-1',
     accent: 'salvia',
-    eyebrow: 'Categoría · Vista Jardín',
-    nombre: 'Habitación Vista Jardín',
-    formLabel: 'Habitación Vista Jardín',
+    eyebrow: 'Categoría · Vista al Mar',
+    nombre: 'Habitación Vista al Mar 1',
+    formLabel: 'Habitación Vista al Mar 1',
     descripcion:
-      'La más recogida de la casa. Sus ventanales dan a los jardines interiores, donde la vegetación filtra la luz y amortigua el mundo. Es la habitación de quien viaja para leer, dormir y no mirar el reloj.',
-    stats: [
-      { valor: '45', sufijo: 'm²', detalle: 'de superficie' },
-      { valor: '2', sufijo: null, detalle: 'huéspedes' },
-    ],
+      'Habitación en planta baja con vista al mar, ideal para leer por las tardes o relajarse escuchando las olas del mar.',
     amenidades: [
-      'Cama king size con ropa de algodón egipcio',
-      'Terraza privada hacia el jardín',
-      'Regadera tipo lluvia y amenidades Spa Vita',
-      'Cafetera de prensa francesa y selección de té',
-      'Clima individual y cortinas blackout',
-      'Wifi de alta velocidad sin costo',
+      'Cama king size',
+      'Baño con tina',
+      'Amplio clóset de caoba',
+      'Mesa de masaje',
+      'Escritorio',
     ],
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_13.jpeg',
-        alt: 'Habitación Vista Jardín con cama king size y luz verde filtrada del jardín',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_11.jpeg',
-        alt: 'Detalle del área de descanso de la Habitación Vista Jardín',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_01.jpeg',
-        alt: 'Cama vestida en tonos claros en la Habitación Vista Jardín',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_04.jpeg',
-        alt: 'Rincón de lectura junto a la ventana de la Habitación Vista Jardín',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_14.jpeg',
-        alt: 'Recámara de la Habitación Vista Jardín con cama tapizada en tonos claros',
+        src: '/fotos_hotel/casa/casa_39.jpeg',
+        alt: 'Habitación Vista al Mar 1 con cama king size, cabecera de mármol iluminada y ventanal a la vegetación',
+        /* La cama y la cabecera viven en la banda central-derecha. */
+        pos: 'object-[58%_50%]',
       },
     ],
   },
   {
-    slug: 'suite-vista-al-mar',
+    slug: 'vista-al-mar-compartida-1',
     accent: 'marino',
-    eyebrow: 'Categoría · Vista al Mar',
-    nombre: 'Suite Vista al Mar',
-    formLabel: 'Suite Vista al Mar',
+    eyebrow: 'Categoría · Vista al Mar Compartida',
+    nombre: 'Habitación Vista al Mar Compartida 1',
+    formLabel: 'Habitación Vista al Mar Compartida 1',
     descripcion:
-      'Una sala, una recámara y un solo protagonista: el Pacífico. La terraza corre a lo largo de la suite, de modo que el mar acompaña desde el primer café hasta la última copa. Al anochecer, las luces de la bahía hacen el resto.',
-    stats: [
-      { valor: '68', sufijo: 'm²', detalle: 'de superficie' },
-      { valor: '2', sufijo: null, detalle: 'huéspedes' },
-    ],
+      'Habitación con balcón compartido y extraordinaria vista al mar, ideal para parejas que disfrutan el silencio y las actividades de relajación.',
     amenidades: [
-      'Terraza panorámica con camastros y mesa exterior',
-      'Sala independiente con sofá de descanso',
-      'Tina con vista al mar',
-      'Cava privada con selección de vinos mexicanos',
-      'Servicio a la habitación de Origen, de 7:00 a 23:00',
-      'Wifi de alta velocidad sin costo',
+      'Cama matrimonial',
+      'Baño con tina',
+      'Amplio clóset de caoba',
+    ],
+    cta: 'Reservar esta habitación',
+    fotos: [
+      {
+        src: '/fotos_hotel/casa/casa_46.jpeg',
+        alt: 'Habitación Vista al Mar Compartida 1 con cama matrimonial, clóset de caoba y servicio de té',
+      },
+    ],
+  },
+  {
+    slug: 'vista-al-mar-compartida-2',
+    accent: 'salvia',
+    eyebrow: 'Categoría · Vista al Mar Compartida',
+    nombre: 'Habitación Vista al Mar Compartida 2',
+    formLabel: 'Habitación Vista al Mar Compartida 2',
+    descripcion:
+      'Habitación con balcón compartido y extraordinaria vista al mar, ideal para parejas que disfrutan el silencio y las actividades de relajación.',
+    amenidades: [
+      'Cama matrimonial',
+      'Baño con tina',
+      'Amplio clóset de caoba',
+    ],
+    cta: 'Reservar esta habitación',
+    fotos: [
+      {
+        src: '/fotos_hotel/casa/casa_51.jpeg',
+        alt: 'Habitación Vista al Mar Compartida 2 con cama matrimonial, clóset de caoba y cuadro del mar',
+      },
+    ],
+  },
+  {
+    slug: 'suite-vista-al-mar-1',
+    accent: 'dorado',
+    eyebrow: 'Suite · Vista al Mar',
+    nombre: 'Suite con Vista al Mar',
+    formLabel: 'Suite con Vista al Mar 1',
+    descripcion:
+      'Amplia suite con vista al mar, cuarto de masajes privado, baño con tina y regadera de relajación, amplio clóset, sillón para leer o relajarse y la mejor vista de la casa. Déjate consentir con el ritmo del mar y relájate con la paz que produce el silencio, el viento y el mar.',
+    amenidades: [
+      'Cuarto de masajes privado',
+      'Baño con tina y regadera de relajación',
+      'Amplio clóset',
+      'Sillón para leer o relajarse',
+      'La mejor vista de la casa',
     ],
     cta: 'Reservar esta suite',
     fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_05.jpeg',
-        alt: 'Suite Vista al Mar con ventanales abiertos hacia el Pacífico',
-        /* El recorte 4:3 toma la banda izquierda: centra la cama y deja
-           fuera el escritorio rojo del costado derecho (fuera de paleta). */
-        pos: 'object-left',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_10.jpeg',
-        alt: 'Sala de estar de la Suite Vista al Mar con luz de la tarde',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_03.jpeg',
-        alt: 'Recámara de la Suite Vista al Mar en tonos marfil y arena',
-      },
-      {
-        src: '/fotos_hotel/habitaciones/habitaciones_15.jpeg',
-        alt: 'Detalle de la terraza privada de la Suite Vista al Mar',
+        src: '/fotos_hotel/casa/casa_70.jpeg',
+        alt: 'Suite con Vista al Mar: sala con sofás frente al ventanal a la playa y cuarto de masajes privado',
       },
     ],
   },
   {
-    slug: 'suite-aurea',
-    accent: 'dorado',
-    eyebrow: 'La insignia · Suite Aurea',
-    nombre: 'Suite Aurea',
-    formLabel: 'Suite Aurea',
+    slug: 'familiar',
+    accent: 'marino',
+    eyebrow: 'Categoría · Familiar',
+    nombre: 'Habitación Familiar',
+    formLabel: 'Habitación Familiar',
     descripcion:
-      'La suite que da nombre a la casa ocupa la esquina más alta del edificio, donde la bahía se ve completa. Dos recámaras, comedor propio y una terraza pensada para ver atardecer sin testigos. Quien la conoce, vuelve a pedirla por nombre.',
-    stats: [
-      { valor: '120', sufijo: 'm²', detalle: 'de superficie' },
-      { valor: '4', sufijo: null, detalle: 'huéspedes' },
-    ],
+      'Habitación familiar con vista al mar, ideal para parejas con niños, espacio diseñado para relajarse escuchando las olas del mar.',
     amenidades: [
-      'Dos recámaras con baño completo cada una',
-      'Terraza de esquina con alberca de inmersión privada',
-      'Comedor para seis y barra de servicio',
-      'Concierge dedicado durante toda la estancia',
-      'Traslados al aeropuerto incluidos',
-      'Ritual de bienvenida del Spa Vita para dos',
+      '2 camas matrimoniales',
+      'Baño con tina',
+      'Amplio clóset de caoba',
+      'Escritorio',
     ],
-    cta: 'Reservar la Suite Aurea',
+    cta: 'Reservar esta habitación',
+    /* FOTO PENDIENTE (PDF 23 jul): genérica temporal del set anterior;
+       sustituir por la definitiva cuando el cliente la entregue. */
+    fotoPendiente: true,
     fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_12.jpeg',
-        alt: 'Suite Aurea con cama amplia y vista panorámica de la bahía',
-        /* Favorece cama y terraza; recorta parte del muro de piedra. */
-        pos: 'object-[60%_50%]',
+        src: '/fotos_hotel/habitaciones/habitaciones_13.jpeg',
+        alt: 'Habitación Familiar de Aurea Vita en tonos claros (fotografía provisional)',
       },
+    ],
+  },
+  {
+    slug: 'doble-vista-al-mar-1',
+    accent: 'salvia',
+    eyebrow: 'Categoría · Vista al Mar',
+    nombre: 'Habitación Doble Vista al Mar 1',
+    formLabel: 'Habitación Doble Vista al Mar 1',
+    descripcion:
+      'Habitación doble con vista al mar, ideal para compartir experiencias con familiares, mientras el mar del Pacífico les ayuda a relajarse.',
+    amenidades: [
+      'Camas matrimoniales',
+      'Baño con tina',
+      'Amplio clóset de caoba',
+      'Escritorio ideal para juegos de mesa',
+    ],
+    cta: 'Reservar esta habitación',
+    fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_02.jpeg',
-        alt: 'Recámara principal de la Suite Aurea con textiles en tonos claros',
+        src: '/fotos_hotel/casa/casa_42.jpeg',
+        alt: 'Habitación Doble Vista al Mar 1 con dos camas vestidas de blanco y muro de madera con espejo',
       },
+    ],
+  },
+  {
+    slug: 'suite-vista-al-mar-2',
+    accent: 'dorado',
+    eyebrow: 'Suite · Vista al Mar',
+    nombre: 'Suite con Vista al Mar',
+    formLabel: 'Suite con Vista al Mar 2',
+    descripcion:
+      'Amplia suite con vista al mar, cuarto de masajes privado, baño con tina y regadera de relajación, amplio clóset, sillón para leer o relajarse y la mejor vista de la casa. Déjate consentir con el ritmo del mar y relájate con la paz que produce el silencio, el viento y el mar.',
+    amenidades: [
+      'Cuarto de masajes privado',
+      'Baño con tina y regadera de relajación',
+      'Amplio clóset',
+      'Sillón para leer o relajarse',
+      'La mejor vista de la casa',
+    ],
+    cta: 'Reservar esta suite',
+    /* FOTO PENDIENTE (PDF 23 jul): genérica temporal del set anterior;
+       sustituir por la definitiva cuando el cliente la entregue. */
+    fotoPendiente: true,
+    fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_07.jpeg',
-        alt: 'Área de estar de la Suite Aurea con luz natural',
+        src: '/fotos_hotel/habitaciones/habitaciones_05.jpeg',
+        alt: 'Suite con Vista al Mar con ventanales hacia el Pacífico (fotografía provisional)',
+        /* El recorte 4:3 toma la banda izquierda: centra la cama y deja
+           fuera el escritorio rojo del costado derecho (fuera de paleta). */
+        pos: 'object-left',
       },
     ],
   },
@@ -153,8 +195,8 @@ export const rooms = [
 /**
  * Encabezado de la página (copy §3.1 / §12). Ronda 15 jun: la `intro`
  * de una línea se expandió a dos niveles —`subtitulo` corto (bajo el
- * H1) + `cuerpo` editorial de 3 párrafos del cliente— según la
- * recomendación del ux-writer. Las 3 categorías no cambian.
+ * H1) + `cuerpo` editorial de 3 párrafos del cliente. Ronda 23 jul
+ * (docs/Fotos WEB AV.pdf): hero con foto definitiva Cámara Casa 41.
  */
 export const habitacionesHeader = {
   eyebrow: 'Descanso',
@@ -166,8 +208,8 @@ export const habitacionesHeader = {
     'Aquí, cada espacio ha sido diseñado para favorecer el descanso profundo, la relajación y la sensación de bienestar que define la esencia de Aurea Vita. Porque descansar no es solamente dormir. Es balancear los sentidos y sentirse en paz.',
   ],
   hero: {
-    src: '/fotos_hotel/habitaciones/habitaciones_02.jpeg',
-    alt: 'Interior de suite en Aurea Vita con textiles claros y luz natural',
+    src: '/fotos_hotel/casa/casa_41.jpeg',
+    alt: 'Cama vestida de blanco en primer plano frente al muro de madera de una habitación de Aurea Vita',
   },
 };
 

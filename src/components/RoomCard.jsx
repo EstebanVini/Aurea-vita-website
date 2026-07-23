@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
-import { EASE_OUT, drawLine } from '../lib/motion.js';
+import { EASE_OUT, drawLine, slideFrom } from '../lib/motion.js';
 
 /**
  * Bloque de categoría de /habitaciones (brief §4.2 y §5.3, variante
@@ -14,6 +14,10 @@ import { EASE_OUT, drawLine } from '../lib/motion.js';
  * - El bloque entero es un RevealGroup: fade + rise con stagger sutil
  *   foto → thumbnails → texto → specs → amenidades/CTA (5 ítems, el
  *   máximo del brief §6.3).
+ * - Ronda 23 jul (pase de motion): dentro del marco recortado, la foto
+ *   principal hace un glide direccional (slideFrom) — entra desde la
+ *   izquierda en las cards normales y desde la derecha con `reverse` —
+ *   para que 7 tarjetas seguidas no repitan el mismo reveal idéntico.
  * - Swap de la mini-galería: crossfade vía AnimatePresence. La foto
  *   entrante hace fade-in encima; la saliente se mantiene opaca debajo
  *   y se retira justo al terminar (sin "dip" hacia el fondo). Las dos
@@ -97,46 +101,66 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
           {/* El contenedor fija el aspect-ratio; las fotos van en
               absoluto durante el crossfade → cero layout shift. */}
           <div className="relative aspect-[4/3] w-full overflow-hidden">
-            <AnimatePresence initial={false}>
-              <motion.img
-                key={fotoActiva.src}
-                src={fotoActiva.src}
-                alt={fotoActiva.alt}
-                width="940"
-                height="705"
-                loading="lazy"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: 1,
-                  transition: {
-                    duration: reduceMotion ? 0 : SWAP_DURATION,
-                    ease: EASE_OUT,
-                  },
-                }}
-                /* La saliente queda opaca DEBAJO de la entrante y se
-                   retira al completarse el fade: crossfade sin destello
-                   del fondo a mitad de camino. */
-                exit={{
-                  opacity: 0,
-                  transition: {
-                    duration: 0,
-                    delay: reduceMotion ? 0 : SWAP_DURATION,
-                  },
-                }}
-                className={[
-                  /* `pos` por foto (rooms.js): encuadra la cama al centro
-                     y deja fuera elementos ajenos a la paleta. */
-                  'absolute inset-0 h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]',
-                  fotoActiva.pos ?? 'object-center',
-                ].join(' ')}
-              />
-            </AnimatePresence>
+            {/* Glide direccional (ronda 23 jul, pase de motion): la foto
+                entra "desde su lado" DENTRO del marco recortado — x
+                negativo con la galería a la izquierda, positivo con
+                `reverse` — mientras el RevealItem pone el fade+rise.
+                Con 7 tarjetas seguidas, la dirección alternada rompe la
+                monotonía del reveal idéntico. slideFrom no lleva opacity
+                (evita el doble-fade) y su sobre-escala que asienta a 1
+                cubre el viaje sin mostrar hueco. Clipeado: jamás genera
+                scroll lateral en móvil. Hereda el disparo del
+                RevealGroup por propagación de variants → visible desde
+                el primer frame con reduced-motion (initial={false}). */}
+            <motion.div
+              variants={slideFrom({ x: reverse ? 32 : -32 })}
+              className="absolute inset-0"
+            >
+              <AnimatePresence initial={false}>
+                <motion.img
+                  key={fotoActiva.src}
+                  src={fotoActiva.src}
+                  alt={fotoActiva.alt}
+                  width="940"
+                  height="705"
+                  loading="lazy"
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: 1,
+                    transition: {
+                      duration: reduceMotion ? 0 : SWAP_DURATION,
+                      ease: EASE_OUT,
+                    },
+                  }}
+                  /* La saliente queda opaca DEBAJO de la entrante y se
+                     retira al completarse el fade: crossfade sin destello
+                     del fondo a mitad de camino. */
+                  exit={{
+                    opacity: 0,
+                    transition: {
+                      duration: 0,
+                      delay: reduceMotion ? 0 : SWAP_DURATION,
+                    },
+                  }}
+                  className={[
+                    /* `pos` por foto (rooms.js): encuadra la cama al centro
+                       y deja fuera elementos ajenos a la paleta. */
+                    'absolute inset-0 h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]',
+                    fotoActiva.pos ?? 'object-center',
+                  ].join(' ')}
+                />
+              </AnimatePresence>
+            </motion.div>
           </div>
         </RevealItem>
         {/* Anuncia el cambio de foto a lectores de pantalla. */}
         <p aria-live="polite" className="sr-only">
           {fotoActiva.alt}
         </p>
+        {/* Ronda 23 jul: las habitaciones reales llegaron con UNA foto
+            cada una — con una sola no hay nada que intercambiar, así
+            que la tira de thumbnails solo se pinta con 2+. */}
+        {room.fotos.length > 1 && (
         <RevealItem
           as="ul"
           className={[
@@ -182,6 +206,7 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
             </li>
           ))}
         </RevealItem>
+        )}
       </div>
 
       {/* Contenido: misma anatomía en las 3 categorías para que se
@@ -227,7 +252,11 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
           </p>
         </RevealItem>
 
-        {/* Specs en serif gigante, patrón de datos del Home (brief §1). */}
+        {/* Specs en serif gigante, patrón de datos del Home (brief §1).
+            Opcionales desde la ronda 23 jul: el cliente no entregó
+            superficies/cupos de las habitaciones reales y no se
+            inventan datos — sin stats, el bloque no se pinta. */}
+        {room.stats?.length > 0 && (
         <RevealItem as="dl" className="mt-10 flex gap-10 sm:gap-14">
           {room.stats.map((stat) => (
             <div
@@ -260,6 +289,7 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
             </div>
           ))}
         </RevealItem>
+        )}
 
         {/* Amenidades con marcador lineal neutro (el acento ya vive en
             línea, filete y thumbnail — disciplina de paleta, brief §1.5).

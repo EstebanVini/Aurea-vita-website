@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { drawLine, fadeRise, staggerGroup } from '../lib/motion.js';
@@ -12,6 +13,7 @@ import {
   spaHeader,
   spaMenu,
   spaNota,
+  spaReserva,
 } from '../data/spa.js';
 
 /**
@@ -32,8 +34,11 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
 
 /**
  * Página /spa (brief §4.4). Estructura, la más "SHA" del sitio:
- * hero interior 70vh (spa_01) → filosofía de bienestar (marfil, SOLO
- * texto: el silencio visual ES el mensaje) → menú de tratamientos
+ * hero interior 70vh (spa_01) → banda de reserva anclada al hero
+ * (arena: microcopy + botón "Reservar espacio" a la derecha, como lo
+ * dibujó el cliente en docs/Fotos WEB AV.pdf, ronda 23 jul) →
+ * filosofía de bienestar (marfil, SOLO texto centrado: el silencio
+ * visual ES el mensaje) → menú de tratamientos
  * (lista tipográfica vertical, sin foto por tratamiento) → "Circuito
  * de aguas" (la ÚNICA sección de contraste de la página, en oliva en
  * lugar de marino — brief §1.4) → rituales/aromaterapia (marfil) →
@@ -71,14 +76,18 @@ export default function Spa() {
         <img
           src={spaHeader.hero.src}
           alt={spaHeader.hero.alt}
-          width="940"
-          height="627"
+          width="1920"
+          height="1492"
           fetchPriority="high"
-          /* Encuadre levemente alto (42%): el masaje sobre la camilla
-             vive en la banda central de la foto; subirlo lo aleja del
-             pie, donde el overlay denso y el título lo taparían. El
-             borde inferior queda en el mármol claro, no en el sujeto. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_42%]"
+          /* Cámara Casa 63 (ronda 23 jul). Encuadre bajo (58%): la mesa
+             de masaje con las toallas vive en la mitad inferior de la
+             foto; el borde superior recorta pantalla y plafón, no el
+             sujeto.
+             Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
+             pulso que el Home — CSS puro (no retrasa el LCP), contenido
+             por el overflow-hidden del section, solo motion-safe. En la
+             página más pausada del sitio, la penumbra respira. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_58%] motion-safe:animate-kenburns"
         />
         {/* Overlay degradado marino solo donde hay texto (brief §1.1):
             denso al pie, ligero arriba para que la penumbra serena de
@@ -121,22 +130,70 @@ export default function Spa() {
         </motion.div>
       </section>
 
+      {/* 1b · Banda de reserva anclada al hero (ronda 23 jul, docs/
+          Fotos WEB AV.pdf pág. Wellness + recomposición 23 jul): el
+          cliente dibujó el botón dorado "Reservar espacio" inmediatamente
+          bajo el hero, cargado a la derecha, rumbo al calendario de citas
+          de masajes y terapias (aún no existe: el destino vive
+          centralizado en spaReserva.to, hoy /contacto). Antes el botón
+          colgaba suelto bajo la filosofía — ahora vive aquí, con una
+          línea de microcopy que lo ancla para que no flote solo. Banda
+          arena compacta: separa el hero marino del marfil de la filosofía
+          y se lee como barra de acción, no como sección editorial. En
+          móvil microcopy y botón se apilan a la izquierda; en desktop la
+          pareja se recarga a la derecha, como en el dibujo del cliente.
+          marino/75 sobre arena = 4.80:1 (AA); botón dorado estándar. */}
+      <section className="bg-arena">
+        {/* Ronda 23 jul (pase de motion): la banda entra en dos tiempos
+            (RevealGroup, stagger 0.12) — el microcopy aterriza primero y
+            el botón dorado lo sigue un paso después, ganando su propia
+            jerarquía como remate de la barra de acción. Mismas
+            primitivas estándar: una sola vez, visible y estático con
+            reduced-motion (initial={false} en RevealGroup). Las
+            utilidades de flex del botón (shrink-0 / self-*) migran al
+            RevealItem, que ahora es el hijo del flexbox. */}
+        <RevealGroup
+          stagger={0.12}
+          className="mx-auto flex w-full max-w-[1400px] flex-col gap-6 px-5 py-10 sm:px-8 lg:flex-row lg:items-center lg:justify-end lg:gap-10 lg:py-12"
+        >
+          <RevealItem
+            as="p"
+            className="max-w-[42ch] text-base leading-relaxed text-marino/75 sm:text-lg"
+          >
+            {spaReserva.nota}
+          </RevealItem>
+          <RevealItem className="shrink-0 self-start lg:self-auto">
+            <Link
+              to={spaReserva.to}
+              className="eyebrow inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99]"
+            >
+              {spaReserva.boton}
+            </Link>
+          </RevealItem>
+        </RevealGroup>
+      </section>
+
       {/* 2 · Filosofía de bienestar (marfil, brief §4.4): bloque
-          editorial SOLO texto, máx 65ch, serif protagonista. Sin foto:
-          el silencio visual es el mensaje. Más aire que en ninguna otra
-          página. La línea decorativa va en salvia (no dorado): es el
-          hilo verde de la página, y como decorativa 1px no necesita
-          pasar contraste de texto. */}
+          editorial SOLO texto, serif protagonista. Sin foto: el
+          silencio visual es el mensaje. Más aire que en ninguna otra
+          página. Recomposición ronda 23 jul: antes el bloque iba
+          alineado a la izquierda con toda la mitad derecha vacía y el
+          botón suelto debajo — ahora es una declaración CENTRADA a lo
+          SHA (eyebrow, línea salvia y párrafo sobre el mismo eje), de
+          modo que el vacío alrededor se lee deliberado; el botón subió
+          a la banda de reserva anclada al hero. La línea decorativa va
+          en salvia (no dorado): es el hilo verde de la página, y como
+          decorativa 1px no necesita pasar contraste de texto. */}
       <section className="bg-marfil py-20 lg:py-32">
-        <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
+        <Reveal className="mx-auto max-w-[1400px] px-5 text-center sm:px-8">
           <p className="eyebrow text-marino">{spaFilosofia.eyebrow}</p>
           {/* Línea salvia: el verde se gana en lo decorativo (brief
               §4.4), no en el texto pequeño sobre claros. */}
-          <div className="mt-7 h-px w-12 bg-salvia" aria-hidden="true" />
+          <div className="mx-auto mt-7 h-px w-12 bg-salvia" aria-hidden="true" />
           {/* Texto central nuevo (ronda 15 jun §9.5): va sin H2 (copy
               §5.2), como párrafo editorial en serif protagonista —el
               silencio visual es el mensaje. */}
-          <p className="mt-8 max-w-[42ch] font-display text-2xl font-light leading-snug text-balance text-marino sm:text-3xl lg:text-4xl">
+          <p className="mx-auto mt-8 max-w-[42ch] font-display text-2xl font-light leading-snug text-balance text-marino sm:text-3xl lg:text-4xl">
             {spaFilosofia.texto}
           </p>
         </Reveal>
@@ -305,18 +362,25 @@ export default function Spa() {
             className="grid gap-5 sm:grid-cols-2 lg:order-2 lg:block"
           >
             <RevealItem className="overflow-hidden lg:w-[82%]">
-              <img
-                src={spaAromaterapia.fotos.aceites.src}
-                alt={spaAromaterapia.fotos.aceites.alt}
-                width="940"
-                height="627"
-                loading="lazy"
-                /* spa_15 es panorámica (16:9) en marco vertical 4:5: el
-                   still-life de botellas vive en la mitad inferior, bajo
-                   el arco. Encuadre bajo (66%) para conservar el bodegón
-                   y la luz de las varillas, no la pared superior vacía. */
-                className="aspect-[4/5] w-full object-cover object-[50%_66%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
-              />
+              {/* Parallax sutil (ronda 23 jul, pase de motion): solo la
+                  foto grande responde al scroll; la vela enmarcada
+                  encima queda fija — el desfase entre capas da la
+                  profundidad del collage. Estático con reduced-motion
+                  (useParallax). */}
+              <Parallax>
+                <img
+                  src={spaAromaterapia.fotos.aceites.src}
+                  alt={spaAromaterapia.fotos.aceites.alt}
+                  width="940"
+                  height="627"
+                  loading="lazy"
+                  /* spa_15 es panorámica (16:9) en marco vertical 4:5: el
+                     still-life de botellas vive en la mitad inferior, bajo
+                     el arco. Encuadre bajo (66%) para conservar el bodegón
+                     y la luz de las varillas, no la pared superior vacía. */
+                  className="aspect-[4/5] w-full object-cover object-[50%_66%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
+                />
+              </Parallax>
             </RevealItem>
             <RevealItem className="overflow-hidden lg:relative lg:z-10 lg:-mt-28 lg:ml-auto lg:w-[58%] lg:border-[10px] lg:border-marfil">
               <img

@@ -30,10 +30,31 @@ export const spaHeader = {
   eyebrow: 'Bienestar',
   titulo: 'Wellness',
   subtitulo: 'Donde el bienestar sucede de forma natural.',
+  /* Ronda 23 jul (docs/Fotos WEB AV.pdf): foto definitiva Cámara Casa 63. */
   hero: {
-    src: '/fotos_hotel/spa/spa_01.jpeg',
-    alt: 'Camilla de masaje sobre piso de mármol en el Wellness de Aurea Vita, en penumbra serena',
+    src: '/fotos_hotel/casa/casa_63.jpeg',
+    alt: 'Mesa de masaje con toallas enrolladas frente al muro de madera del Wellness de Aurea Vita',
   },
+};
+
+/**
+ * CTA de reservación de espacios (ronda 23 jul, docs/Fotos WEB AV.pdf):
+ * el cliente pidió un botón "Reservar espacio" bajo el hero que mande a
+ * un calendario de citas para masajes y terapias. El calendario AÚN NO
+ * EXISTE: mientras tanto `to` apunta a /contacto — cuando el cliente
+ * entregue la herramienta (Calendly/Odoo/etc.), basta cambiar aquí el
+ * destino (si es URL externa, cambiar el <Link> por <a> en Spa.jsx).
+ *
+ * Ronda 23 jul, recomposición: el botón dejó de colgar suelto bajo la
+ * filosofía y vive en una banda compacta anclada al hero (el cliente lo
+ * dibujó justo ahí, cargado a la derecha). `nota` es microcopy NUEVO de
+ * apoyo (no es texto del cliente): una línea serena que ancla el botón
+ * para que no flote solo en la banda.
+ */
+export const spaReserva = {
+  nota: 'Tu momento de calma también se reserva.',
+  boton: 'Reservar espacio',
+  to: '/contacto',
 };
 
 /**

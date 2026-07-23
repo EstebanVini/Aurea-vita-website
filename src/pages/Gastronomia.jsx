@@ -85,8 +85,11 @@ export default function Gastronomia() {
           height="650"
           fetchPriority="high"
           /* Encuadre levemente bajo (60%): prioriza la mesa servida y
-             el puerto sobre el techo del comedor. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_60%]"
+             el puerto sobre el techo del comedor.
+             Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
+             pulso que el Home — CSS puro (no retrasa el LCP), contenido
+             por el overflow-hidden del section, solo motion-safe. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_60%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
             ligero arriba para que la luz dorada de la foto respire. */}

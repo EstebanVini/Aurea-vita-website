@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
-import { fadeRise, staggerGroup } from '../lib/motion.js';
+import { drawLine, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
   albercaInfinita,
   atardeceres,
   descubreAcapulco,
   experienciasCta,
+  experienciasEditorial,
   experienciasHeader,
   experienciasProximamente,
 } from '../data/experiences.js';
@@ -49,14 +51,17 @@ const heroSequence = staggerGroup({ stagger: 0.12, delayChildren: 0.1 });
 const heroItem = fadeRise({ y: 18, duration: 0.7 });
 
 /**
- * Página /experiencias (brief §4.5). Estructura:
- * hero interior 70vh (alberca_05) → bloque "Alberca infinita" en
- * layout imagen/texto + strip scroll-snap de tres fotos y un apoyo
- * editorial (desayuno junto al agua) sobre marfil/arena → bloque
- * "Atardeceres en Cielo" alternado con link cruzado a /gastronomia →
- * bloque "Descubre Acapulco" sobre marino (el único momento de
- * profundidad de la página, brief §1.4: cuatro cards con foto y texto
- * marfil) → banda CTA (marino) → footer.
+ * Página /experiencias (brief §4.5, ronda 23 jul). Estructura visible:
+ * hero interior 70vh (casa_16) → unidad editorial "vivir el día"
+ * (50/50: párrafos literales del cliente + pull-quote "Te sugerimos
+ * registrarte…" + CTA "Reservar experiencia" | tipi casa_07) →
+ * "próximamente" → banda CTA (arena) → footer. Gateados mientras
+ * tanto: bloque "Alberca infinita" en layout imagen/texto + strip
+ * scroll-snap de tres fotos y un apoyo editorial (desayuno junto al
+ * agua) sobre marfil/arena → bloque "Atardeceres en Cielo" alternado
+ * con link cruzado a /gastronomia → bloque "Descubre Acapulco" sobre
+ * marino (el único momento de profundidad de la página, brief §1.4:
+ * cuatro cards con foto y texto marfil).
  *
  * En móvil los bloques se apilan SIEMPRE con la foto primero (brief
  * §4.5). Las cards del destino usan aspect-ratio fijo + object-cover
@@ -73,21 +78,24 @@ export default function Experiencias() {
 
   return (
     <>
-      {/* 1 · Hero interior (60–70vh, brief §4.5): alberca_05 es la
-          imagen más aspiracional del set alberca. LCP: sin lazy. */}
+      {/* 1 · Hero interior (60–70vh, brief §4.5): Cámara Casa 16
+          (ronda 23 jul) — la mesa servida en la terraza al atardecer.
+          LCP: sin lazy. */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-marino">
         <img
           src={experienciasHeader.hero.src}
           alt={experienciasHeader.hero.alt}
-          width="940"
-          height="627"
+          width="1920"
+          height="1280"
           fetchPriority="high"
-          /* Encuadre apenas bajo del centro (52%): conserva las palapas
-             y la palmera focal (tercio medio) y deja el agua turquesa al
-             pie, donde se asienta el texto marfil sobre el overlay denso.
-             A 60% en desktop panorámico se perdían las copas y quedaba
-             casi solo agua; 52% sostiene la arquitectura del encuadre. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_52%]"
+          /* Encuadre bajo del centro (58%): la mesa servida y las sillas
+             de mimbre viven en la mitad inferior; arriba queda el mar
+             tras el cristal, donde el overlay ligero deja respirar la
+             hora dorada.
+             Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
+             pulso que el Home — CSS puro (no retrasa el LCP), contenido
+             por el overflow-hidden del section, solo motion-safe. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_58%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
             ligero arriba para que la luz del agua respire. AA del
@@ -114,28 +122,90 @@ export default function Experiencias() {
         </motion.div>
       </section>
 
-      {/* 2 · Intro editorial (marfil): serif grande, la exhalación
-          entre la inmersión del hero y la lectura (brief §1.3). */}
-      <section className="bg-marfil pt-16 lg:pt-24">
-        <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
-          <p className="max-w-3xl font-display text-2xl font-light leading-snug text-balance text-marino sm:text-3xl lg:text-4xl">
-            {experienciasHeader.intro}
-          </p>
-          <div className="mt-9 h-px w-12 bg-dorado" aria-hidden="true" />
-        </Reveal>
+      {/* 2 · Unidad editorial "vivir el día" (ronda 23 jul, docs/Fotos
+          WEB AV.pdf: texto del cliente JUSTO debajo de la imagen;
+          recomposición 23 jul). Antes eran DOS secciones: este 50/50 y,
+          aparte, la línea "Te sugerimos registrarte…" sola con su línea
+          dorada — que se leía huérfana, una frase flotando con media
+          pantalla vacía. Ahora es UNA sola unidad editorial (patrón
+          "Descubre Aurea Vita" del Home): los dos párrafos del cliente
+          abren, la sugerencia de registro remata como pull-quote serif
+          con pleca dorada, y el CTA "Reservar experiencia" cierra la
+          columna con esa frase como ancla; Cámara Casa 7 (el tipi al
+          atardecer) sostiene la columna visual a la derecha. En móvil el
+          texto abre la sección (aquí el texto ES el contenido pedido) y
+          el tipi la cierra como pausa visual antes del "próximamente". */}
+      <section className="bg-marfil py-16 lg:py-24">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
+          <Reveal>
+            {/* La línea dorada que abre la unidad editorial se DIBUJA de
+                izquierda a derecha (drawLine, §6.8 — ronda 23 jul, pase
+                de motion): el deleite puntual de /experiencias, mismo
+                vocabulario que la Suite Aurea y el menú "Marea". Hereda
+                el disparo del Reveal por propagación de variants →
+                visible desde el primer frame con reduced-motion
+                (initial={false} en Reveal). */}
+            <motion.div
+              variants={drawLine({ duration: 0.9, delay: 0.2 })}
+              className="h-px w-12 origin-left bg-dorado"
+              aria-hidden="true"
+            />
+            <div className="mt-9 max-w-[65ch] space-y-5 text-base leading-relaxed text-marino/80 sm:text-lg">
+              {experienciasEditorial.cuerpo.map((parrafo) => (
+                <p key={parrafo}>{parrafo}</p>
+              ))}
+            </div>
+            {/* Pull-quote serif con pleca dorada (mismo vocabulario que
+                la nota de /spa, allí en salvia): el texto literal del
+                cliente que antes vivía solo en su propia sección. El
+                salto de escala serif + la pleca lo marcan como remate,
+                y de paso ancla el botón que viene debajo. */}
+            <p className="mt-10 max-w-[38ch] border-l-2 border-dorado pl-6 font-display text-2xl font-light leading-snug text-balance text-marino sm:pl-8 sm:text-3xl">
+              {experienciasEditorial.remate}
+            </p>
+            {/* CTA al calendario de citas (hoy /contacto; ver nota en
+                data/experiences.js). */}
+            <Link
+              to={experienciasEditorial.to}
+              className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99]"
+            >
+              {experienciasEditorial.boton}
+            </Link>
+          </Reveal>
+          <Reveal delay={0.12} className="overflow-hidden">
+            {/* Parallax sutil (ronda 23 jul, pase de motion): el tipi
+                responde al scroll ±4% dentro del marco recortado del
+                Reveal — el wrapper lleva el parallax y el img conserva
+                su zoom de hover CSS sin conflicto de transforms.
+                Estático con reduced-motion (useParallax). */}
+            <Parallax>
+              <img
+                src={experienciasEditorial.foto.src}
+                alt={experienciasEditorial.foto.alt}
+                width="1452"
+                height="1364"
+                loading="lazy"
+                /* casa_07 es casi cuadrada: el recorte 4:5 conserva el tipi
+                   completo con las palmeras al fondo. */
+                className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
+              />
+            </Parallax>
+          </Reveal>
+        </div>
       </section>
 
       {/* 2bis · Mensaje "próximamente" (marfil, copy §6.1bis, ronda 15
-          jun §9.6): bloque NUEVO visible entre la intro y la banda CTA
-          mientras los bloques temáticos están gateados. Voz de marca,
-          sereno; máx ~60ch. NO está gateado: garantiza que la entrada
-          "Experiencias" del menú no lleve a una página vacía.
-          Ajuste visual-designer: la intro y este bloque comparten fondo
-          marfil; el doble pt (intro pt-24 + este pt-24) abría un hueco
-          de ~12rem que los leía como dos cabeceras sueltas. Se reduce el
-          pt aquí (10/14) para que la línea dorada de la intro fluya hacia
-          el "próximamente" como una sola unidad editorial, y la banda CTA
-          (arena) sea el verdadero cambio de ritmo. */}
+          jun §9.6): bloque visible entre la unidad editorial y la banda
+          CTA mientras los bloques temáticos están gateados. Voz de
+          marca, sereno; máx ~60ch. NO está gateado: garantiza que la
+          entrada "Experiencias" del menú no lleve a una página vacía.
+          Recomposición 23 jul: la sección suelta de la intro desapareció
+          (su texto remata ahora la unidad editorial de arriba), así que
+          este bloque sigue a la unidad editorial directamente. Comparten
+          fondo marfil: se conserva el pt reducido (10/14) para que el
+          marfil se lea continuo — del tipi al "próximamente" sin hueco
+          de cabeceras sueltas — y la banda CTA (arena) siga siendo el
+          verdadero cambio de ritmo. */}
       <section className="bg-marfil pb-20 pt-10 lg:pb-28 lg:pt-14">
         <Reveal className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <SectionHeading
