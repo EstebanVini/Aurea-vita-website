@@ -4,9 +4,9 @@ import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import BookingBar from '../components/BookingBar.jsx';
 import FeatureCard from '../components/FeatureCard.jsx';
-import HeroVideo from '../components/HeroVideo.jsx';
 import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
+import VideoBucle from '../components/VideoBucle.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { EASE_OUT, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
@@ -155,16 +155,17 @@ export default function Home() {
   return (
     <>
       {/* 1 · Hero fullscreen (brief §3). Ronda fotos jul 2026: el fondo
-          es video (2 clips del cliente en bucle secuencial, HeroVideo);
-          el poster del clip 1 es el LCP: sin lazy. El bloque de texto
-          sigue anclado al tercio superior: ahí los clips tienen cielo
-          despejado, ideal para el marfil (brief §3.1). overflow-hidden
-          contiene el fondo, como contenía el Ken Burns (§6.8). */}
+          es video (2 clips del cliente en bucle secuencial, VideoBucle
+          en modo prioridad); el poster del clip 1 es el LCP: sin lazy.
+          El bloque de texto sigue anclado al tercio superior: ahí los
+          clips tienen cielo despejado, ideal para el marfil (brief
+          §3.1). overflow-hidden contiene el fondo, como contenía el Ken
+          Burns (§6.8). */}
       <section className="relative flex min-h-[100dvh] flex-col justify-start overflow-hidden bg-marino pt-[max(20vh,9rem)]">
         {/* Con prefers-reduced-motion NO se reproduce video (brief §6):
             queda la foto aérea estática de siempre — su Ken Burns ya era
             motion-safe, así que aquí nunca corre. En modo motion,
-            HeroVideo pinta el poster de inmediato y funde el video
+            VideoBucle pinta el poster de inmediato y funde el video
             encima cuando de verdad reproduce. */}
         {reduceMotion ? (
           <img
@@ -176,7 +177,7 @@ export default function Home() {
             className="absolute inset-0 h-full w-full object-cover object-[28%_50%] motion-safe:animate-kenburns md:object-center"
           />
         ) : (
-          <HeroVideo />
+          <VideoBucle prioridad />
         )}
         {/* QA video hero (P1, jul 2026 — WCAG 1.4.3): la zona del texto
             en el poster y el clip 01 es cielo claro casi uniforme (luma
@@ -423,24 +424,39 @@ export default function Home() {
           scroll-snap de alberca/terraza) ELIMINADA en la ronda 15 jun
           (§9.3): JSX retirado de Home y `momentosFotos` de home.js. */}
 
-      {/* 6 · Banda CTA final de reserva (foto con overlay marino).
-          Momento de deleite permitido (§6.8): la foto asienta de
-          scale 1.08 → 1.0 al entrar al viewport, una sola vez. Ronda 15
-          jun (§9.3): texto de apoyo nuevo (centralizado en home.js); el
-          botón ya está a la escala G2 (min-h-[48px] px-8). */}
+      {/* 6 · Banda CTA final de reserva. Ronda 28 jul (pedido del
+          cliente): en modo motion el fondo son los MISMOS dos clips del
+          hero en bucle secuencial (VideoBucle, modo lazy: nada descarga
+          hasta que la banda entra al viewport — y aun entonces sale del
+          caché del hero). La banda conserva su alto de siempre (py-28 /
+          lg:py-40): los clips se recortan con object-cover y no importa
+          (acordado con el cliente). aereas_09 queda como poster del
+          video y como fondo estático con prefers-reduced-motion (brief
+          §6) — ese camino sustituye al deleite de scale 1.08 → 1.0 que
+          traía la foto (§6.8): el movimiento ahora lo pone el video.
+          Ronda 15 jun (§9.3): texto de apoyo centralizado en home.js;
+          el botón ya está a la escala G2 (min-h-[48px] px-8). */}
       <section className="relative overflow-hidden bg-marino">
-        <motion.img
-          src={ctaFinal.foto.src}
-          alt={ctaFinal.foto.alt}
-          width="940"
-          height="529"
-          loading="lazy"
-          initial={reduceMotion ? false : { scale: 1.08 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 1.4, ease: EASE_OUT }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        {reduceMotion ? (
+          <img
+            src={ctaFinal.foto.src}
+            alt={ctaFinal.foto.alt}
+            width="940"
+            height="529"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          <VideoBucle
+            poster={{
+              src: ctaFinal.foto.src,
+              alt: ctaFinal.foto.alt,
+              width: 940,
+              height: 529,
+            }}
+            etiquetaBoton="video de fondo de la banda de reserva"
+          />
+        )}
         {/* QA 15 jun (P1): aereas_09 tiene un cielo amplio muy claro
             (no un glint puntual); el texto centrado lo cruza. El flat
             marino/60 dejaba el cuerpo (marfil/85) en 3.14:1 y el eyebrow
@@ -451,7 +467,11 @@ export default function Home() {
             (regla dura: dorado como texto solo sobre marino). /78 deja el
             cuerpo (marfil/85) en ~4.6:1 incluso sobre el pixel de cielo
             más claro; el eyebrow dorado, que ningún overlay lleva a 4.5:1
-            sobre claro, se apoya en el halo marino del text-shadow. */}
+            sobre claro, se apoya en el halo marino del text-shadow.
+            Ronda 28 jul: el overlay pasa a cubrir también los clips de
+            video — que comparten el problema (el QA del hero midió luma
+            198–205 en el cielo del clip 01) — así que /78 sigue siendo
+            el piso correcto con fondo en movimiento. */}
         <div className="absolute inset-0 bg-marino/78" aria-hidden="true" />
         <RevealGroup
           stagger={0.12}

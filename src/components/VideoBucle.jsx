@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/* Clips definitivos del hero del Home (ronda fotos cliente jul 2026):
-   secuencia infinita 01 → 02 → 01 → … Cada <video> mantiene su src fijo
-   durante toda la vida del componente; el secuenciador solo alterna
-   cuál es el "activo". QA video hero (P2): existe rendition móvil
-   960×540 de cada clip — el par se elige UNA sola vez al montar con
-   matchMedia (sin live-switching: cambiar de par a mitad de bucle
-   reiniciaría la secuencia y no lo vale por un resize). */
+/* Clips definitivos del video de marca (ronda fotos cliente jul 2026),
+   compartidos por las dos bandas de video del Home — hero y CTA final
+   (ronda 28 jul): secuencia infinita 01 → 02 → 01 → … Cada <video>
+   mantiene su src fijo durante toda la vida del componente; el
+   secuenciador solo alterna cuál es el "activo". QA video hero (P2):
+   existe rendition móvil 960×540 de cada clip — el par se elige UNA
+   sola vez al montar con matchMedia (sin live-switching: cambiar de par
+   a mitad de bucle reiniciaría la secuencia y no lo vale por un
+   resize). */
 const CLIPS_ESCRITORIO = ['/videos/hero_01.mp4', '/videos/hero_02.mp4'];
 const CLIPS_MOVIL = [
   '/videos/hero_01_movil.mp4',
@@ -17,11 +19,20 @@ const CLIPS_MOVIL = [
    resto del hero. */
 const MEDIA_MOVIL = '(max-width: 767px)';
 
-/* Primer frame del clip 01, 1920w (sirve para ambas renditions): es el
-   LCP del Home en modo motion (Home inyecta su <link rel="preload">).
-   Como el clip 01 abre exactamente en este frame, el fade-in del video
-   sobre el poster es invisible. */
-const POSTER = '/videos/hero_poster.jpeg';
+/* Poster por defecto (el del hero): primer frame del clip 01, 1920w
+   (sirve para ambas renditions) — es el LCP del Home en modo motion
+   (Home inyecta su <link rel="preload"> con este mismo path). Como el
+   clip 01 abre exactamente en este frame, el fade-in del video sobre el
+   poster es invisible. Otras instancias (la banda CTA final) pasan su
+   propia foto vía la prop `poster`; ahí el fundido foto → clip SÍ se ve,
+   pero es el crossfade de 700ms bajo su overlay marino — suave a
+   propósito. */
+const POSTER_DEFECTO = {
+  src: '/videos/hero_poster.jpeg',
+  alt: 'Entrada principal de Aurea Vita entre palmeras al atardecer, con la iluminación cálida encendida y el Pacífico al fondo',
+  width: 1920,
+  height: 1080,
+};
 
 /* Fundido de 700ms, dentro de la ventana 0.5–0.8s acordada. QA video
    hero (P3): el crossfade es DIRECCIONAL para que el poster nunca
@@ -71,11 +82,29 @@ function IconoPlay() {
 }
 
 /**
- * Fondo de video del hero del Home (ronda fotos cliente jul 2026).
- * Reemplaza a la foto aérea estática SOLO en modo motion: con
- * prefers-reduced-motion Home ni siquiera monta este componente y
- * conserva aereas_11 estática (brief §6: nada se mueve si el usuario
- * pidió que nada se mueva).
+ * Fondo de video en bucle secuencial (antes `HeroVideo`, ronda fotos
+ * cliente jul 2026; generalizado en la ronda 28 jul para servir también
+ * a la banda CTA final del Home). Reemplaza a la foto estática SOLO en
+ * modo motion: con prefers-reduced-motion Home ni siquiera monta este
+ * componente y conserva la foto de siempre (brief §6: nada se mueve si
+ * el usuario pidió que nada se mueva).
+ *
+ * Props:
+ * - `poster`: { src, alt, width, height } de la foto que pinta debajo
+ *   del video (default: el poster del hero). El marco lo pone el padre
+ *   (sección relative + overflow-hidden); el stack es absolute inset-0
+ *   con object-cover, así que respeta el alto que dicte el contenido de
+ *   la sección — los clips se recortan lo que haga falta.
+ * - `prioridad`: true SOLO en el hero, donde el poster es el LCP
+ *   (fetchPriority high, clip 01 con autoPlay + preload auto). En false
+ *   (CTA, bajo el fold) el poster va lazy, ambos clips montan con
+ *   preload="none" y NADA se descarga ni reproduce hasta que el
+ *   IntersectionObserver ve la banda y sincronizar() dispara el primer
+ *   play() — que en la práctica sale del caché HTTP: son los mismos
+ *   archivos que el hero ya bajó.
+ * - `etiquetaBoton`: sustantivo para el aria-label del control de pausa
+ *   ("video de fondo" por defecto); las dos instancias del Home lo
+ *   diferencian para que sus botones no compartan nombre accesible.
  *
  * Estructura del stack (todo absolute inset-0 object-cover; los scrims
  * y el texto del hero viven en Home y quedan encima por orden de
@@ -120,7 +149,11 @@ function IconoPlay() {
  * justo terminó estando oculto, el avance quedó pendiente y
  * sincronizar() lo retoma (caso `ended`).
  */
-export default function HeroVideo() {
+export default function VideoBucle({
+  poster = POSTER_DEFECTO,
+  prioridad = false,
+  etiquetaBoton = 'video de fondo',
+}) {
   /* Marco observado por el IntersectionObserver (envuelve el stack). */
   const marcoRef = useRef(null);
   const videoRefs = useRef([]);
@@ -205,7 +238,11 @@ export default function HeroVideo() {
     [clips],
   );
 
-  /* Pausa/reanudación según viewport y visibilidad de la pestaña. */
+  /* Pausa/reanudación según viewport y visibilidad de la pestaña. Sin
+     `prioridad` este efecto es además el ARRANQUE del bucle: el clip 01
+     monta sin autoPlay y con preload="none", así que el primer play()
+     real lo dispara sincronizar() cuando la banda entra al viewport
+     (play() sobre un video sin datos inicia la descarga él solo). */
   useEffect(() => {
     if (fallo) return undefined;
     const marco = marcoRef.current;
@@ -305,15 +342,19 @@ export default function HeroVideo() {
   return (
     <>
       <div ref={marcoRef} className="absolute inset-0">
-        {/* Poster = LCP (preload inyectado por Home): pinta de inmediato
-            mientras los clips descargan. object-center (no el 28% de la
-            foto aérea): la entrada del hotel está centrada en el frame. */}
+        {/* Poster: pinta de inmediato mientras los clips descargan. En
+            la instancia prioritaria es el LCP (preload inyectado por
+            Home, fetchPriority high); en las demás va lazy — bajo el
+            fold no compite con nada. object-center en ambas: la entrada
+            del hotel está centrada en el frame del hero y la foto del
+            CTA ya vivía con el encuadre por defecto. */}
         <img
-          src={POSTER}
-          alt="Entrada principal de Aurea Vita entre palmeras al atardecer, con la iluminación cálida encendida y el Pacífico al fondo"
-          width="1920"
-          height="1080"
-          fetchPriority="high"
+          src={poster.src}
+          alt={poster.alt}
+          width={poster.width}
+          height={poster.height}
+          fetchPriority={prioridad ? 'high' : undefined}
+          loading={prioridad ? undefined : 'lazy'}
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         {!fallo &&
@@ -331,8 +372,13 @@ export default function HeroVideo() {
                 src={src}
                 muted
                 playsInline
-                autoPlay={indice === 0}
-                preload={indice === 0 ? 'auto' : 'none'}
+                /* Solo la instancia prioritaria autoarranca y precarga
+                   el clip 01; en modo lazy ambos clips esperan en
+                   preload="none" al primer sincronizar() (ver efecto de
+                   visibilidad) y el 02 se promueve igual que siempre en
+                   el primer 'playing'. */
+                autoPlay={prioridad && indice === 0}
+                preload={prioridad && indice === 0 ? 'auto' : 'none'}
                 disablePictureInPicture
                 disableRemotePlayback
                 aria-hidden="true"
@@ -367,8 +413,8 @@ export default function HeroVideo() {
           onClick={alternarPausa}
           aria-label={
             mostrandoPlay
-              ? 'Reproducir video de fondo'
-              : 'Pausar video de fondo'
+              ? `Reproducir ${etiquetaBoton}`
+              : `Pausar ${etiquetaBoton}`
           }
           className="absolute bottom-6 right-5 z-20 flex h-11 w-11 items-center justify-center bg-marino/40 text-marfil backdrop-blur-sm transition-colors duration-300 hover:bg-marino/60 focus-visible:outline-marfil sm:right-8"
         >
