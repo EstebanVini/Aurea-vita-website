@@ -4,6 +4,7 @@ import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import BookingBar from '../components/BookingBar.jsx';
 import FeatureCard from '../components/FeatureCard.jsx';
+import HeroVideo from '../components/HeroVideo.jsx';
 import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
@@ -86,19 +87,19 @@ function StatValue({ valor }) {
   );
 }
 
-/* Secuencia de carga del hero (brief §6.1): H1 → subtítulo →
-   indicador, con stagger de ~120ms; la BookingBar cierra la secuencia.
-   Variants compartidos de src/lib/motion.
-   Ronda 15 jun (§9.3): el eyebrow superior se eliminó, así que la
-   secuencia perdió su primer hijo. Los tres hijos del hero entran ahora
-   a 0.10s / 0.22s / 0.34s (delayChildren 0.1 + stagger 0.12). La
-   BookingBar baja su delay de 0.55s a 0.46s para seguir al indicador a
-   un paso de stagger (0.34 + 0.12), no con el hueco de ~0.21s que dejó
-   quitar el eyebrow. Total ~1.16s: sigue < 1.2s y la entrada se lee como
-   una sola exhalación, sin que la barra arranque tarde. */
+/* Secuencia de carga del hero (brief §6.1): H1 → subtítulo, con
+   stagger de ~120ms; la BookingBar cierra la secuencia. Variants
+   compartidos de src/lib/motion.
+   Ronda 15 jun (§9.3): el eyebrow superior se eliminó. Ronda 28 jul:
+   el indicador de scroll (línea dorada en loop) se quitó a pedido del
+   cliente, así que la secuencia quedó en dos hijos, a 0.10s / 0.22s
+   (delayChildren 0.1 + stagger 0.12). La BookingBar baja su delay de
+   0.46s a 0.34s para seguir al subtítulo a un paso de stagger
+   (0.22 + 0.12) y no heredar el hueco del indicador. Total ~1.04s y
+   la entrada se sigue leyendo como una sola exhalación. */
 const heroSequence = staggerGroup({ stagger: 0.12, delayChildren: 0.1 });
 const heroItem = fadeRise({ y: 18, duration: 0.7 });
-const bookingBarEntrance = fadeRise({ y: 16, duration: 0.7, delay: 0.46 });
+const bookingBarEntrance = fadeRise({ y: 16, duration: 0.7, delay: 0.34 });
 
 /**
  * Página de inicio (brief §3 y §4.1, ronda 15 jun §9.3). Estructura en
@@ -124,40 +125,78 @@ export default function Home() {
      scroll — se mide la sección completa, que fluye normal. */
   const destinoRef = useRef(null);
 
-  /* Preload del LCP del hero (aereas_11) acotado a esta ruta: antes vivía
-     en index.html y se descargaba en todas las páginas. Se inyecta al
-     montar y se retira al desmontar para no afectar a las rutas interiores
-     (brief §3.3: head-start del LCP solo donde es el LCP). */
+  /* Preload del LCP del hero acotado a esta ruta: antes vivía en
+     index.html y se descargaba en todas las páginas. Se inyecta al
+     montar y se retira al desmontar para no afectar a las rutas
+     interiores (brief §3.3: head-start del LCP solo donde es el LCP).
+     Ronda fotos jul 2026: el LCP depende del modo — poster del video en
+     motion, aereas_11 con reduced-motion (el hero de video ni se
+     monta). QA video hero (P3): useReducedMotion de framer-motion 12 NO
+     se actualiza en vivo (useState con el valor inicial de la media
+     query; hay un TODO al respecto en su fuente), así que la
+     dependencia es formalmente correcta pero inerte dentro de un
+     montaje: si la preferencia cambia con la página abierta, el link no
+     se reinyecta hasta el siguiente montaje — igual que el resto de
+     ramas reduceMotion del árbol. */
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'preload';
     link.as = 'image';
-    link.href = '/fotos_hotel/aereas/aereas_11.jpeg';
+    link.href = reduceMotion
+      ? '/fotos_hotel/aereas/aereas_11.jpeg'
+      : '/videos/hero_poster.jpeg';
     link.setAttribute('fetchpriority', 'high');
     document.head.appendChild(link);
     return () => {
       document.head.removeChild(link);
     };
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <>
-      {/* 1 · Hero fullscreen (brief §3) — la foto es el LCP: sin lazy */}
-      {/* El bloque de texto se ancla al tercio superior: ahí aereas_11
-          tiene mar abierto despejado, ideal para el marfil (brief §3.1).
-          overflow-hidden contiene el Ken Burns de la foto (§6.8). */}
+      {/* 1 · Hero fullscreen (brief §3). Ronda fotos jul 2026: el fondo
+          es video (2 clips del cliente en bucle secuencial, HeroVideo);
+          el poster del clip 1 es el LCP: sin lazy. El bloque de texto
+          sigue anclado al tercio superior: ahí los clips tienen cielo
+          despejado, ideal para el marfil (brief §3.1). overflow-hidden
+          contiene el fondo, como contenía el Ken Burns (§6.8). */}
       <section className="relative flex min-h-[100dvh] flex-col justify-start overflow-hidden bg-marino pt-[max(20vh,9rem)]">
-        {/* Ken Burns muy lento (scale 1 → 1.06 en ~22s), solo motion-safe */}
-        <img
-          src="/fotos_hotel/aereas/aereas_11.jpeg"
-          alt="Costa turquesa y cielo despejado del Pacífico desde el aire"
-          width="867"
-          height="650"
-          fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[28%_50%] motion-safe:animate-kenburns md:object-center"
-        />
+        {/* Con prefers-reduced-motion NO se reproduce video (brief §6):
+            queda la foto aérea estática de siempre — su Ken Burns ya era
+            motion-safe, así que aquí nunca corre. En modo motion,
+            HeroVideo pinta el poster de inmediato y funde el video
+            encima cuando de verdad reproduce. */}
+        {reduceMotion ? (
+          <img
+            src="/fotos_hotel/aereas/aereas_11.jpeg"
+            alt="Costa turquesa y cielo despejado del Pacífico desde el aire"
+            width="867"
+            height="650"
+            fetchPriority="high"
+            className="absolute inset-0 h-full w-full object-cover object-[28%_50%] motion-safe:animate-kenburns md:object-center"
+          />
+        ) : (
+          <HeroVideo />
+        )}
+        {/* QA video hero (P1, jul 2026 — WCAG 1.4.3): la zona del texto
+            en el poster y el clip 01 es cielo claro casi uniforme (luma
+            media 198–205), mucho más claro que el agua de aereas_11
+            para la que se calibraron estos scrims. Medido con la
+            composición exacta de ambos gradientes: subtítulo desktop
+            2.6–3.3:1 (AA pide 4.5:1), H1 móvil 1.8–2.4:1 (pide 3:1),
+            subtítulo móvil 1.7–2.2:1. En modo video el scrim vertical
+            refuerza su tramo superior (45→60 el ancla, 20→40 el via);
+            la foto de reduced-motion conserva los valores originales,
+            con los que ya medía ~5.4:1. Cierre del residual (re-QA):
+            con via/35 el subtítulo quedaba en 4.1:1 sobre el frame
+            claro sostenido del clip 01 — via/40 + subtítulo en marfil
+            sólido (antes /90, abajo) lo suben por encima de 4.5:1. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/45 via-marino/20 to-marino/35"
+          className={`absolute inset-0 ${
+            reduceMotion
+              ? 'bg-linear-to-b from-marino/45 via-marino/20 to-marino/35'
+              : 'bg-linear-to-b from-marino/60 via-marino/40 to-marino/35'
+          }`}
           aria-hidden="true"
         />
         {/* Scrim lateral solo bajo el bloque de texto (brief §1.1: overlay
@@ -175,6 +214,20 @@ export default function Home() {
           className="absolute inset-0 bg-linear-to-r from-marino/60 via-marino/30 to-transparent"
           aria-hidden="true"
         />
+        {/* QA video hero (P1, jul 2026): en móvil el bloque de texto
+            ocupa todo el ancho y el scrim lateral se agota antes de
+            cubrirlo, así que el H1 cruzaba el cielo claro del clip casi
+            sin refuerzo (1.8–2.4:1, ver medición arriba). Scrim
+            superior dedicado, solo < md y solo en modo video: marino/65
+            → transparente hasta ~55dvh — la franja que ocupa el texto
+            con pt-[max(20vh,9rem)]. La mitad inferior del clip queda
+            limpia (brief §1.1: overlay solo donde hay texto encima). */}
+        {!reduceMotion && (
+          <div
+            className="absolute inset-x-0 top-0 h-[55dvh] bg-linear-to-b from-marino/65 to-transparent md:hidden"
+            aria-hidden="true"
+          />
+        )}
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
@@ -197,19 +250,10 @@ export default function Home() {
           </motion.h1>
           <motion.p
             variants={heroItem}
-            className="mt-6 max-w-2xl text-lg text-marfil/90 [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
+            className="mt-6 max-w-2xl text-lg text-marfil [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
           >
             {heroHome.subtitulo}
           </motion.p>
-          {/* Indicador de scroll: línea dorada que se dibuja y desvanece
-              en loop lento — el único loop permitido (brief §6) */}
-          <motion.div variants={heroItem} className="mt-14">
-            <span className="sr-only">Desplázate para descubrir</span>
-            <span
-              aria-hidden="true"
-              className="ml-1 block h-14 w-px origin-top bg-dorado motion-safe:animate-scroll-pulse"
-            />
-          </motion.div>
         </motion.div>
       </section>
 
