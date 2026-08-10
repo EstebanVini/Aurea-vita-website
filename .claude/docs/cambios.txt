@@ -1,0 +1,6 @@
+1. Utilizar el public/videos/CLIP 9.mp4 como la "Entrada", pero además quiero que quites el filtro azul verdoso
+
+2. Analiza las fotos que están en el directorio public/fotos_definitivas y clasifícalas según la parte del hotel al que pertenezcan
+
+3. Cambia las fotos de la galería de fotos y de la página web en general por las que están en public/fotos_definitivas (quita todas las fotos que pertenezcan a public/fotos_hotel esas son fotos demo. También si hay de esas fotos en algún otro lado de la págna web, necesito que las cambies por fotos deinitivas)
+
