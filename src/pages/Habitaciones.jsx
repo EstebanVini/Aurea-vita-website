@@ -62,10 +62,11 @@ export default function Habitaciones() {
         <img
           src={habitacionesHeader.hero.src}
           alt={habitacionesHeader.hero.alt}
-          width="1920"
-          height="1280"
+          width="1600"
+          height="1066"
           fetchPriority="high"
-          /* Cámara Casa 41 (ronda 23 jul). El recorte panorámico baja el
+          /* Encuadre heredado (la nota citaba «Cámara Casa 41», que ya no
+             es esta foto: el hero es habitaciones_03). El recorte baja el
              encuadre (60%): la cama en primer plano y el muro de madera
              cálida — la promesa de la página sigue siendo la cama.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
@@ -75,9 +76,18 @@ export default function Habitaciones() {
           className="absolute inset-0 h-full w-full object-cover object-[50%_60%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
-            ligero arriba para que la foto respire. */}
+            ligero arriba para que la foto respire.
+            RECALIBRADO (QA ago 2026, fotografía definitiva): era
+            40/15/65, calibrado para la foto anterior. Con habitaciones_03
+            el eyebrow (12px → texto normal, pide 4.5:1) caía a 3.35:1 y
+            el H1 rozaba el mínimo. El H1 ocupa dos líneas en escritorio,
+            así que el eyebrow se sitúa ~57% de la altura de la sección,
+            donde el `via` mandaba: por eso sube 15→45, y el pie 65→80.
+            Medido sobre el archivo web con el mismo object-cover del
+            navegador, peor teja de 24×24 px, 5 viewports × Ken Burns
+            (scale 1.0 y 1.06): eyebrow 5.40:1, H1 5.00:1. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/15 to-marino/65"
+          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/45 to-marino/80"
           aria-hidden="true"
         />
         <motion.div
@@ -86,7 +96,7 @@ export default function Habitaciones() {
           animate="visible"
           className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20"
         >
-          <motion.p variants={heroItem} className="eyebrow text-marfil/90">
+          <motion.p variants={heroItem} className="eyebrow text-marfil">
             {habitacionesHeader.eyebrow}
           </motion.p>
           <motion.h1

@@ -2,8 +2,7 @@
  * Habitaciones de la casa (ronda 23 jul, docs/Fotos WEB AV.pdf).
  * Esta ronda REEMPLAZA las 3 categorías conceptuales (Vista Jardín /
  * Suite Vista al Mar / Suite Aurea, ver git history) por las 7
- * habitaciones REALES que el cliente definió, con sus textos literales
- * y las fotos definitivas de la casa (public/fotos_hotel/casa/).
+ * habitaciones REALES que el cliente definió, con sus textos literales.
  *
  * Contrato con /contacto: el botón "Reservar" de cada habitación navega
  * a `/contacto?habitacion=<slug>` y el formulario usa `formLabel` como
@@ -16,9 +15,13 @@
  * SIN `stats`: el cliente no entregó superficies ni cupos en esta ronda
  * y no se inventan datos (RoomCard omite el bloque si no hay stats).
  *
- * Fotos pendientes (PDF): Habitación Familiar y la segunda Suite con
- * Vista al Mar usan una foto genérica temporal del set anterior,
- * marcada con `fotoPendiente: true` — reemplazar cuando lleguen.
+ * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): las siete
+ * habitaciones toman una foto propia de `public/fotos/habitaciones/`
+ * (29 disponibles), elegida por lo que describe cada ficha —camas,
+ * ventanal, vestidor. Ya no hay ninguna genérica provisional: el flag
+ * `fotoPendiente` desapareció junto con el set demo. Sin `pos`: las 29
+ * son 3:2 con el sujeto centrado, así que el recorte por defecto de
+ * RoomCard (`object-center`) las encuadra bien.
  *
  * Las mayúsculas de los eyebrows las pone CSS (utilidad `eyebrow`),
  * nunca estos datos (copy §11). La primera foto es la principal.
@@ -42,10 +45,8 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos_hotel/casa/casa_39.jpeg',
-        alt: 'Habitación Vista al Mar 1 con cama king size, cabecera de mármol iluminada y ventanal a la vegetación',
-        /* La cama y la cabecera viven en la banda central-derecha. */
-        pos: 'object-[58%_50%]',
+        src: '/fotos/habitaciones/habitaciones_01.jpg',
+        alt: 'Habitación Vista al Mar 1 con ventanales abiertos al océano y sala de estar para leer por las tardes',
       },
     ],
   },
@@ -65,8 +66,8 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos_hotel/casa/casa_46.jpeg',
-        alt: 'Habitación Vista al Mar Compartida 1 con cama matrimonial, clóset de caoba y servicio de té',
+        src: '/fotos/habitaciones/habitaciones_16.jpg',
+        alt: 'Habitación Vista al Mar Compartida 1, luminosa, con clóset abierto, sillón y maderas cálidas',
       },
     ],
   },
@@ -86,8 +87,8 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos_hotel/casa/casa_51.jpeg',
-        alt: 'Habitación Vista al Mar Compartida 2 con cama matrimonial, clóset de caoba y cuadro del mar',
+        src: '/fotos/habitaciones/habitaciones_28.jpg',
+        alt: 'Habitación Vista al Mar Compartida 2 en paleta neutra, con acentos de madera tropical',
       },
     ],
   },
@@ -109,8 +110,8 @@ export const rooms = [
     cta: 'Reservar esta suite',
     fotos: [
       {
-        src: '/fotos_hotel/casa/casa_70.jpeg',
-        alt: 'Suite con Vista al Mar: sala con sofás frente al ventanal a la playa y cuarto de masajes privado',
+        src: '/fotos/habitaciones/habitaciones_29.jpg',
+        alt: 'Estancia de la Suite con Vista al Mar frente al ventanal, con el oleaje del Pacífico al fondo',
       },
     ],
   },
@@ -129,13 +130,10 @@ export const rooms = [
       'Escritorio',
     ],
     cta: 'Reservar esta habitación',
-    /* FOTO PENDIENTE (PDF 23 jul): genérica temporal del set anterior;
-       sustituir por la definitiva cuando el cliente la entregue. */
-    fotoPendiente: true,
     fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_13.jpeg',
-        alt: 'Habitación Familiar de Aurea Vita en tonos claros (fotografía provisional)',
+        src: '/fotos/habitaciones/habitaciones_08.jpg',
+        alt: 'Habitación Familiar de dos camas, con techo alto y piso de mármol claro',
       },
     ],
   },
@@ -156,8 +154,8 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos_hotel/casa/casa_42.jpeg',
-        alt: 'Habitación Doble Vista al Mar 1 con dos camas vestidas de blanco y muro de madera con espejo',
+        src: '/fotos/habitaciones/habitaciones_06.jpg',
+        alt: 'Habitación Doble Vista al Mar 1 con camas gemelas, madera cálida y luz natural',
       },
     ],
   },
@@ -177,16 +175,10 @@ export const rooms = [
       'La mejor vista de la casa',
     ],
     cta: 'Reservar esta suite',
-    /* FOTO PENDIENTE (PDF 23 jul): genérica temporal del set anterior;
-       sustituir por la definitiva cuando el cliente la entregue. */
-    fotoPendiente: true,
     fotos: [
       {
-        src: '/fotos_hotel/habitaciones/habitaciones_05.jpeg',
-        alt: 'Suite con Vista al Mar con ventanales hacia el Pacífico (fotografía provisional)',
-        /* El recorte 4:3 toma la banda izquierda: centra la cama y deja
-           fuera el escritorio rojo del costado derecho (fuera de paleta). */
-        pos: 'object-left',
+        src: '/fotos/habitaciones/habitaciones_27.jpg',
+        alt: 'Suite con Vista al Mar de cabecera de mármol, banca de madera y vista al océano',
       },
     ],
   },
@@ -195,8 +187,9 @@ export const rooms = [
 /**
  * Encabezado de la página (copy §3.1 / §12). Ronda 15 jun: la `intro`
  * de una línea se expandió a dos niveles —`subtitulo` corto (bajo el
- * H1) + `cuerpo` editorial de 3 párrafos del cliente. Ronda 23 jul
- * (docs/Fotos WEB AV.pdf): hero con foto definitiva Cámara Casa 41.
+ * H1) + `cuerpo` editorial de 3 párrafos del cliente. Ronda ago 26: el
+ * hero toma habitaciones_03, la única calidad 5 del set de recámaras
+ * (cabecera de madera curva bañada por la luz del jardín).
  */
 export const habitacionesHeader = {
   eyebrow: 'Descanso',
@@ -208,8 +201,8 @@ export const habitacionesHeader = {
     'Aquí, cada espacio ha sido diseñado para favorecer el descanso profundo, la relajación y la sensación de bienestar que define la esencia de Aurea Vita. Porque descansar no es solamente dormir. Es balancear los sentidos y sentirse en paz.',
   ],
   hero: {
-    src: '/fotos_hotel/casa/casa_41.jpeg',
-    alt: 'Cama vestida de blanco en primer plano frente al muro de madera de una habitación de Aurea Vita',
+    src: '/fotos/habitaciones/habitaciones_03.jpg',
+    alt: 'Suite principal con cabecera de madera curva y luz de jardín',
   },
 };
 

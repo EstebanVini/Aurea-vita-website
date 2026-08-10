@@ -146,3 +146,51 @@ Build verde.
    transform/opacity + `prefers-reduced-motion` siempre.
 4. Verdes oliva/salvia dominan SOLO en /spa.
 5. MOTION_INTENSITY 6/10.
+
+---
+
+## Ronda "entrada" — 10 ago 2026 (fotografía definitiva + video de entrada)
+
+Origen: `.claude/docs/cambios.txt`. Orquestación: 6 × `visual-designer` (clasificación
+visual foto a foto) → 2 × `ui-engineer` (galería / datos de página) + `motion-engineer`
+(hero y scrims) en paralelo → `qa-auditor` (auditoría AA + fix P0/P1). Build verde.
+
+**1 · Video de entrada.** `CLIP 9.mp4` resultó ser la toma de dron que se aproxima al
+acceso principal — literalmente la entrada. Transcodificado del máster 4K de 91.8 MB a
+`entrada.mp4` (1920×1080, 3.5 MB), `entrada_movil.mp4` (960×540, 1.05 MB) y
+`entrada_poster.jpeg`. `VideoBucle` ganó la prop `clips` y soporta bucle de un solo clip
+(`loop` nativo cuando `fuentes.length === 1`); la banda CTA conserva hero_01/02.
+
+**2 · Fuera el "filtro azul verdoso".** No estaba en el video: lo ponían los tres scrims
+del hero con el token `marino` (#1f3a44). Pasan a **negro puro** y, como a igual alfa el
+negro rinde más (el marino aporta L = 0.038), bajan de 60/40/35 a **45/35/25** — se quita
+el color y se destapa video. Calibrado sobre 19 frames reales × 11 viewports, peor teja de
+24×24 px. El marino se conserva donde el lavado es intencional (banda CTA, heroes
+interiores): el cliente pidió quitarlo del video de entrada, no del sitio.
+
+**3 · Fotografía definitiva.** 121 fotos clasificadas viéndolas una por una en 7
+categorías reales; 120 publicadas (se descartó 1 por calidad). Set demo `fotos_hotel/`
+eliminado. Inventario en **`docs/fotos/catalogo-definitivas.md`** — fuente de verdad.
+
+**Pesos.** `public/` 1.16 GB → 36 MB. Fotos 245 MB → 21 MB (máx. 1600px, JPEG q80
+progresivo). Los originales de cámara y los 14 másters 4K viven en `originales/`, fuera de
+`public/`: **no se publican pero no se pierden**. Antes de esto, cada build publicaba
+927 MB de clips en bruto que ningún archivo referenciaba.
+
+**Sin tomas aéreas.** La entrega no trae ni una foto de dron: la categoría `aereas`
+desapareció del sitio (filtro de galería incluido) y sus usos se reemplazaron.
+
+**Deuda abierta con el cliente:**
+- Las 4 cards de "Descubre Acapulco" (`/experiencias`) no tienen fotografía del destino
+  (bahía a vela, clavadistas, manglares, centro histórico): van con imagen de la propia
+  casa y su `alt` describe la foto real, no la excursión. **Es el punto más frágil.**
+- El copy de `/gastronomia` describe un "techo de redes náuticas tejidas a mano" que no
+  existe en ninguna foto de la entrega.
+- 48 de las 120 fotos no entraron en la curaduría y se publican igual (7.8 MB): margen
+  deliberado para cambiar la selección sin reprocesar.
+- `alberca_11` aparece dos veces (hero de Experiencias + tesela de Galería): era la única
+  toma de conjunto libre que cumplía AA como portada.
+
+**Regla nueva (añadir a las duras):** el **salvia** (`#a3b5a0`, L = 0.444) como texto se
+comporta igual que el dorado — solo funciona sobre marino **sólido**. Sobre foto con
+overlay no llega a 4.5:1 ni a alfa 0.94. La banda CTA de `/spa` pasó su eyebrow a marfil.

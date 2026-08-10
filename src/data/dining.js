@@ -1,12 +1,15 @@
 /**
  * Gastronomía — Origen y Cielo (docs/copy.md §4, brief §4.3).
  *
- * Fotos según curaduría (docs/fotos/lobby-restaurante.md y
- * spa-terraza.md): restaurante_11 es el hero de la página;
- * restaurante_14/01/12 acompañan los slots alternados de Origen.
- * Regla dura de terraza (brief §4.8): SOLO terraza_13, terraza_10 y
- * terraza_03 son utilizables en todo el sitio — Cielo usa las tres.
- * restaurante_02/08/10 están descartadas (estilos ajenos al concepto).
+ * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): el hero es
+ * restaurante_06 (mesa para dos frente al oleaje: la escena que promete
+ * la página, no un plato). Origen alterna crepúsculo (restaurante_05),
+ * el comedor real de la casa —lobby_02, calidad 5, el ventanal
+ * panorámico sobre la alberca y el mar— y el desayuno completo
+ * (restaurante_31). Cielo toma tres tomas de terraza sin repetir con
+ * /experiencias: los dos tipis al ocaso (terraza_03 y terraza_02) y los
+ * camastros de día (terraza_10). La entrega no trae ninguna toma de las
+ * redes náuticas ni del bar de azotea.
  *
  * Las mayúsculas de los eyebrows las pone CSS (utilidad `eyebrow`),
  * nunca estos datos (copy §11). Sin precios en menú ni cocteles:
@@ -26,8 +29,8 @@ export const gastronomiaHeader = {
   intro:
     'Comer bien es parte del descanso. Origen cocina lo que el Pacífico entrega cada mañana —sano, de temporada y con sabor— y Cielo lo acompaña cuando el sol empieza a caer.',
   hero: {
-    src: '/fotos_hotel/restaurante/restaurante_11.jpeg',
-    alt: 'Mesa servida del restaurante Origen frente a la bahía, bajo la luz dorada de la tarde',
+    src: '/fotos/restaurante/restaurante_06.jpg',
+    alt: 'Mesa para dos frente al oleaje del Pacífico, bajo sombrilla',
   },
 };
 
@@ -45,18 +48,21 @@ export const origen = {
     { servicio: 'Cena', horas: '18:30 – 23:00' },
   ],
   notaHorarios: 'Se recomienda reservar para la cena.',
+  /* Las claves `redes` y `terrazaVerde` son posiciones de layout en
+     Gastronomia.jsx, no descripciones: sostienen ahora el comedor
+     panorámico y la mesa de desayuno de la entrega definitiva. */
   fotos: {
     crepusculo: {
-      src: '/fotos_hotel/restaurante/restaurante_14.jpeg',
-      alt: 'Cena en Origen con el horizonte crepuscular al fondo',
+      src: '/fotos/restaurante/restaurante_05.jpg',
+      alt: 'Montaje de mesa frente al mar con la luz dorada del atardecer',
     },
     redes: {
-      src: '/fotos_hotel/restaurante/restaurante_01.jpeg',
-      alt: 'Techo de redes náuticas tejidas en el comedor de Origen',
+      src: '/fotos/lobby/lobby_02.jpg',
+      alt: 'Comedor de mármol abierto al ventanal panorámico sobre la alberca y el mar',
     },
     terrazaVerde: {
-      src: '/fotos_hotel/restaurante/restaurante_12.jpeg',
-      alt: 'Desayuno servido en la terraza verde de Origen',
+      src: '/fotos/restaurante/restaurante_31.jpg',
+      alt: 'Mesa de desayuno completa con arreglo floral, vista desde arriba',
     },
   },
 };
@@ -118,16 +124,16 @@ export const cielo = {
   notaHorarios: 'Con música en vivo los fines de semana.',
   fotos: {
     principal: {
-      src: '/fotos_hotel/terraza/terraza_13.jpeg',
-      alt: 'Terraza del bar Cielo al crepúsculo, con luces cálidas encendidas',
+      src: '/fotos/terraza/terraza_03.jpg',
+      alt: 'Tipi de lona blanca iluminado por dentro sobre el césped al ocaso',
     },
     lounge: {
-      src: '/fotos_hotel/terraza/terraza_10.jpeg',
-      alt: 'Lounge de Cielo con asientos bajos e iluminación cálida de noche',
+      src: '/fotos/terraza/terraza_02.jpg',
+      alt: 'Cena íntima bajo el tipi de lona, con las palmeras recortadas contra el cielo',
     },
     diurna: {
-      src: '/fotos_hotel/terraza/terraza_03.jpeg',
-      alt: 'Terraza de Cielo durante el día, con sombras y vista despejada',
+      src: '/fotos/terraza/terraza_10.jpg',
+      alt: 'Camastros alineados con bebidas frías y el Pacífico de fondo',
     },
   },
 };

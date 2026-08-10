@@ -99,8 +99,15 @@ los dominios de desarrollo (`dev-aureavita.*`).
 ```
 public/
 ├── Logo.svg                  → única marca válida (favicon incluido)
-└── fotos_hotel/<categoria>/  → 8 carpetas × 15 fotos (aereas, alberca, fachadas,
-                                habitaciones, lobby, restaurante, spa, terraza)
+├── fotos/<categoria>/        → 7 carpetas, 120 fotos definitivas del cliente
+│                               (fachadas 6, lobby 7, habitaciones 29, restaurante 45,
+│                               spa 11, alberca 12, terraza 10). Versiones web:
+│                               máx. 1600px, JPEG q80 progresivo, 21 MB en total.
+└── videos/                   → entrada.mp4 / entrada_movil.mp4 / entrada_poster.jpeg
+                                (hero) + hero_01/02 y sus renditions móviles (banda CTA)
+originales/                   → FUERA de public/: no se publica, pero no se pierde
+├── fotos_definitivas/        → los 121 originales de cámara (2048px, 245 MB)
+└── videos/                   → los 14 másters CLIP N.mp4 en 4K (891 MB)
 src/
 ├── main.jsx                  → bootstrap (Router + StrictMode)
 ├── App.jsx                   → layout + rutas + skip-link
@@ -387,11 +394,25 @@ diseño y motion. Las páginas con hero interior comparten exactamente la misma 
 
 ### 7.1 `/` — Inicio (`Home.jsx`)
 
-Hero **fullscreen** (`min-h-[100dvh]`, `aereas_11.jpeg`, Ken Burns) con eyebrow + tagline
-"Santuario frente al Pacífico" + subtítulo + indicador de scroll dorado. La foto es el
-LCP (eager + `fetchPriority="high"`; el preload se inyecta desde el componente, ver
-§9). Overlays: degradado vertical + scrim lateral solo bajo el bloque de texto para
-asegurar AA del marfil sobre el agua turquesa.
+Hero **fullscreen** (`min-h-[100dvh]`) con tagline "Santuario frente al Pacífico" +
+subtítulo. **Ronda "entrada" (ago 2026):** el fondo es CLIP 9 del cliente — la toma de
+dron que se aproxima al acceso principal del hotel, literalmente la entrada — servida
+como `entrada.mp4` (1920×1080, 3.5 MB) y `entrada_movil.mp4` (960×540, 1.05 MB), sin
+audio y con faststart; el máster 4K pesaba 91.8 MB. `VideoBucle` lo reproduce en **bucle
+de un solo clip** (prop `clips`), mientras la banda CTA final conserva el par
+hero_01/hero_02. `entrada_poster.jpeg` es el LCP (eager + `fetchPriority="high"`, preload
+inyectado desde el componente, ver §9) y también la imagen estática con
+`prefers-reduced-motion`: los dos modos muestran la misma escena, así que una sola
+calibración de scrims sirve para ambos.
+
+Overlays: degradado vertical + scrim lateral bajo el bloque de texto + scrim superior solo
+en `< md`. **Los tres son negro puro, no `marino`**: el cliente pidió "quitar el filtro
+azul verdoso" y ese verde azulado lo ponía el token `marino` (#1f3a44) tiñendo el frame
+entero. Como a igual alfa un scrim negro rinde más que uno marino (el marino aporta su
+propia luminancia, L = 0.038), el cambio permitió además **bajar las opacidades** y
+destapar video sin perder piso de contraste. Calibrado sobre 19 frames reales del clip ×
+11 viewports, peor teja de 24×24 px: H1 4.53:1 (pide 3:1) y subtítulo 4.79:1 (pide
+4.5:1), ambos en el peor caso, que cae en tablet.
 
 Secciones: **BookingBar** (mordiendo el borde foto→marfil) → editorial "Bienvenido a
 Aurea Vita" (50/50 texto/foto, `fachadas_05` con `object-right` para evitar el letrero)
@@ -551,11 +572,24 @@ Convenciones: las mayúsculas de los eyebrows las pone el CSS (no se escriben en
 mayúsculas en los datos); sin precios en menús (las cartas son tipográficas, no
 transaccionales); cada foto incluye su `alt` en español.
 
-**Fotografía.** 120 fotos de dominio público en `public/fotos_hotel/` (8 categorías × 15).
-Hay una **lista negra** documentada en `docs/brief.md` §4.8 (fotos con cubrebocas,
-letreros ajenos, calidad insuficiente o contextos no-Acapulco). Reglas notables: del set
-*terraza* solo `terraza_13/10/03`; `habitaciones_08/09` descartadas; `fachadas_10`
-evitada por el letrero "Sacher".
+**Fotografía (ronda "entrada", agosto 2026 — estado vigente).** El set demo de dominio
+público `public/fotos_hotel/` se eliminó por completo y lo sustituye la fotografía real
+del hotel: 120 fotos en `public/fotos/<categoria>/<categoria>_NN.jpg`, 7 categorías. El
+inventario completo —cada archivo con su `alt` en español, su ratio real medido y una
+calidad de 1 a 5— vive en **`docs/fotos/catalogo-definitivas.md`**, que es la fuente de
+verdad al elegir una foto. La curaduría de `/galeria` toma 72 de las 120; el resto queda
+publicado como margen para cambiar la selección sin reprocesar.
+
+Con el set demo desaparecieron su **lista negra** (`docs/brief.md` §4.8: cubrebocas,
+letreros ajenos, contextos no-Acapulco) y las reglas que dependían de ella: ya no aplican.
+
+**Sin tomas aéreas.** La entrega del cliente no incluye ni una sola foto de dron, así que
+la categoría `aereas` se eliminó del sitio: desapareció el filtro "Vistas aéreas" de la
+galería y sus usos se reemplazaron por la mejor foto equivalente en espíritu (alberca
+infinita frente al Pacífico, fachada, terraza con horizonte). Las 4 cards de "Descubre
+Acapulco" en `/experiencias` son el punto frágil: no hay fotografía del destino (bahía a
+vela, clavadistas, manglares, centro histórico), así que van con imagen de la propia casa
+y su `alt` describe la foto real, no la excursión. Pendiente con el cliente.
 
 ---
 

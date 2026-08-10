@@ -34,7 +34,7 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
 
 /**
  * Página /spa (brief §4.4). Estructura, la más "SHA" del sitio:
- * hero interior 70vh (spa_01) → banda de reserva anclada al hero
+ * hero interior 70vh (spa_07) → banda de reserva anclada al hero
  * (arena: microcopy + botón "Reservar espacio" a la derecha, como lo
  * dibujó el cliente en docs/Fotos WEB AV.pdf, ronda 23 jul) →
  * filosofía de bienestar (marfil, SOLO texto centrado: el silencio
@@ -69,20 +69,24 @@ export default function Spa() {
 
   return (
     <>
-      {/* 1 · Hero interior (70vh, no fullscreen — brief §4.4): spa_01
-          es la mejor foto del set, editorial dramática. La foto es el
-          LCP: sin lazy, eager + fetchPriority alta. */}
+      {/* 1 · Hero interior (70vh, no fullscreen — brief §4.4): el hero
+          es spa_07 (yoga al aire libre con el Pacífico de fondo), la
+          única calidad 4 del set de spa en la entrega definitiva; la
+          nota anterior hablaba de spa_01 y de una editorial en penumbra
+          que ya no es esta foto. La foto es el LCP: sin lazy, eager +
+          fetchPriority alta. */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-marino">
         <img
           src={spaHeader.hero.src}
           alt={spaHeader.hero.alt}
-          width="1920"
-          height="1492"
+          width="1600"
+          height="1002"
           fetchPriority="high"
-          /* Cámara Casa 63 (ronda 23 jul). Encuadre bajo (58%): la mesa
-             de masaje con las toallas vive en la mitad inferior de la
-             foto; el borde superior recorta pantalla y plafón, no el
-             sujeto.
+          /* Encuadre bajo (58%) heredado de la foto anterior (una mesa
+             de masaje en interior, que ya no es esta). Sobre spa_07
+             funciona por otro motivo: baja el horizonte y deja el césped
+             con los tapetes en la mitad inferior, que es donde va el
+             texto; arriba quedan el seto, el mar y el cielo.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
              por el overflow-hidden del section, solo motion-safe. En la
@@ -90,25 +94,35 @@ export default function Spa() {
           className="absolute inset-0 h-full w-full object-cover object-[50%_58%] motion-safe:animate-kenburns"
         />
         {/* Overlay degradado marino solo donde hay texto (brief §1.1):
-            denso al pie, ligero arriba para que la penumbra serena de
-            la foto respire. Nunca negro puro. */}
+            denso al pie, ligero arriba para que la foto respire. Nunca
+            negro puro.
+            RECALIBRADO (QA ago 2026, fotografía definitiva): era
+            40/15/65, calibrado para spa_01 (penumbra de mármol). El hero
+            es ahora spa_07 —yoga sobre césped a pleno día, mucho más
+            claro— y con los valores viejos el eyebrow caía a 3.00:1 y el
+            H1 a 2.98:1, por debajo de AA. El `via` sube 15→45 (el H1
+            ocupa dos líneas y empuja el eyebrow a ~57% de la altura,
+            donde mandaba el `via`) y el pie 65→80. Medido sobre el
+            archivo web con el object-cover real, peor teja de 24×24 px,
+            5 viewports × Ken Burns: eyebrow 5.12:1, H1 4.80:1. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/15 to-marino/65"
+          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/45 to-marino/80"
           aria-hidden="true"
         />
-        {/* text-shadow marino (QA 15 jun, P1): el pie de spa_01 promedia
-            muy oscuro (marfil/90 ~10:1) pero el mármol tiene reflejos
-            especulares puntuales donde marfil/90 cae a ~3.4:1 → falla AA
-            local en el eyebrow/subtítulo (texto pequeño). El halo marino
-            garantiza el contraste en el borde de cada glifo sobre esos
-            reflejos sin oscurecer el overlay del hero. */}
+        {/* text-shadow marino (QA 15 jun, P1). La nota original hablaba
+            de los reflejos del mármol de spa_01; el hero es ahora spa_07
+            y el papel del halo es el mismo pero sobre otro riesgo: los
+            brillos del césped a pleno sol y las toallas blancas de los
+            tapetes. Sostiene el contraste en el borde de cada glifo allí
+            donde el degradado recalibrado no llega, sin oscurecer más el
+            hero. */}
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
           animate="visible"
           className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20 [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
         >
-          <motion.p variants={heroItem} className="eyebrow text-marfil/90">
+          <motion.p variants={heroItem} className="eyebrow text-marfil">
             {spaHeader.eyebrow}
           </motion.p>
           <motion.h1
@@ -298,47 +312,83 @@ export default function Spa() {
           oliva = 3.09:1; ver QA P1). Sobre el scrim marino el texto
           marfil pasa AA holgado. La identidad verde se conserva en el
           agua verde de la propia alberca, el eyebrow salvia y la línea
-          oliva. Se retiró spa_03 (turquesa/grifo dorado fuera de paleta,
-          QA P2): spa_06 sostiene el bloque sola, más SHA/serena. */}
+          oliva. Ronda ago 26: el bloque lo sostiene alberca_10 (la
+          alberca de mosaico al pie de los ventanales al atardecer); las
+          notas sobre spa_03 y spa_06 eran del set anterior.
+          ⚠ QA ago 2026 (P1): el overlay horizontal de abajo se calibró
+          para la foto anterior y sobre alberca_10 NO cumple AA — ver el
+          comentario del overlay. */}
       <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-marino py-24 lg:py-36">
         <img
           src={spaCircuito.foto.src}
           alt={spaCircuito.foto.alt}
-          width="867"
-          height="650"
+          width="1600"
+          height="1066"
           loading="lazy"
           /* No es el LCP (vive a media página): lazy. Encuadre al centro
-             para conservar la alberca y los muros de arena. */
+             para conservar la alberca de mosaico y los ventanales
+             iluminados del hotel (alberca_10; la nota anterior hablaba
+             de unos muros de arena que eran de la foto vieja). */
           className="absolute inset-0 h-full w-full object-cover object-[50%_55%]"
         />
         {/* Overlay marino: denso a la izquierda (donde va el texto) y
-            ligero a la derecha (deja respirar la alberca). Garantiza el
-            AA del marfil con independencia de la luminancia de la foto.
-            Nunca negro puro (brief §1.1). */}
+            ligero a la derecha (deja respirar la alberca).
+            RECALIBRADO (QA ago 2026). Era 85/55/25 y la nota afirmaba que
+            garantizaba el AA "con independencia de la luminancia de la
+            foto": cierto para spa_06 (alberca verde en sombra), falso
+            para alberca_10, bastante más clara. Con los valores viejos:
+            eyebrow 2.37:1, h2 2.37:1, párrafo 4.12:1.
+            Tres cambios, en este orden de importancia:
+            1) El eyebrow deja de ser salvia. #a3b5a0 tiene L=0.444 y
+               exige un fondo casi marino sólido para dar 4.5:1 — sobre
+               foto no llega ni a 94/80/45 (3.90:1). Es el mismo caso que
+               el dorado en §1.1: acento válido sobre marino sólido, no
+               sobre imagen. Pasa a marfil (el verde se conserva en la
+               línea oliva de abajo, que es decorativa).
+            2) El degradado sube a 92/78/50.
+            3) El párrafo pasa de marfil/90 a marfil sólido, el mismo
+               recurso que en los heroes interiores.
+            Medido con el copy real sobre el archivo web, peor teja de
+            24×24 px, 7 viewports: eyebrow 7.03:1, h2 5.12:1, p 7.15:1. */}
         <div
-          className="absolute inset-0 bg-linear-to-r from-marino/85 via-marino/55 to-marino/25"
+          className="absolute inset-0 bg-linear-to-r from-marino/92 via-marino/78 to-marino/50"
+          aria-hidden="true"
+        />
+        {/* El degradado de arriba es HORIZONTAL y en < md el texto ocupa
+            todo el ancho: el h2 se metía en el extremo claro y caía a
+            3.87:1. Scrim plano solo en móvil (mismo patrón que el hero
+            del Home), que sube el h2 a 5.12:1. En md+ no aplica: ahí el
+            texto vive en la mitad izquierda y la alberca sigue abierta
+            a la derecha. */}
+        <div
+          className="absolute inset-0 bg-marino/35 md:hidden"
           aria-hidden="true"
         />
         <Reveal className="relative z-10 mx-auto w-full max-w-[1400px] px-5 sm:px-8">
           <div className="max-w-xl">
-            {/* Eyebrow salvia sobre marino (5.54:1, AA): el acento verde
-                de la página sin texto sobre oliva. */}
-            <p className="eyebrow text-salvia">{spaCircuito.eyebrow}</p>
+            {/* Marfil, no salvia: los 5.54:1 que citaba esta nota eran
+                sobre marino SÓLIDO, y aquí el fondo es una foto (ver el
+                overlay arriba). El acento verde de la página lo sostiene
+                la línea oliva de abajo. */}
+            <p className="eyebrow text-marfil">{spaCircuito.eyebrow}</p>
             <h2 className="mt-4 font-display text-4xl font-light leading-[1.1] text-balance text-marfil sm:text-5xl lg:text-6xl">
               {spaCircuito.titulo}
             </h2>
             {/* Línea oliva: el verde se gana en lo decorativo. */}
             <div className="mt-7 h-px w-12 bg-oliva" aria-hidden="true" />
-            <p className="mt-7 max-w-[58ch] text-base leading-relaxed text-marfil/90 sm:text-lg">
+            {/* marfil sólido, no /90: sobre alberca_10 la opacidad dejaba
+                el párrafo en 4.12:1 (pide 4.5:1). */}
+            <p className="mt-7 max-w-[58ch] text-base leading-relaxed text-marfil sm:text-lg">
               {spaCircuito.texto}
             </p>
           </div>
         </Reveal>
       </section>
 
-      {/* 5 · Rituales / aromaterapia (marfil, brief §4.4): spa_15
+      {/* 5 · Rituales / aromaterapia (marfil, brief §4.4): spa_10
           (still-life de aceites, alineada con la paleta de marca) como
-          foto principal + spa_09 (vela/difusor) como detalle. Layout
+          (set de aceites) como foto principal + spa_11 (sala de
+          tratamiento) como detalle. Layout
           alternado: texto-izq / foto-der; en móvil la foto va primero
           (orden del DOM + lg:order). Eyebrow marino, línea salvia. */}
       <section className="bg-marfil py-20 lg:py-32">
@@ -371,8 +421,8 @@ export default function Spa() {
                 <img
                   src={spaAromaterapia.fotos.aceites.src}
                   alt={spaAromaterapia.fotos.aceites.alt}
-                  width="940"
-                  height="627"
+                  width="1600"
+                  height="1066"
                   loading="lazy"
                   /* spa_15 es panorámica (16:9) en marco vertical 4:5: el
                      still-life de botellas vive en la mitad inferior, bajo
@@ -386,8 +436,8 @@ export default function Spa() {
               <img
                 src={spaAromaterapia.fotos.vela.src}
                 alt={spaAromaterapia.fotos.vela.alt}
-                width="940"
-                height="627"
+                width="1600"
+                height="1244"
                 loading="lazy"
                 /* spa_09 horizontal (3:2) en marco 4:5: el difusor y la
                    llama están al centro-bajo. Encuadre a 58% para anclar

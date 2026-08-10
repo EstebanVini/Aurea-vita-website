@@ -1,32 +1,37 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/* Clips definitivos del video de marca (ronda fotos cliente jul 2026),
-   compartidos por las dos bandas de video del Home — hero y CTA final
-   (ronda 28 jul): secuencia infinita 01 → 02 → 01 → … Cada <video>
-   mantiene su src fijo durante toda la vida del componente; el
-   secuenciador solo alterna cuál es el "activo". QA video hero (P2):
-   existe rendition móvil 960×540 de cada clip — el par se elige UNA
-   sola vez al montar con matchMedia (sin live-switching: cambiar de par
-   a mitad de bucle reiniciaría la secuencia y no lo vale por un
-   resize). */
-const CLIPS_ESCRITORIO = ['/videos/hero_01.mp4', '/videos/hero_02.mp4'];
-const CLIPS_MOVIL = [
-  '/videos/hero_01_movil.mp4',
-  '/videos/hero_02_movil.mp4',
-];
+/* Clips POR DEFECTO: los dos del video de marca (ronda fotos cliente
+   jul 2026) en secuencia infinita 01 → 02 → 01 → … Hasta la ronda 28 jul
+   los compartían las dos bandas de video del Home; desde la ronda
+   "entrada" (ago 2026) el hero pasa su propio clip por la prop `clips`
+   (pedido del cliente: «utilizar CLIP 9 como la entrada») y estos
+   quedan sirviendo a la banda CTA final. Cada <video> mantiene su src
+   fijo durante toda la vida del componente; el secuenciador solo alterna
+   cuál es el "activo". QA video hero (P2): existe rendition móvil
+   960×540 de cada clip — el par se elige UNA sola vez al montar con
+   matchMedia (sin live-switching: cambiar de par a mitad de bucle
+   reiniciaría la secuencia y no lo vale por un resize). */
+const CLIPS_DEFECTO = {
+  escritorio: ['/videos/hero_01.mp4', '/videos/hero_02.mp4'],
+  movil: ['/videos/hero_01_movil.mp4', '/videos/hero_02_movil.mp4'],
+};
 
 /* < md de Tailwind (min-width: 768px), el mismo corte que ya usa el
    resto del hero. */
 const MEDIA_MOVIL = '(max-width: 767px)';
 
-/* Poster por defecto (el del hero): primer frame del clip 01, 1920w
-   (sirve para ambas renditions) — es el LCP del Home en modo motion
-   (Home inyecta su <link rel="preload"> con este mismo path). Como el
-   clip 01 abre exactamente en este frame, el fade-in del video sobre el
-   poster es invisible. Otras instancias (la banda CTA final) pasan su
-   propia foto vía la prop `poster`; ahí el fundido foto → clip SÍ se ve,
-   pero es el crossfade de 700ms bajo su overlay marino — suave a
-   propósito. */
+/* Poster por defecto, emparejado con CLIPS_DEFECTO: primer frame del
+   clip 01, 1920w (sirve para ambas renditions). Como el clip 01 abre
+   exactamente en ese frame, el fade-in del video sobre el poster es
+   invisible.
+   Ronda "entrada" (ago 2026): las DOS instancias del Home pasan hoy su
+   propio poster — el hero, el primer frame de entrada.mp4 (que además es
+   su LCP, con el <link rel="preload"> que inyecta Home); el CTA final,
+   su foto aérea — así que este default ya solo cubriría a un consumidor
+   futuro que montara los clips por defecto sin poster propio. Cuando el
+   poster NO es el primer frame del clip (caso del CTA) el fundido foto →
+   video SÍ se ve, pero es el crossfade de 700ms bajo el overlay de la
+   sección — suave a propósito. */
 const POSTER_DEFECTO = {
   src: '/videos/hero_poster.jpeg',
   alt: 'Entrada principal de Aurea Vita entre palmeras al atardecer, con la iluminación cálida encendida y el Pacífico al fondo',
@@ -41,7 +46,12 @@ const POSTER_DEFECTO = {
    stack — queda opaco permanente una vez listo, y SOLO la opacidad del
    clip 02 (encima por orden del DOM) anima: entra fundiéndose sobre el
    01 congelado en su último frame, y sale revelando al 01 ya
-   reproduciendo debajo. */
+   reproduciendo debajo.
+   Con UN SOLO clip (el hero desde la ronda "entrada") no hay nada que
+   fundir entre clips: el único <video> es el índice 0, sube a opaco en
+   su primer 'playing' y no vuelve a animar nunca. El único fundido que
+   queda es el del video entrando sobre el poster — invisible, porque el
+   poster ES su primer frame. */
 const CROSSFADE = 'transition-opacity duration-700 ease-in-out';
 
 /** Iconos lineales del control de pausa (sin emojis; brief: SVG
@@ -90,18 +100,26 @@ function IconoPlay() {
  * el usuario pidió que nada se mueva).
  *
  * Props:
+ * - `clips`: { escritorio: [...], movil: [...] } con las fuentes del
+ *   bucle (default: CLIPS_DEFECTO, el par hero_01/hero_02). Los dos
+ *   arrays deben tener la misma longitud — son renditions del mismo
+ *   material — y ADMITEN UN SOLO ELEMENTO: con longitud 1 la secuencia
+ *   degrada a bucle simple (ver avanzar()). Es el caso del hero desde la
+ *   ronda "entrada" (ago 2026), que reproduce solo entrada.mp4.
  * - `poster`: { src, alt, width, height } de la foto que pinta debajo
- *   del video (default: el poster del hero). El marco lo pone el padre
- *   (sección relative + overflow-hidden); el stack es absolute inset-0
- *   con object-cover, así que respeta el alto que dicte el contenido de
- *   la sección — los clips se recortan lo que haga falta.
+ *   del video (default: el poster emparejado con CLIPS_DEFECTO). El
+ *   marco lo pone el padre (sección relative + overflow-hidden); el
+ *   stack es absolute inset-0 con object-cover, así que respeta el alto
+ *   que dicte el contenido de la sección — los clips se recortan lo que
+ *   haga falta.
  * - `prioridad`: true SOLO en el hero, donde el poster es el LCP
  *   (fetchPriority high, clip 01 con autoPlay + preload auto). En false
  *   (CTA, bajo el fold) el poster va lazy, ambos clips montan con
  *   preload="none" y NADA se descarga ni reproduce hasta que el
  *   IntersectionObserver ve la banda y sincronizar() dispara el primer
- *   play() — que en la práctica sale del caché HTTP: son los mismos
- *   archivos que el hero ya bajó.
+ *   play(). Ronda "entrada": el CTA ya NO comparte archivos con el hero
+ *   (que pasó a entrada.mp4), así que su descarga ya no sale del caché
+ *   HTTP — razón de más para que siga en modo lazy y bajo el fold.
  * - `etiquetaBoton`: sustantivo para el aria-label del control de pausa
  *   ("video de fondo" por defecto); las dos instancias del Home lo
  *   diferencian para que sus botones no compartan nombre accesible.
@@ -113,6 +131,8 @@ function IconoPlay() {
  *   2. clip 01 y clip 02: nacen en opacity-0; el 01 sube cuando de
  *      verdad reproduce ('playing') y se queda opaco; el 02 anima su
  *      opacidad en ambas direcciones (crossfade direccional, arriba).
+ *      Con un solo clip solo existe el 01 y el paso 2 se reduce a su
+ *      fade-in sobre el poster.
  *
  * Control de pausa (QA P1 — WCAG 2.2.2 Pause, Stop, Hide, nivel A):
  * movimiento automático > 5s en paralelo con contenido exige un control
@@ -129,8 +149,9 @@ function IconoPlay() {
  * Red (QA P2): el clip 02 monta con preload="none" — sus MB no compiten
  * con el LCP ni se descargan si el autoplay está bloqueado — y se
  * promueve a descarga completa en el primer 'playing' real del bucle
- * (quedan ~8s de clip 01 de margen). En < md se sirven las renditions
- * móviles 960×540.
+ * (quedan ~8s de clip 01 de margen). Con un solo clip no hay nada que
+ * promover y el paso se salta. En < md se sirven las renditions móviles
+ * 960×540.
  *
  * Robustez:
  * - Autoplay bloqueado: 'playing' nunca dispara, `listo` queda false,
@@ -150,6 +171,7 @@ function IconoPlay() {
  * sincronizar() lo retoma (caso `ended`).
  */
 export default function VideoBucle({
+  clips = CLIPS_DEFECTO,
   poster = POSTER_DEFECTO,
   prioridad = false,
   etiquetaBoton = 'video de fondo',
@@ -159,9 +181,12 @@ export default function VideoBucle({
   const videoRefs = useRef([]);
 
   /* Rendition según viewport, decidida una sola vez al montar (QA P2).
-     Inicializador perezoso: corre en el primer render y nunca más. */
-  const [clips] = useState(() =>
-    window.matchMedia(MEDIA_MOVIL).matches ? CLIPS_MOVIL : CLIPS_ESCRITORIO,
+     Inicializador perezoso: corre en el primer render y nunca más — por
+     eso `clips` se lee aquí sin ser dependencia de nada: cambiarlo en
+     caliente no re-elegiría la rendition, igual que un resize tampoco la
+     re-elige (ver nota de matchMedia arriba). */
+  const [fuentes] = useState(() =>
+    window.matchMedia(MEDIA_MOVIL).matches ? clips.movil : clips.escritorio,
   );
 
   /* Índice del clip activo. El estado pinta la opacidad; el ref espejo
@@ -185,7 +210,8 @@ export default function VideoBucle({
   const [pausadoManual, setPausadoManual] = useState(false);
   const pausadoManualRef = useRef(false);
 
-  /* Promoción de la descarga del clip 02, una sola vez (QA P2). */
+  /* Promoción de la descarga del clip 02, una sola vez (QA P2). Con un
+     solo clip nunca hay clip 02 y el paso se salta. */
   const clip2PromovidoRef = useRef(false);
 
   useEffect(() => {
@@ -195,8 +221,16 @@ export default function VideoBucle({
   /* Avanza el bucle: arranca el clip siguiente y, SOLO cuando su play()
      resuelve (ya reproduce de verdad), cambia `activo` para disparar el
      crossfade — así el frame viejo nunca se funde hacia un video que
-     aún no pinta. useCallback: identidad estable (clips no cambia tras
-     montar) para declararla como dependencia del efecto de visibilidad. */
+     aún no pinta. useCallback: identidad estable (fuentes no cambia tras
+     montar) para declararla como dependencia del efecto de visibilidad.
+
+     BUCLE SIMPLE (ronda "entrada", ago 2026): con `fuentes.length === 1`
+     el módulo devuelve el MISMO índice, así que "avanzar" se reduce a
+     rebobinar el clip activo (currentTime = 0) y volver a reproducirlo.
+     Todo lo demás encaja sin ramas nuevas: `setActivo` reescribe el
+     mismo 0 (no-op, sin re-render útil ni parpadeo de opacidad), la
+     opacidad del índice 0 depende de `listo` y no de `activo` (ver
+     CROSSFADE), y el catch degrada a reintentar ese mismo clip. */
   const avanzar = useCallback(
     (indice) => {
       /* Sin avance si: eco de un clip ya retirado (guard teórico), hero
@@ -209,7 +243,7 @@ export default function VideoBucle({
         pausadoManualRef.current
       )
         return;
-      const siguiente = (indice + 1) % clips.length;
+      const siguiente = (indice + 1) % fuentes.length;
       const video = videoRefs.current[siguiente];
       if (!video) return;
       video.currentTime = 0;
@@ -235,7 +269,7 @@ export default function VideoBucle({
           actual.play().catch(() => {});
         });
     },
-    [clips],
+    [fuentes],
   );
 
   /* Pausa/reanudación según viewport y visibilidad de la pestaña. Sin
@@ -298,7 +332,10 @@ export default function VideoBucle({
        real — nunca antes (no compite con el LCP y, si el autoplay está
        bloqueado, sus MB no se bajan en vano). Cambiar preload a solas
        no dispara la descarga: load() la arranca. Una sola vez (ref, no
-       estado: es un handler de evento, StrictMode no lo duplica). */
+       estado: es un handler de evento, StrictMode no lo duplica).
+       Con un solo clip (hero de la entrada) no se renderiza ningún
+       <video> en el índice 1, así que videoRefs.current[1] es undefined
+       y el guard corta el paso: ni preload ni load() sobre nada. */
     if (!clip2PromovidoRef.current) {
       clip2PromovidoRef.current = true;
       const clip2 = videoRefs.current[1];
@@ -345,9 +382,12 @@ export default function VideoBucle({
         {/* Poster: pinta de inmediato mientras los clips descargan. En
             la instancia prioritaria es el LCP (preload inyectado por
             Home, fetchPriority high); en las demás va lazy — bajo el
-            fold no compite con nada. object-center en ambas: la entrada
-            del hotel está centrada en el frame del hero y la foto del
-            CTA ya vivía con el encuadre por defecto. */}
+            fold no compite con nada. object-center en ambas: el acceso
+            principal está centrado en el frame del hero (y en el de la
+            entrada, ronda ago 2026) y la foto del CTA ya vivía con el
+            encuadre por defecto. El object-cover/object-center es además
+            el que replica la rama de reduced-motion del Home, para que
+            los dos modos recorten idéntico. */}
         <img
           src={poster.src}
           alt={poster.alt}
@@ -358,10 +398,11 @@ export default function VideoBucle({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         {!fallo &&
-          clips.map((src, indice) => {
+          fuentes.map((src, indice) => {
             /* Crossfade direccional (QA P3, ver nota en CROSSFADE): el
                clip 01 queda opaco permanente una vez listo; solo el 02
-               anima entrada y salida. */
+               anima entrada y salida. Con un solo clip esto se reduce a
+               `listo`: un único fade-in sobre el poster y nada más. */
             const opaco = indice === 0 ? listo : activo === 1;
             return (
               <video
@@ -372,6 +413,19 @@ export default function VideoBucle({
                 src={src}
                 muted
                 playsInline
+                /* Con UN SOLO clip el bucle lo cierra el navegador (QA
+                   ago 2026, P2). Antes lo hacía `avanzar()` vía el evento
+                   `ended` —rebobinar a 0 y volver a llamar a play()— y
+                   ese empalme se veía: hay un salto de frames entre el
+                   final y el reinicio, y aquí no existe el crossfade que
+                   lo tapa en el par de clips. `loop` nativo hace la vuelta
+                   sin corte. Ojo: con `loop` el navegador YA NO dispara
+                   `ended`, así que el camino de `avanzar()` queda inerte
+                   en este modo (es justo lo que se busca) y sigue siendo
+                   el único camino cuando hay dos clips. La pausa manual,
+                   el IntersectionObserver y el manejo de errores no
+                   dependen de `ended`: siguen operando igual. */
+                loop={fuentes.length === 1}
                 /* Solo la instancia prioritaria autoarranca y precarga
                    el clip 01; en modo lazy ambos clips esperan en
                    preload="none" al primer sincronizar() (ver efecto de

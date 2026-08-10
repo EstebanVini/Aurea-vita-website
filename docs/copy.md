@@ -6,6 +6,8 @@
 - **Idioma:** español (México), tono editorial sereno
 - **Input:** `prompt-claude-code-aurea-vita.md` + `docs/brief.md` (§8 y §9 ronda 15 jun)
 
+> **Nota de la ronda "entrada" — ago 2026:** este documento nombra fotos del set demo `public/fotos_hotel/`, que ya no existe. Los **textos** siguen vigentes; las **referencias a archivos de foto y sus `alt` no**. El inventario actual está en `docs/fotos/catalogo-definitivas.md`, con el `alt` ya redactado de cada foto. Afecta sobre todo a §7.3 (alt de galería), §4 (cards de "Descubre Acapulco") y las notas de alt de §3. La categoría `aereas` de §7.2 desapareció del sitio: la entrega definitiva no tiene ninguna toma de dron.
+
 > **Nota de la ronda 15 jun 2026:** los cambios de esta ronda están marcados a lo largo del documento con el prefijo **`[RONDA 15 JUN]`** e incluyen el texto viejo (tachado o etiquetado "ANTES") y el nuevo ("AHORA/DESPUÉS"). El resumen de qué archivo de datos toca cada cambio está en §12. Los textos largos del cliente van LITERALES; la división en párrafos y la ubicación titular/subtítulo/cuerpo son decisión del ux-writer (patrón SectionHeading).
 
 ---

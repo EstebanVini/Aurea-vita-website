@@ -81,20 +81,27 @@ export default function Gastronomia() {
         <img
           src={gastronomiaHeader.hero.src}
           alt={gastronomiaHeader.hero.alt}
-          width="903"
-          height="650"
+          width="1600"
+          height="1066"
           fetchPriority="high"
           /* Encuadre levemente bajo (60%): prioriza la mesa servida y
-             el puerto sobre el techo del comedor.
+             el oleaje del Pacífico sobre la sombrilla (restaurante_06 es
+             la mesa para dos frente al mar; no hay ningún puerto).
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
              por el overflow-hidden del section, solo motion-safe. */
           className="absolute inset-0 h-full w-full object-cover object-[50%_60%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
-            ligero arriba para que la luz dorada de la foto respire. */}
+            ligero arriba para que la luz dorada de la foto respire.
+            RECALIBRADO (QA ago 2026, fotografía definitiva): era
+            40/15/65. Con restaurante_06 el eyebrow caía a 3.32:1 (pide
+            4.5:1 por ser texto de 12px). El `via` sube 15→45 porque el
+            eyebrow queda ~57% de la altura, no al pie. Medido sobre el
+            archivo web con el object-cover real, peor teja de 24×24 px,
+            5 viewports × Ken Burns: eyebrow 5.48:1, H1 5.32:1. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/15 to-marino/65"
+          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/45 to-marino/80"
           aria-hidden="true"
         />
         <motion.div
@@ -103,7 +110,7 @@ export default function Gastronomia() {
           animate="visible"
           className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20"
         >
-          <motion.p variants={heroItem} className="eyebrow text-marfil/90">
+          <motion.p variants={heroItem} className="eyebrow text-marfil">
             {gastronomiaHeader.eyebrow}
           </motion.p>
           <motion.h1
@@ -134,8 +141,8 @@ export default function Gastronomia() {
             <img
               src={origen.fotos.crepusculo.src}
               alt={origen.fotos.crepusculo.alt}
-              width="940"
-              height="627"
+              width="1600"
+              height="1066"
               loading="lazy"
               /* Encuadre a la izquierda (28%): el ventanal con el
                  horizonte crepuscular vive en ese tercio de la foto;
@@ -159,8 +166,8 @@ export default function Gastronomia() {
             <img
               src={origen.fotos.redes.src}
               alt={origen.fotos.redes.alt}
-              width="940"
-              height="627"
+              width="1600"
+              height="1066"
               loading="lazy"
               className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
             />
@@ -186,8 +193,8 @@ export default function Gastronomia() {
             <img
               src={origen.fotos.terrazaVerde.src}
               alt={origen.fotos.terrazaVerde.alt}
-              width="940"
-              height="627"
+              width="1600"
+              height="1066"
               loading="lazy"
               className="aspect-[16/9] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04] lg:aspect-[21/9]"
             />
@@ -294,8 +301,8 @@ export default function Gastronomia() {
             <img
               src={cielo.fotos.principal.src}
               alt={cielo.fotos.principal.alt}
-              width="940"
-              height="627"
+              width="1600"
+              height="1066"
               loading="lazy"
               className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
             />
@@ -329,8 +336,8 @@ export default function Gastronomia() {
               <img
                 src={cielo.fotos.lounge.src}
                 alt={cielo.fotos.lounge.alt}
-                width="940"
-                height="627"
+                width="1600"
+                height="1066"
                 loading="lazy"
                 className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
@@ -339,8 +346,8 @@ export default function Gastronomia() {
               <img
                 src={cielo.fotos.diurna.src}
                 alt={cielo.fotos.diurna.alt}
-                width="940"
-                height="627"
+                width="1600"
+                height="1066"
                 loading="lazy"
                 className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />

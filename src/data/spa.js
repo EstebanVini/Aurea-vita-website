@@ -8,13 +8,15 @@
  * AA ahí). Por eso los eyebrows sobre marfil/arena van en marino, igual
  * que el comportamiento por defecto de SectionHeading.
  *
- * Fotos según curaduría (docs/fotos/spa-terraza.md, brief §4.4/§4.8):
- * spa_01 es el hero; el circuito de aguas usa spa_06 (la alberca de
- * inmersión en patio de arena, la más serena y en paleta del set); los
- * rituales/aromaterapia usan spa_15 + spa_09. Descartadas: spa_11
- * (letrero ajeno), spa_14 (clínica médica), spa_07 (manicure dorada) y
- * spa_03 (azulejo turquesa + grifo cromado-dorado, fuera de paleta: el
- * pase global la retiró del bloque de contraste; QA P2).
+ * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): el set real
+ * de spa son 11 tomas —yoga en el jardín y dos salas de tratamiento—,
+ * ninguna de agua. Por eso el hero es spa_07 (calidad 4, la sesión de
+ * yoga con el Pacífico de fondo: la única que junta bienestar y mar) y
+ * la aromaterapia usa el par spa_10 (aceites sobre camilla, el detalle)
+ * + spa_11 (la sala completa, para dar escala). El circuito de aguas no
+ * tiene foto propia en la entrega: lo sostiene alberca_10, el espejo de
+ * agua al pie de los ventanales, que además aguanta el scrim marino de
+ * la banda inmersiva sin perder legibilidad.
  *
  * Las mayúsculas de los eyebrows y de las duraciones las pone CSS
  * (utilidad `eyebrow`), nunca estos datos (copy §11). Sin precios:
@@ -30,10 +32,9 @@ export const spaHeader = {
   eyebrow: 'Bienestar',
   titulo: 'Wellness',
   subtitulo: 'Donde el bienestar sucede de forma natural.',
-  /* Ronda 23 jul (docs/Fotos WEB AV.pdf): foto definitiva Cámara Casa 63. */
   hero: {
-    src: '/fotos_hotel/casa/casa_63.jpeg',
-    alt: 'Mesa de masaje con toallas enrolladas frente al muro de madera del Wellness de Aurea Vita',
+    src: '/fotos/spa/spa_07.jpg',
+    alt: 'Sesión de yoga al aire libre con el Pacífico de fondo',
   },
 };
 
@@ -127,10 +128,12 @@ export const spaMenu = {
 /**
  * Bloque "Circuito de aguas" — sección de contraste (copy §5.4).
  * El pase global la convirtió en una banda inmersiva de foto a sangre
- * completa (spa_06 + overlay marino, patrón de los heroes): el texto
+ * completa (foto + overlay marino, patrón de los heroes): el texto
  * marfil sobre el scrim marino alcanza AA, lo que el fondo plano oliva
- * no permitía con ningún token (QA P1). El verde del agua de la propia
- * alberca + el eyebrow salvia y la línea oliva conservan la identidad.
+ * no permitía con ningún token (QA P1). Ronda ago 26: sin tomas de agua
+ * en el set de spa, la banda la sostiene alberca_10 —mosaico azul al
+ * pie de los ventanales al caer la tarde—; su azul profundo sigue
+ * dialogando con el eyebrow salvia y la línea oliva.
  */
 export const spaCircuito = {
   eyebrow: 'El agua como medicina',
@@ -138,8 +141,8 @@ export const spaCircuito = {
   texto:
     'El circuito de aguas alterna temperaturas como lo ha hecho la gente de mar desde siempre: vapor que abre, agua fría que despierta, flotación que suelta. Cuarenta minutos después, el cuerpo opina distinto.',
   foto: {
-    src: '/fotos_hotel/spa/spa_06.jpeg',
-    alt: 'Alberca de inmersión del circuito de aguas en un patio de muros de arena',
+    src: '/fotos/alberca/alberca_10.jpg',
+    alt: 'Alberca de mosaico azul al pie de los ventanales iluminados del hotel',
   },
 };
 
@@ -149,14 +152,17 @@ export const spaAromaterapia = {
   titulo: 'Aromas de la costa',
   texto:
     'Todos los aceites y mezclas del Spa Vita se preparan en casa con ingredientes de la región: coco, salvia, cacao, sal de mar. Lo que toca tu piel viene de cerca.',
+  /* Par detalle + escala: el primer slot va al close-up de los aceites
+     y el segundo abre a la sala que los recibe (no hay tomas de velas
+     ni difusores en la entrega). */
   fotos: {
     aceites: {
-      src: '/fotos_hotel/spa/spa_15.jpeg',
-      alt: 'Composición de aceites y sales del Spa Vita en tonos arena',
+      src: '/fotos/spa/spa_10.jpg',
+      alt: 'Set de aceites esenciales sobre la camilla, antesala de un ritual de bienestar',
     },
     vela: {
-      src: '/fotos_hotel/spa/spa_09.jpeg',
-      alt: 'Vela encendida y difusor de aromaterapia en el Spa Vita',
+      src: '/fotos/spa/spa_11.jpg',
+      alt: 'Sala de tratamiento con camilla de masaje y muro de madera acanalada',
     },
   },
 };

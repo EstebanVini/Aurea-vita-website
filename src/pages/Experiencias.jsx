@@ -52,9 +52,9 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
 
 /**
  * Página /experiencias (brief §4.5, ronda 23 jul). Estructura visible:
- * hero interior 70vh (casa_16) → unidad editorial "vivir el día"
+ * hero interior 70vh (alberca_11) → unidad editorial "vivir el día"
  * (50/50: párrafos literales del cliente + pull-quote "Te sugerimos
- * registrarte…" + CTA "Reservar experiencia" | tipi casa_07) →
+ * registrarte…" + CTA "Reservar experiencia" | tipi terraza_04) →
  * "próximamente" → banda CTA (arena) → footer. Gateados mientras
  * tanto: bloque "Alberca infinita" en layout imagen/texto + strip
  * scroll-snap de tres fotos y un apoyo editorial (desayuno junto al
@@ -78,30 +78,46 @@ export default function Experiencias() {
 
   return (
     <>
-      {/* 1 · Hero interior (60–70vh, brief §4.5): Cámara Casa 16
-          (ronda 23 jul) — la mesa servida en la terraza al atardecer.
-          LCP: sin lazy. */}
+      {/* 1 · Hero interior (60–70vh, brief §4.5): alberca_11 — la
+          alberca de mosaico cobalto con los camastros y el edificio
+          principal. Sustituyó a alberca_05 en el QA de ago 2026 por un
+          fallo de contraste (ver nota en experiences.js). LCP: sin lazy. */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-marino">
         <img
           src={experienciasHeader.hero.src}
           alt={experienciasHeader.hero.alt}
-          width="1920"
-          height="1280"
+          width="1600"
+          height="1066"
           fetchPriority="high"
-          /* Encuadre bajo del centro (58%): la mesa servida y las sillas
-             de mimbre viven en la mitad inferior; arriba queda el mar
-             tras el cristal, donde el overlay ligero deja respirar la
-             hora dorada.
+          /* Encuadre 58% verificado sobre alberca_11 (QA ago 2026), ya no
+             heredado: deja arriba el edificio con los ventanales y los
+             camastros alineados, y baja la línea de agua para que el
+             mosaico cobalto —la zona oscura de la foto— quede justo
+             detrás del bloque de texto. Se barrieron 0.30→1.00: 0.58 y
+             0.75 son los únicos que cumplen AA con el overlay de abajo,
+             y 0.58 conserva el edificio, que es el sujeto.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
              por el overflow-hidden del section, solo motion-safe. */
           className="absolute inset-0 h-full w-full object-cover object-[50%_58%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
-            ligero arriba para que la luz del agua respire. AA del
-            marfil verificado sobre el degradado al pie. */}
+            ligero arriba para que el edificio y el cielo respiren.
+            Esta página lleva el degradado UN PASO MÁS DENSO que los
+            otros heroes interiores (que van 40/45/80): alberca_11 tiene
+            el agua muy reflectante y el eyebrow —12px, texto normal,
+            pide 4.5:1— se queda en 3.60:1 con el valor común. El `via`
+            manda porque el H1 ocupa dos líneas en escritorio y empuja el
+            eyebrow a ~57% de la altura, no al pie.
+            Medido con el copy real ("Maneras de pasar el día" /
+            "Experiencias") sobre el archivo web, con el object-cover del
+            navegador, peor teja de 24×24 px, 10 viewports × Ken Burns
+            (scale 1.0 y 1.06): eyebrow 4.79:1, H1 4.94:1.
+            40/55/85 se queda corto (eyebrow 4.37:1); 40/60/85 es el
+            mínimo que cumple y a esa densidad la foto sigue leyéndose
+            entera —edificio, camastros, mosaico— como un atardecer. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/15 to-marino/65"
+          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/60 to-marino/85"
           aria-hidden="true"
         />
         <motion.div
@@ -110,7 +126,7 @@ export default function Experiencias() {
           animate="visible"
           className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20"
         >
-          <motion.p variants={heroItem} className="eyebrow text-marfil/90">
+          <motion.p variants={heroItem} className="eyebrow text-marfil">
             {experienciasHeader.eyebrow}
           </motion.p>
           <motion.h1
@@ -131,8 +147,8 @@ export default function Experiencias() {
           "Descubre Aurea Vita" del Home): los dos párrafos del cliente
           abren, la sugerencia de registro remata como pull-quote serif
           con pleca dorada, y el CTA "Reservar experiencia" cierra la
-          columna con esa frase como ancla; Cámara Casa 7 (el tipi al
-          atardecer) sostiene la columna visual a la derecha. En móvil el
+          columna con esa frase como ancla; terraza_04 (el tipi entre
+          palmeras) sostiene la columna visual a la derecha. En móvil el
           texto abre la sección (aquí el texto ES el contenido pedido) y
           el tipi la cierra como pausa visual antes del "próximamente". */}
       <section className="bg-marfil py-16 lg:py-24">
@@ -182,11 +198,13 @@ export default function Experiencias() {
               <img
                 src={experienciasEditorial.foto.src}
                 alt={experienciasEditorial.foto.alt}
-                width="1452"
-                height="1364"
+                width="1600"
+                height="1066"
                 loading="lazy"
-                /* casa_07 es casi cuadrada: el recorte 4:5 conserva el tipi
-                   completo con las palmeras al fondo. */
+                /* terraza_04 es 3:2 (1.501), no casi cuadrada como la
+                   foto anterior: el recorte 4:5 es bastante más agresivo
+                   de lo que suponía esta nota. El tipi queda centrado y
+                   completo, pero se pierden las palmeras de los bordes. */
                 className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
             </Parallax>
@@ -229,8 +247,8 @@ export default function Experiencias() {
             <img
               src={albercaInfinita.fotos.principal.src}
               alt={albercaInfinita.fotos.principal.alt}
-              width="940"
-              height="623"
+              width="1600"
+              height="1066"
               loading="lazy"
               className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
             />
@@ -281,8 +299,13 @@ export default function Experiencias() {
                   <img
                     src={foto.src}
                     alt={foto.alt}
-                    width="940"
-                    height="627"
+                    /* Sin width/height: este slot recorre un set de
+                       alturas MIXTAS (alberca_08/07/01 son 1600×1066 pero
+                       restaurante_21 es 1600×1132), así que cualquier par
+                       fijo sería falso para alguna foto. El
+                       `aspect-[4/3]` del propio img ya reserva el espacio,
+                       de modo que no hay CLS que cubrir. Si algún día se
+                       necesitan, van en los datos, no aquí. */
                     loading="lazy"
                     className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
                   />
@@ -311,8 +334,8 @@ export default function Experiencias() {
               <img
                 src={atardeceres.fotos.crepusculo.src}
                 alt={atardeceres.fotos.crepusculo.alt}
-                width="940"
-                height="627"
+                width="1600"
+                height="1066"
                 loading="lazy"
                 className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
@@ -321,8 +344,8 @@ export default function Experiencias() {
               <img
                 src={atardeceres.fotos.nocturna.src}
                 alt={atardeceres.fotos.nocturna.alt}
-                width="940"
-                height="627"
+                width="1600"
+                height="1066"
                 loading="lazy"
                 className="aspect-[4/3] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
@@ -397,8 +420,10 @@ export default function Experiencias() {
                   <img
                     src={card.foto.src}
                     alt={card.foto.alt}
-                    width="867"
-                    height="542"
+                    /* Sin width/height: las cuatro cards tienen alturas
+                       distintas (terraza_08 es 1600×1080, las otras tres
+                       1600×1066) y el aspect-ratio fijo del contenedor ya
+                       reserva el espacio. Ver nota del strip de arriba. */
                     loading="lazy"
                     style={{ objectPosition: card.foto.objectPosition }}
                     className="aspect-[16/10] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"

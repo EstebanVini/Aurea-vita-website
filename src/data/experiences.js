@@ -6,22 +6,25 @@
  * /gastronomia) y "Descubre Acapulco" (el destino, única sección de
  * contraste en marino con texto marfil de la página).
  *
- * Fotos según curaduría (brief §4.5 y §4.8): alberca_05 es el hero;
- * alberca_02/10/14 + alberca_07 acompañan el bloque de la alberca.
- * Regla dura de terraza (brief §4.8): SOLO terraza_13, terraza_10 y
- * terraza_03 son utilizables en todo el sitio — aquí Cielo usa el dúo
- * terraza_13/terraza_10 (terraza_03 queda reservada a /gastronomia
- * para no repetir las tres en dos páginas). Las cards del destino usan
- * aereas_02/08/04/10; aereas_15 se evita aquí por aparecer ya en el
- * Home (brief §4.5: usar aereas_10 en su lugar).
+ * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): el hero es
+ * alberca_11 (mosaico cobalto, camastros y el edificio principal: una
+ * toma de conjunto que abre la página). Lo fue alberca_05 hasta el QA
+ * de ago 2026, que lo retiró por contraste — ver la nota sobre `hero`
+ * más abajo. El bloque de la alberca alterna el borde infinito
+ * (alberca_08), el mosaico en detalle (alberca_07), la noche iluminada
+ * (alberca_01) y el servicio al borde del agua (restaurante_21, la más
+ * cercana al desayuno junto a la alberca que existe en la entrega).
+ * Cielo toma terraza_01 al atardecer y cierra con alberca_03 cuando ya
+ * cayó la noche: no hay ninguna toma nocturna de terraza en el set.
  *
- * Nota de encuadre (visual-designer): el brief asumía aereas_04 vertical,
- * pero el archivo entregado es horizontal (867x650, ~4:3). En el
- * contenedor 16:10 de las cards el recorte de cada foto es distinto según
- * su ratio (aereas_02/10 son ~16:9 y recortan de lado; aereas_08/04 son
- * ~4:3 y recortan arriba/abajo). Cada card lleva su `objectPosition`
- * para que el sujeto quede en cuadro y las cuatro se sientan uniformes
- * pese a las orientaciones mixtas.
+ * Nota de encuadre (visual-designer): las cards de "Descubre Acapulco"
+ * viven en un contenedor 16:10 y la entrega es toda 3:2 (~1.50), así
+ * que el recorte es lateral y suave; cada card conserva su
+ * `objectPosition` para anclar el sujeto y que las cuatro se sientan
+ * uniformes. Sin fotografía de destino en la entrega (no hay bahía,
+ * clavadistas, manglares ni centro histórico), las cuatro las ilustra
+ * la propia costa vista desde la casa y sus `alt` describen eso, no la
+ * excursión: sustituir en cuanto el cliente entregue tomas del destino.
  *
  * Las mayúsculas de los eyebrows las pone CSS (utilidad `eyebrow`),
  * nunca estos datos (copy §11).
@@ -29,8 +32,7 @@
 
 /**
  * Encabezado de la página (copy §6.1 / §12, ronda 15 jun). Eyebrow y
- * H1 se conservan. Ronda 23 jul (docs/Fotos WEB AV.pdf): hero con foto
- * definitiva Cámara Casa 16. La intro que vivía aquí ("Te sugerimos
+ * H1 se conservan. La intro que vivía aquí ("Te sugerimos
  * registrarte…", texto literal del cliente que reemplazó a la vieja)
  * se movió a `experienciasEditorial.remate` en la recomposición del
  * 23 jul: sola en su propia sección quedaba huérfana — ahora remata la
@@ -39,17 +41,28 @@
 export const experienciasHeader = {
   eyebrow: 'Experiencias',
   titulo: 'Maneras de pasar el día',
+  /* Hero cambiado en el QA de ago 2026 (P0 de accesibilidad). Era
+     alberca_05, un still-life de alta clave (muro encalado a pleno sol y
+     toalla blanca) sobre el que el marfil daba 3.23:1 en el eyebrow y
+     2.74:1 en el H1 — por debajo de AA y sin arreglo posible por
+     encuadre: en móvil el recorte object-cover no tiene holgura
+     vertical. alberca_11 es además una toma de conjunto (portada real de
+     la página) y no un detalle: mosaico cobalto, camastros y el edificio
+     principal. Aparece también como una tesela en gallery.js; se acepta
+     esa duplicación menor antes que abrir la página con un still-life.
+     Alt EXACTO del catálogo. */
   hero: {
-    src: '/fotos_hotel/casa/casa_16.jpeg',
-    alt: 'Mesa servida para cuatro en la terraza de Aurea Vita, con el mar tras el barandal de cristal',
+    src: '/fotos/alberca/alberca_11.jpg',
+    alt: 'Alberca de mosaico cobalto con camastros alineados junto al edificio principal',
   },
 };
 
 /**
  * Bloque editorial bajo el hero (ronda 23 jul, docs/Fotos WEB AV.pdf:
  * "AGREGAR ESTE TEXTO JUSTO DEBAJO DE LA IMAGEN"). Cuerpo literal del
- * cliente en dos párrafos; la foto acompañante es Cámara Casa 7 (la
- * segunda foto que el PDF asigna a esta página). El botón "Reservar
+ * cliente en dos párrafos; la foto acompañante es terraza_04, el tipi
+ * privado entre palmeras al atardecer —la imagen que mejor dice "el día
+ * lo marcas tú" del set definitivo. El botón "Reservar
  * experiencia" apunta por ahora a /contacto — cuando exista el
  * calendario de citas, basta cambiar aquí el destino (si es URL
  * externa, cambiar el <Link> por <a> en Experiencias.jsx).
@@ -68,8 +81,8 @@ export const experienciasEditorial = {
   remate:
     'Te sugerimos registrarte en nuestras actividades guiadas durante el día, recuerda que tú marcas el ritmo dentro de la casa.',
   foto: {
-    src: '/fotos_hotel/casa/casa_07.jpeg',
-    alt: 'Tipi iluminado con velas y copas de vino sobre el jardín de Aurea Vita al caer la tarde',
+    src: '/fotos/terraza/terraza_04.jpg',
+    alt: 'Tipi privado entre palmeras, con cojines verdes sobre el jardín al caer la tarde',
   },
   boton: 'Reservar experiencia',
   to: '/contacto',
@@ -97,20 +110,23 @@ export const albercaInfinita = {
     'El desayuno puede servirse junto al agua. Solo hay que pedirlo la noche anterior.',
   fotos: {
     principal: {
-      src: '/fotos_hotel/alberca/alberca_02.jpeg',
-      alt: 'Camastros y palmeras junto a la alberca de Aurea Vita',
+      src: '/fotos/alberca/alberca_08.jpg',
+      alt: 'Alberca infinita enmarcada por palmeras frente al horizonte marino',
     },
     detalle: {
-      src: '/fotos_hotel/alberca/alberca_10.jpeg',
-      alt: 'Detalle del agua en calma de la alberca reflejando la luz',
+      src: '/fotos/alberca/alberca_07.jpg',
+      alt: 'Borde de alberca en mosaico azul con palmeras difuminadas al fondo',
     },
     nocturna: {
-      src: '/fotos_hotel/alberca/alberca_14.jpeg',
-      alt: 'Alberca iluminada de noche bajo un cielo azul profundo',
+      src: '/fotos/alberca/alberca_01.jpg',
+      alt: 'Alberca iluminada al anochecer, con las aguas azules en calma',
     },
+    /* No hay ninguna toma de desayuno junto al agua en la entrega: el
+       slot lo cubre el servicio de cocos al borde de la alberca, que
+       cuenta lo mismo —la cocina sale hasta el agua. */
     desayuno: {
-      src: '/fotos_hotel/alberca/alberca_07.jpeg',
-      alt: 'Desayuno servido en una mesa junto a la alberca por la mañana',
+      src: '/fotos/restaurante/restaurante_21.jpg',
+      alt: 'Cocos servidos al borde de la alberca con el oleaje de fondo',
     },
   },
 };
@@ -124,12 +140,14 @@ export const atardeceres = {
   cta: { label: 'Conoce la carta de Cielo', to: '/gastronomia' },
   fotos: {
     crepusculo: {
-      src: '/fotos_hotel/terraza/terraza_13.jpeg',
-      alt: 'Atardecer desde la terraza de Cielo con el cielo encendido en tonos cálidos',
+      src: '/fotos/terraza/terraza_01.jpg',
+      alt: 'Tipi de picnic privado sobre el jardín al atardecer, entre palmeras',
     },
+    /* Después de la hora dorada no hay foto de terraza en la entrega:
+       el par lo cierra la alberca ya de noche, mismo nivel de deck. */
     nocturna: {
-      src: '/fotos_hotel/terraza/terraza_10.jpeg',
-      alt: 'Ambiente nocturno del lounge de Cielo con iluminación tenue',
+      src: '/fotos/alberca/alberca_03.jpg',
+      alt: 'Piscina turquesa y camastros con el mar abriéndose al horizonte nocturno',
     },
   },
 };
@@ -146,10 +164,10 @@ export const descubreAcapulco = {
       descripcion:
         'Travesía privada al atardecer por la bahía de Santa Lucía, con copa de vino y regreso bajo las primeras luces de la costa.',
       foto: {
-        src: '/fotos_hotel/aereas/aereas_02.jpeg',
-        alt: 'Vista aérea de la costa y la bahía de Acapulco con aguas turquesa',
-        /* ~16:9: el recorte es lateral. Centro conserva alberca,
-           palapas y la franja de mar a la izquierda. */
+        src: '/fotos/terraza/terraza_08.jpg',
+        alt: 'Limonadas y follaje sobre la mesa de un camastro frente al mar',
+        /* 1.48: el recorte 16:10 es lateral y mínimo. Centro conserva
+           las bebidas y la franja de océano del fondo. */
         objectPosition: '50% 50%',
       },
     },
@@ -158,11 +176,11 @@ export const descubreAcapulco = {
       descripcion:
         'El salto más famoso del Pacífico mexicano, visto desde el mirador al caer la noche, con cena posterior en el centro.',
       foto: {
-        src: '/fotos_hotel/aereas/aereas_08.jpeg',
-        alt: 'Acantilados de la costa de Acapulco cayendo hacia el mar',
-        /* ~4:3: el recorte es vertical. Encuadre apenas alto (45%)
-           para sostener el drama del acantilado boscoso sobre el
-           agua, sin perder la franja turquesa del pie. */
+        src: '/fotos/alberca/alberca_04.jpg',
+        alt: 'Borde infinito de la alberca sobre el océano en penumbra tropical',
+        /* Encuadre apenas alto (45%): sostiene la caída del borde
+           infinito sobre el agua oscura, que es lo que da el drama
+           nocturno de la card, sin comerse el cielo. */
         objectPosition: '50% 45%',
       },
     },
@@ -171,12 +189,11 @@ export const descubreAcapulco = {
       descripcion:
         'Recorrido en lancha por la laguna de Coyuca entre manglares y aves, con comida de mariscos en una enramada a la orilla.',
       foto: {
-        src: '/fotos_hotel/aereas/aereas_04.jpeg',
-        alt: 'Vista aérea de manglares y vegetación junto al agua',
-        /* ~4:3: recorte vertical. El interés (laguna con reflejo de
-           sol y las casas entre el manglar) vive en la mitad superior;
-           la base es solo vegetación densa. Encuadre alto (38%) sube
-           el agua al cuadro. */
+        src: '/fotos/fachadas/fachadas_04.jpg',
+        alt: 'Palapa de palma sobre el jardín extendido hacia la línea de palmeras del Pacífico',
+        /* Encuadre alto (38%): la palapa y la línea de palmeras viven
+           en la mitad superior; la base es solo césped. Subirlo mete
+           la vegetación al cuadro, que es el sujeto de la card. */
         objectPosition: '50% 38%',
       },
     },
@@ -185,10 +202,10 @@ export const descubreAcapulco = {
       descripcion:
         'Caminata guiada por el Fuerte de San Diego y el viejo centro: la historia del puerto que conectó dos océanos, contada sin prisa.',
       foto: {
-        src: '/fotos_hotel/aereas/aereas_10.jpeg',
-        alt: 'Panorámica aérea de la bahía de Acapulco y la ciudad junto al mar',
-        /* ~16:9: recorte lateral. Encuadre apenas bajo (58%) prioriza
-           la bahía y la ciudad sobre la banda de cielo del pie superior. */
+        src: '/fotos/fachadas/fachadas_02.jpg',
+        alt: 'Torre escultórica de celosía y acceso principal enmarcados por una palapa de palma',
+        /* Encuadre apenas bajo (58%): prioriza la torre y el acceso
+           sobre la banda de cielo del borde superior. */
         objectPosition: '50% 58%',
       },
     },

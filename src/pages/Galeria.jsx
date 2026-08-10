@@ -45,7 +45,7 @@ import {
 export default function Galeria() {
   usePageMeta(
     'Galería · Aurea Vita Acapulco',
-    'Un recorrido visual por Aurea Vita: vistas aéreas de la bahía, habitaciones, alberca infinita, gastronomía, spa y atardeceres en terraza.',
+    'Un recorrido visual por Aurea Vita: arquitectura frente al Pacífico, habitaciones, alberca infinita, gastronomía, spa y atardeceres en terraza.',
   );
 
   const reduceMotion = useReducedMotion();

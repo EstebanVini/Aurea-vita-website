@@ -12,7 +12,7 @@
 
 1. **Logo:** única fuente válida `public/Logo.svg`. En `public/` existen `AureaVita_logo.jpeg`, `Aurea_Vita_logo.png` y `Aurea_Vita_logo_fondo_blanco.jpeg` — **prohibido usarlos**. Favicon también se deriva del SVG.
 2. **Color:** dorado (`#C6A87D`) es el único acento global. Oliva/salvia solo dominan en `/spa`. Nada fuera de los 7 tokens.
-3. **Fotos:** solo `public/fotos_hotel/`. Lista negra completa en §4.8 de este brief.
+3. **Fotos:** ~~solo `public/fotos_hotel/`. Lista negra completa en §4.8 de este brief.~~ **[RONDA ENTRADA — AGO 2026]** El set demo `public/fotos_hotel/` se eliminó y con él su lista negra (§4.8 queda sin efecto). Ahora: solo `public/fotos/<categoria>/`, la fotografía real del hotel. La fuente de verdad para elegir foto es **`docs/fotos/catalogo-definitivas.md`**. **No hay ninguna toma aérea en la entrega**, así que toda referencia a `aereas_NN` en este brief (§3, §4.1, §4.5, §4.6, §4.8) es histórica y no debe implementarse.
 4. **Hero:** `min-h-[100dvh]`, nunca `h-screen`. Hero sin lazy loading; todo lo demás `loading="lazy"`.
 5. **Idioma:** es-MX, tono editorial, cero clichés ("paraíso", "experiencia inolvidable", "el lugar de tus sueños" quedan vetados — el `ux-writer` define el vocabulario).
 

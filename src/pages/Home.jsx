@@ -129,106 +129,174 @@ export default function Home() {
      index.html y se descargaba en todas las páginas. Se inyecta al
      montar y se retira al desmontar para no afectar a las rutas
      interiores (brief §3.3: head-start del LCP solo donde es el LCP).
-     Ronda fotos jul 2026: el LCP depende del modo — poster del video en
-     motion, aereas_11 con reduced-motion (el hero de video ni se
-     monta). QA video hero (P3): useReducedMotion de framer-motion 12 NO
-     se actualiza en vivo (useState con el valor inicial de la media
-     query; hay un TODO al respecto en su fuente), así que la
-     dependencia es formalmente correcta pero inerte dentro de un
-     montaje: si la preferencia cambia con la página abierta, el link no
-     se reinyecta hasta el siguiente montaje — igual que el resto de
-     ramas reduceMotion del árbol. */
+     Ronda fotos jul 2026: el LCP dependía del modo — poster del video en
+     motion, aereas_11 con reduced-motion.
+     Ronda "entrada" (ago 2026): el set demo fotos_hotel/ desapareció del
+     disco (aereas_11 era un 404 en la rama reduced-motion) y los dos
+     modos convergieron en la MISMA imagen: entrada_poster.jpeg, el
+     primer frame de entrada.mp4. Así que el LCP ya no depende del modo y
+     el efecto no necesita depender de reduceMotion — un solo <link> para
+     ambos caminos, y la foto estática de reduced-motion coincide al
+     pixel con el primer frame del video (mismo 1920×1080, mismo
+     object-cover/object-center). Nota que sigue vigente para las ramas
+     reduceMotion del render: useReducedMotion de framer-motion 12 NO se
+     actualiza en vivo (useState con el valor inicial de la media query;
+     hay un TODO al respecto en su fuente), así que un cambio de
+     preferencia con la página abierta no se refleja hasta el siguiente
+     montaje. */
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'preload';
     link.as = 'image';
-    link.href = reduceMotion
-      ? '/fotos_hotel/aereas/aereas_11.jpeg'
-      : '/videos/hero_poster.jpeg';
+    link.href = '/videos/entrada_poster.jpeg';
     link.setAttribute('fetchpriority', 'high');
     document.head.appendChild(link);
     return () => {
       document.head.removeChild(link);
     };
-  }, [reduceMotion]);
+  }, []);
 
   return (
     <>
       {/* 1 · Hero fullscreen (brief §3). Ronda fotos jul 2026: el fondo
-          es video (2 clips del cliente en bucle secuencial, VideoBucle
-          en modo prioridad); el poster del clip 1 es el LCP: sin lazy.
-          El bloque de texto sigue anclado al tercio superior: ahí los
-          clips tienen cielo despejado, ideal para el marfil (brief
-          §3.1). overflow-hidden contiene el fondo, como contenía el Ken
-          Burns (§6.8). */}
+          es video (VideoBucle en modo prioridad) y el poster del primer
+          frame es el LCP: sin lazy.
+          Ronda "entrada" (ago 2026, pedido del cliente): «utilizar CLIP 9
+          como la entrada». CLIP 9 es la toma de dron que se aproxima al
+          ACCESO PRINCIPAL del hotel — literalmente la entrada — así que
+          el hero pasa a UN SOLO clip (entrada.mp4) en bucle simple, en
+          vez de la secuencia de dos. El máster 4K pesaba 91.8 MB, así que
+          se sirve transcodificado: 1920×1080 / 3.5 MB en escritorio y
+          960×540 / 1.05 MB en < md, ambos sin pista de audio y con
+          faststart (el moov al principio: el navegador puede empezar a
+          reproducir sin bajar el archivo entero).
+          El bloque de texto sigue anclado al tercio superior — ahí el
+          clip tiene cielo y la fachada, ver la calibración de scrims
+          abajo (brief §3.1). overflow-hidden contiene el fondo, como
+          contenía el Ken Burns (§6.8). */}
       <section className="relative flex min-h-[100dvh] flex-col justify-start overflow-hidden bg-marino pt-[max(20vh,9rem)]">
-        {/* Con prefers-reduced-motion NO se reproduce video (brief §6):
-            queda la foto aérea estática de siempre — su Ken Burns ya era
-            motion-safe, así que aquí nunca corre. En modo motion,
-            VideoBucle pinta el poster de inmediato y funde el video
-            encima cuando de verdad reproduce. */}
+        {/* Con prefers-reduced-motion NO se reproduce video (brief §6).
+            Ronda "entrada": la foto estática de esta rama es ahora el
+            primer frame del propio clip (entrada_poster.jpeg, 1920×1080)
+            en vez de aereas_11 — que además había desaparecido del disco
+            con el set demo fotos_hotel/ y daba 404. Ventaja doble: los
+            dos modos muestran EXACTAMENTE la misma escena y el mismo
+            encuadre (object-cover + object-center, igual que el <video>
+            de VideoBucle), así que una sola calibración de scrims sirve
+            para ambos (ver bloque siguiente) y el <link rel="preload">
+            de arriba es el mismo en los dos caminos.
+            Se retira el `motion-safe:animate-kenburns` que arrastraba
+            aereas_11: en esta rama nunca podía correr (motion-safe y
+            reduceMotion son excluyentes) salvo si la preferencia cambiaba
+            en caliente — y ahí habría desalineado el encuadre respecto
+            del video. Estático y punto. */}
         {reduceMotion ? (
           <img
-            src="/fotos_hotel/aereas/aereas_11.jpeg"
-            alt="Costa turquesa y cielo despejado del Pacífico desde el aire"
-            width="867"
-            height="650"
+            src="/videos/entrada_poster.jpeg"
+            alt="Acceso principal de Aurea Vita visto desde el aire, entre palmeras y con la iluminación cálida encendida al atardecer"
+            width="1920"
+            height="1080"
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover object-[28%_50%] motion-safe:animate-kenburns md:object-center"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
         ) : (
-          <VideoBucle prioridad />
-        )}
-        {/* QA video hero (P1, jul 2026 — WCAG 1.4.3): la zona del texto
-            en el poster y el clip 01 es cielo claro casi uniforme (luma
-            media 198–205), mucho más claro que el agua de aereas_11
-            para la que se calibraron estos scrims. Medido con la
-            composición exacta de ambos gradientes: subtítulo desktop
-            2.6–3.3:1 (AA pide 4.5:1), H1 móvil 1.8–2.4:1 (pide 3:1),
-            subtítulo móvil 1.7–2.2:1. En modo video el scrim vertical
-            refuerza su tramo superior (45→60 el ancla, 20→40 el via);
-            la foto de reduced-motion conserva los valores originales,
-            con los que ya medía ~5.4:1. Cierre del residual (re-QA):
-            con via/35 el subtítulo quedaba en 4.1:1 sobre el frame
-            claro sostenido del clip 01 — via/40 + subtítulo en marfil
-            sólido (antes /90, abajo) lo suben por encima de 4.5:1. */}
-        <div
-          className={`absolute inset-0 ${
-            reduceMotion
-              ? 'bg-linear-to-b from-marino/45 via-marino/20 to-marino/35'
-              : 'bg-linear-to-b from-marino/60 via-marino/40 to-marino/35'
-          }`}
-          aria-hidden="true"
-        />
-        {/* Scrim lateral solo bajo el bloque de texto (brief §1.1: overlay
-            "solo donde hay texto encima"): la zona centro-izquierda de
-            aereas_11 es agua turquesa clara y el marfil no alcanzaba AA.
-            Combinado con el degradado vertical, el texto queda sobre
-            ~60% de marino efectivo; la mitad derecha de la foto sigue
-            limpia. QA 15 jun (P1): la franja del texto promedia oscura
-            (~6:1) PERO contiene glints de sol/espuma puntuales (~1% del
-            área) donde el overlay solo da ~2–3:1 → falla AA local. Se
-            refuerza el ancla izquierda del scrim (45→60) para subir el
-            piso de marino bajo la columna; el text-shadow del copy
-            (abajo) cubre los glints residuales sin oscurecer la foto. */}
-        <div
-          className="absolute inset-0 bg-linear-to-r from-marino/60 via-marino/30 to-transparent"
-          aria-hidden="true"
-        />
-        {/* QA video hero (P1, jul 2026): en móvil el bloque de texto
-            ocupa todo el ancho y el scrim lateral se agota antes de
-            cubrirlo, así que el H1 cruzaba el cielo claro del clip casi
-            sin refuerzo (1.8–2.4:1, ver medición arriba). Scrim
-            superior dedicado, solo < md y solo en modo video: marino/65
-            → transparente hasta ~55dvh — la franja que ocupa el texto
-            con pt-[max(20vh,9rem)]. La mitad inferior del clip queda
-            limpia (brief §1.1: overlay solo donde hay texto encima). */}
-        {!reduceMotion && (
-          <div
-            className="absolute inset-x-0 top-0 h-[55dvh] bg-linear-to-b from-marino/65 to-transparent md:hidden"
-            aria-hidden="true"
+          <VideoBucle
+            prioridad
+            clips={{
+              escritorio: ['/videos/entrada.mp4'],
+              movil: ['/videos/entrada_movil.mp4'],
+            }}
+            poster={{
+              src: '/videos/entrada_poster.jpeg',
+              alt: 'Acceso principal de Aurea Vita visto desde el aire, entre palmeras y con la iluminación cálida encendida al atardecer',
+              width: 1920,
+              height: 1080,
+            }}
           />
         )}
+        {/* ── SCRIMS DEL HERO (ronda "entrada", ago 2026) ──────────────
+            Pedido del cliente: «quitar el filtro azul verdoso». El clip
+            NO tiene tinte alguno: sus colores son cálidos y naturales
+            (cielo de atardecer, piedra, palmeras, césped). El verde
+            azulado lo ponían estos tres overlays, que teñían el frame
+            entero con el token `marino` (#1f3a44), que es literalmente un
+            azul-verde oscuro. Solución acordada: conservar un degradado
+            detrás del texto (hace falta para AA) pero en NEGRO puro, sin
+            componente de color, para que el video se lea con sus colores
+            reales.
+
+            El cambio de color permite ADEMÁS bajar las opacidades,
+            porque a igual alfa un scrim negro rinde bastante más que uno
+            marino (el marino aporta su propia luminancia: L = 0.038, no
+            0). Medido sobre la franja del H1 a 1440×900: negro/45 →
+            3.75:1, marino/45 → 2.74:1, marino/60 → 3.87:1. O sea
+            negro/45 ≈ marino/58. Por eso los tres scrims bajan (60→45,
+            40→35, 35→25 el vertical; 60→45, 30→25 el lateral; 65→50 el
+            de móvil) sin perder piso de contraste: se quita el color Y
+            se destapa video.
+
+            CALIBRACIÓN (WCAG 1.4.3: el H1 es texto grande → 3:1; el
+            subtítulo, texto normal → 4.5:1). Metodología: 19 frames de
+            entrada.mp4 y entrada_movil.mp4 (uno cada 0.5s), recortados
+            con el mismo object-cover/object-center que aplica el
+            navegador, con los tres degradados compuestos encima en sRGB
+            NO lineal — c_salida = c_video · Π(1−αᵢ), que es lo que hace
+            el compositor — y luminancia relativa WCAG del resultado
+            contra el marfil #f5f1ec (L = 0.884). Como el fondo siempre
+            queda más oscuro que el marfil, el peor caso de una zona es
+            su parte más CLARA; se evaluó la peor teja de 24×24 px (≈ el
+            fondo local de un glifo) sobre 11 viewports × 19 frames.
+            Peores casos con los valores de abajo:
+              H1         4.53:1  @1024×768   (pide 3:1)
+              subtítulo  4.79:1  @768×1024   (pide 4.5:1)
+            Los dos mínimos caen en tablet, donde el bloque de texto ocupa
+            casi todo el ancho y el scrim lateral ya se agotó; en
+            escritorio ancho suben a 5.6:1 / 8.8:1 y en móvil a 8.1:1 /
+            5.6:1. El pixel suelto más claro (p99.9) queda en ~4.2:1 para
+            el H1 y ~4.0:1 para el subtítulo: bajo 4.5 en el 0.1% del área
+            (reflejos puntuales del muro blanco), que es exactamente lo
+            que cubre el text-shadow del copy (abajo) — el mismo recurso
+            que ya sostenía los glints de sol de la foto anterior.
+
+            UN SOLO juego de scrims para los DOS modos: desde esta ronda
+            reduced-motion muestra el primer frame de este mismo clip, así
+            que la rama marino/45–20/35 que tenía la foto aérea dejó de
+            aplicar (y sobre esta escena habría fallado: subtítulo 2.93:1
+            en móvil, H1 con p99.9 de 2.78:1 en tablet). ─────────────── */}
+        <div
+          className="absolute inset-0 bg-linear-to-b from-black/45 via-black/35 to-black/25"
+          aria-hidden="true"
+        />
+        {/* Scrim lateral, reforzando la columna donde vive el texto
+            (brief §1.1: overlay "solo donde hay texto encima"). El
+            degradado vertical por sí solo no basta en la mitad izquierda,
+            que en este clip cruza la fachada blanca y el cielo; la mitad
+            derecha del frame — césped, palmeras, el campo al fondo —
+            queda sin refuerzo y se ve limpia. Se apaga a transparent
+            antes del borde derecho para que la caída no se note como
+            banda. */}
+        <div
+          className="absolute inset-0 bg-linear-to-r from-black/45 via-black/25 to-transparent"
+          aria-hidden="true"
+        />
+        {/* En < md el bloque de texto ocupa todo el ancho y el scrim
+            lateral se agota antes de cubrirlo, así que el texto cruzaría
+            la zona más clara del frame casi sin refuerzo. Scrim superior
+            dedicado, solo < md: negro/50 → transparente sobre la franja
+            que ocupa el texto con pt-[max(20vh,9rem)]. Se extiende de
+            55dvh a 60dvh en esta ronda: en móvil el recorte object-cover
+            deja a la vista solo la banda CENTRAL del frame 16:9 (≈26% del
+            ancho a 390×844), que es justo el acceso iluminado y el muro
+            blanco — lo más claro del clip. Con 55dvh el degradado ya
+            estaba casi agotado a la altura del subtítulo (~50dvh) y este
+            se quedaba en 4.45:1; con 60dvh sube a 4.79:1 y entra en AA.
+            La mitad inferior del clip sigue limpia (brief §1.1).
+            Va en los dos modos: con reduced-motion el fondo es el primer
+            frame de este mismo clip y tiene el problema idéntico. */}
+        <div
+          className="absolute inset-x-0 top-0 h-[60dvh] bg-linear-to-b from-black/50 to-transparent md:hidden"
+          aria-hidden="true"
+        />
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
@@ -237,21 +305,27 @@ export default function Home() {
         >
           {/* Eyebrow "Aurea Vita · Acapulco" eliminado en la ronda 15 jun
               (§9.3): el H1 abre la secuencia. */}
-          {/* text-shadow marino (QA 15 jun, P1): garantía AA del marfil
-              sobre los glints de sol/espuma puntuales de aereas_11, que el
-              overlay no puede cubrir sin oscurecer toda la foto. El halo
-              marino sostiene el contraste en el borde de cada glifo aun
-              sobre el pixel más claro, conservando "la foto manda" en la
-              mitad derecha limpia (brief §1.1). */}
+          {/* text-shadow (QA 15 jun, P1): garantía AA del marfil sobre
+              los reflejos puntuales que el overlay no puede cubrir sin
+              oscurecer todo el fondo — antes los glints de sol/espuma de
+              aereas_11, hoy los del muro blanco y el cielo del clip de la
+              entrada (el 0.1% de pixels que la calibración de arriba deja
+              bajo 4.5:1). El halo sostiene el contraste en el borde de
+              cada glifo aun sobre el pixel más claro, conservando "la
+              imagen manda" en la mitad derecha limpia (brief §1.1).
+              Ronda "entrada": el halo pasa de marino a NEGRO por el mismo
+              pedido de quitar el azul verdoso — era el último resto de
+              color tintando el video, y a igual alfa un halo negro rinde
+              más, así que el respaldo queda incluso algo más firme. */}
           <motion.h1
             variants={heroItem}
-            className="max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.05] text-marfil [text-shadow:0_1px_18px_rgb(31_58_68_/_0.55)]"
+            className="max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.05] text-marfil [text-shadow:0_1px_18px_rgb(0_0_0_/_0.55)]"
           >
             {heroHome.titulo}
           </motion.h1>
           <motion.p
             variants={heroItem}
-            className="mt-6 max-w-2xl text-lg text-marfil [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
+            className="mt-6 max-w-2xl text-lg text-marfil [text-shadow:0_1px_12px_rgb(0_0_0_/_0.7)]"
           >
             {heroHome.subtitulo}
           </motion.p>
@@ -303,12 +377,14 @@ export default function Home() {
               <img
                 src={bienvenida.foto.src}
                 alt={bienvenida.foto.alt}
-                width="1920"
-                height="1440"
+                width="1600"
+                height="1066"
                 loading="lazy"
-                /* Dron Casa 21 (ronda 23 jul): el recorte 4:5 centra la
-                   alberca y la terraza; el encuadre bajo (62%) conserva el
-                   espejo de agua y los camastros, no el cielo. */
+                /* Encuadre heredado de la aérea anterior («Dron Casa 21»),
+                   que la entrega definitiva no incluye. Sobre alberca_12
+                   —deck, alberca y jacuzzi abiertos al Pacífico, 3:2— el
+                   recorte 4:5 con encuadre bajo (62%) sigue conservando el
+                   espejo de agua y los camastros en vez del cielo. */
                 className="aspect-[4/5] w-full object-cover object-[50%_62%]"
               />
             </Parallax>
@@ -410,8 +486,8 @@ export default function Home() {
               <img
                 src={destino.foto.src}
                 alt={destino.foto.alt}
-                width="1920"
-                height="1396"
+                width="1600"
+                height="1066"
                 loading="lazy"
                 className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-[calc(100dvh-9rem)] lg:max-h-[34rem]"
               />
@@ -425,15 +501,22 @@ export default function Home() {
           (§9.3): JSX retirado de Home y `momentosFotos` de home.js. */}
 
       {/* 6 · Banda CTA final de reserva. Ronda 28 jul (pedido del
-          cliente): en modo motion el fondo son los MISMOS dos clips del
-          hero en bucle secuencial (VideoBucle, modo lazy: nada descarga
-          hasta que la banda entra al viewport — y aun entonces sale del
-          caché del hero). La banda conserva su alto de siempre (py-28 /
-          lg:py-40): los clips se recortan con object-cover y no importa
-          (acordado con el cliente). aereas_09 queda como poster del
-          video y como fondo estático con prefers-reduced-motion (brief
-          §6) — ese camino sustituye al deleite de scale 1.08 → 1.0 que
-          traía la foto (§6.8): el movimiento ahora lo pone el video.
+          cliente): en modo motion el fondo son dos clips del video de
+          marca en bucle secuencial (VideoBucle en modo lazy: nada
+          descarga hasta que la banda entra al viewport). Son los clips
+          por defecto del componente (hero_01/hero_02) — hasta la ronda
+          "entrada" (ago 2026) eran los mismos del hero y su descarga
+          salía del caché HTTP; ahora que el hero reproduce entrada.mp4
+          ya no se comparten, y el modo lazy pasa de optimización a
+          requisito: son ~4.3 MB que no deben competir con el LCP.
+          La banda conserva su alto de siempre (py-28 / lg:py-40): los
+          clips se recortan con object-cover y no importa (acordado con
+          el cliente). El poster del video —y el fondo estático con
+          prefers-reduced-motion (brief §6)— es hoy `alberca_02`, la
+          alberca infinita frente al Pacífico en el azul del crepúsculo,
+          que sustituye a la aérea `aereas_09` del set demo. Ese
+          camino sustituye al deleite de scale 1.08 → 1.0 que traía la
+          foto (§6.8): el movimiento ahora lo pone el video.
           Ronda 15 jun (§9.3): texto de apoyo centralizado en home.js;
           el botón ya está a la escala G2 (min-h-[48px] px-8). */}
       <section className="relative overflow-hidden bg-marino">
@@ -441,8 +524,8 @@ export default function Home() {
           <img
             src={ctaFinal.foto.src}
             alt={ctaFinal.foto.alt}
-            width="940"
-            height="529"
+            width="1600"
+            height="1066"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
@@ -451,27 +534,36 @@ export default function Home() {
             poster={{
               src: ctaFinal.foto.src,
               alt: ctaFinal.foto.alt,
-              width: 940,
-              height: 529,
+              width: 1600,
+              height: 1066,
             }}
             etiquetaBoton="video de fondo de la banda de reserva"
           />
         )}
-        {/* QA 15 jun (P1): aereas_09 tiene un cielo amplio muy claro
-            (no un glint puntual); el texto centrado lo cruza. El flat
-            marino/60 dejaba el cuerpo (marfil/85) en 3.14:1 y el eyebrow
-            dorado en 1.84:1 sobre el cielo → falla AA. Se sube el overlay
-            a /72 (sube el piso del cuerpo) y el text-shadow del bloque
-            (abajo) garantiza el borde de los glifos del eyebrow dorado,
-            que sobre cualquier fondo claro no alcanza 4.5:1 por sí solo
-            (regla dura: dorado como texto solo sobre marino). /78 deja el
-            cuerpo (marfil/85) en ~4.6:1 incluso sobre el pixel de cielo
-            más claro; el eyebrow dorado, que ningún overlay lleva a 4.5:1
-            sobre claro, se apoya en el halo marino del text-shadow.
+        {/* QA 15 jun (P1): el fondo de esta banda tiene un cielo amplio
+            muy claro (no un glint puntual) y el texto centrado lo cruza.
+            El flat marino/60 dejaba el cuerpo (marfil/85) en 3.14:1 y el
+            eyebrow dorado en 1.84:1 sobre el cielo → falla AA. Se sube el
+            overlay a /72 (sube el piso del cuerpo) y el text-shadow del
+            bloque (abajo) garantiza el borde de los glifos del eyebrow
+            dorado, que sobre cualquier fondo claro no alcanza 4.5:1 por sí
+            solo (regla dura: dorado como texto solo sobre marino). /78
+            deja el cuerpo (marfil/85) en ~4.6:1 incluso sobre el pixel de
+            cielo más claro; el eyebrow dorado, que ningún overlay lleva a
+            4.5:1 sobre claro, se apoya en el halo marino del text-shadow.
             Ronda 28 jul: el overlay pasa a cubrir también los clips de
             video — que comparten el problema (el QA del hero midió luma
             198–205 en el cielo del clip 01) — así que /78 sigue siendo
-            el piso correcto con fondo en movimiento. */}
+            el piso correcto con fondo en movimiento.
+            Ronda "entrada" (ago 2026): el poster cambió a `alberca_02`,
+            un crepúsculo bastante MÁS oscuro que la aérea que había, así
+            que /78 pasa a ser holgado en la rama reduced-motion. NO se
+            baja: el caso que manda sigue siendo el de los clips
+            hero_01/02, que no cambiaron y conservan su cielo claro. El
+            overlay se dimensiona por el peor fondo de los dos, no por el
+            poster. A diferencia del hero, aquí el marino SÍ se conserva:
+            el cliente pidió quitar el tinte verdoso del video de entrada,
+            no de esta banda, cuyo lavado marino es intencional (§4.1). */}
         <div className="absolute inset-0 bg-marino/78" aria-hidden="true" />
         <RevealGroup
           stagger={0.12}
