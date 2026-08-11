@@ -65,15 +65,23 @@ export default function Habitaciones() {
           width="1600"
           height="1066"
           fetchPriority="high"
-          /* Encuadre heredado (la nota citaba «Cámara Casa 41», que ya no
-             es esta foto: el hero es habitaciones_03). El recorte baja el
-             encuadre (60%): la cama en primer plano y el muro de madera
-             cálida — la promesa de la página sigue siendo la cama.
+          /* Restitución docs/Fotos WEB AV.pdf: el hero vuelve a ser
+             «Cámara Casa 41» (casa_41), la foto que la nota vieja citaba
+             y que la ronda ago 26 había reemplazado por habitaciones_03.
+             Encuadre INVERTIDO respecto de esa ronda: 60% → 25%. El 60%
+             bajaba a por la cama porque en habitaciones_03 ahí estaba el
+             sujeto; en casa_41 la mitad inferior del frame es edredón
+             blanco a plena luz, sin detalle ni textura —recortar ahí deja
+             el hero en un campo blanco liso—. A 25% entran el muro de
+             duelas, la cabecera y la luz cálida indirecta, que es lo que
+             cuenta la foto, y el edredón se queda como base.
+             Ojo al leer la calibración de overlays de abajo: se midió
+             sobre habitaciones_03. Ver nota ahí.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el hero del Home — CSS puro, no retrasa el LCP,
              contenido por el overflow-hidden del section y solo
              motion-safe (estático con reduced-motion). */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_60%] motion-safe:animate-kenburns"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_25%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
             ligero arriba para que la foto respire.
@@ -85,9 +93,18 @@ export default function Habitaciones() {
             donde el `via` mandaba: por eso sube 15→45, y el pie 65→80.
             Medido sobre el archivo web con el mismo object-cover del
             navegador, peor teja de 24×24 px, 5 viewports × Ken Burns
-            (scale 1.0 y 1.06): eyebrow 5.40:1, H1 5.00:1. */}
+            (scale 1.0 y 1.06): eyebrow 5.40:1, H1 5.00:1.
+            RETOCADO en la restitución de fotos (docs/Fotos WEB AV.pdf):
+            con casa_41 y el encuadre alto (25%) el eyebrow se quedaba en
+            4.42:1 — rozando por debajo del 4.5:1 que pide a 12px, porque
+            el recorte sube el muro iluminado a la banda del texto. El
+            `via` sube 45→50, el mínimo que lo devuelve a AA sin tocar el
+            resto: eyebrow 4.73:1, H1 4.25:1. El `from` (40) y el pie (80)
+            se conservan. Modelo de layout aproximado (±0.7 frente a las
+            cifras históricas): conviene verificación de QA sobre el
+            render real. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/45 to-marino/80"
+          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/50 to-marino/80"
           aria-hidden="true"
         />
         <motion.div

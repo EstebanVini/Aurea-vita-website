@@ -80,33 +80,53 @@ export default function Spa() {
           src={spaHeader.hero.src}
           alt={spaHeader.hero.alt}
           width="1600"
-          height="1002"
+          height="1244"
           fetchPriority="high"
-          /* Encuadre bajo (58%) heredado de la foto anterior (una mesa
-             de masaje en interior, que ya no es esta). Sobre spa_07
-             funciona por otro motivo: baja el horizonte y deja el césped
-             con los tapetes en la mitad inferior, que es donde va el
-             texto; arriba quedan el seto, el mar y el cielo.
+          /* Restitución docs/Fotos WEB AV.pdf: el hero es casa_63, «una
+             mesa de masaje en interior» — exactamente la foto que la nota
+             anterior daba por perdida. Intrínsecas 1600×1244 (1.29), NO
+             1600×1002 ni el 3:2 del resto del set: casa_63 es de las
+             pocas verticales-ish de la entrega y el hint debe decirlo.
+             Encuadre 45% (antes 58%): el 58% bajaba a por el césped de
+             spa_07; aquí bajar mete el piso y decapita el arreglo floral.
+             A 45% la camilla queda centrada en la banda visible del hero
+             y el muro de duelas ocupa el tercio superior, que es donde el
+             overlay es más ligero — la textura de madera se lee.
+             Ojo: la calibración de overlays de abajo se midió sobre
+             spa_07 (ver la nota).
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
              por el overflow-hidden del section, solo motion-safe. En la
              página más pausada del sitio, la penumbra respira. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_58%] motion-safe:animate-kenburns"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_45%] motion-safe:animate-kenburns"
         />
         {/* Overlay degradado marino solo donde hay texto (brief §1.1):
             denso al pie, ligero arriba para que la foto respire. Nunca
             negro puro.
-            RECALIBRADO (QA ago 2026, fotografía definitiva): era
-            40/15/65, calibrado para spa_01 (penumbra de mármol). El hero
-            es ahora spa_07 —yoga sobre césped a pleno día, mucho más
-            claro— y con los valores viejos el eyebrow caía a 3.00:1 y el
-            H1 a 2.98:1, por debajo de AA. El `via` sube 15→45 (el H1
-            ocupa dos líneas y empuja el eyebrow a ~57% de la altura,
-            donde mandaba el `via`) y el pie 65→80. Medido sobre el
-            archivo web con el object-cover real, peor teja de 24×24 px,
-            5 viewports × Ken Burns: eyebrow 5.12:1, H1 4.80:1. */}
+            Historial: 40/15/65 se calibró para spa_01 (penumbra de
+            mármol); el QA de ago 2026 lo subió a 40/45/80 para spa_07
+            (yoga sobre césped a pleno día), donde daba eyebrow 5.12:1 y
+            H1 4.80:1.
+            RECALIBRADO otra vez en la restitución de fotos (docs/Fotos
+            WEB AV.pdf): el hero es ahora casa_63 y con 40/45/80 el
+            eyebrow caía a 2.78:1 y el H1 a 2.84:1 — los DOS por debajo de
+            AA, y el H1 es el peor dato de contraste que ha tenido un hero
+            de este sitio. Motivo: casa_63 es un interior claro y la ropa
+            blanca de la camilla cae justo en la banda del texto, mientras
+            que en spa_07 esa banda era césped en sombra.
+            El `via` sube 45→70 y el pie 80→88: es el mínimo del barrido
+            (40/65/88 aún se queda en 4.22:1 el eyebrow). A esa densidad
+            el tercio superior —muro de duelas, que sigue en 40%— se lee
+            entero, que es donde el encuadre 45% dejó la textura.
+            Método: archivo web + object-cover real, overlay compuesto en
+            sRGB no lineal, peor teja de 24×24 px, 6 viewports × Ken Burns
+            (scale 1.0 y 1.06): eyebrow 4.72:1, H1 5.01:1, subtítulo
+            7.49:1. El modelo de layout del texto es aproximado (±0.7
+            reproduciendo las cifras históricas de arriba), así que el
+            margen del eyebrow es ajustado: conviene que QA lo confirme
+            sobre el render real antes de publicar. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/45 to-marino/80"
+          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/70 to-marino/88"
           aria-hidden="true"
         />
         {/* text-shadow marino (QA 15 jun, P1). La nota original hablaba

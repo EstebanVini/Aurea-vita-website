@@ -378,14 +378,22 @@ export default function Home() {
                 src={bienvenida.foto.src}
                 alt={bienvenida.foto.alt}
                 width="1600"
-                height="1066"
+                height="1200"
                 loading="lazy"
-                /* Encuadre heredado de la aérea anterior («Dron Casa 21»),
-                   que la entrega definitiva no incluye. Sobre alberca_12
-                   —deck, alberca y jacuzzi abiertos al Pacífico, 3:2— el
-                   recorte 4:5 con encuadre bajo (62%) sigue conservando el
-                   espejo de agua y los camastros en vez del cielo. */
-                className="aspect-[4/5] w-full object-cover object-[50%_62%]"
+                /* Restitución docs/Fotos WEB AV.pdf: la foto vuelve a ser
+                   la aérea que pedía el cliente («Dron Casa 21» =
+                   dron_21), así que el encuadre deja de ser heredado.
+                   Intrínsecas 1600×1200 (4:3), NO 1600×1066 como el resto
+                   del set: la aérea es la excepción y el hint debe decir
+                   la verdad.
+                   Encuadre ALTO (35%, antes 62%): el recorte 4:5 sobre una
+                   fuente 4:3 es el más agresivo de la página —descarta
+                   ~44% del ancho— y el 62% que servía a alberca_12 aquí
+                   cortaba la casa por el techo dejando jardín y camino de
+                   acceso. A 35% el volumen construido, la alberca y la
+                   franja de mar quedan dentro; lo que se cede es el
+                   antejardín del pie, que no aporta. */
+                className="aspect-[4/5] w-full object-cover object-[50%_35%]"
               />
             </Parallax>
           </Reveal>
@@ -487,9 +495,17 @@ export default function Home() {
                 src={destino.foto.src}
                 alt={destino.foto.alt}
                 width="1600"
-                height="1066"
+                height="1163"
                 loading="lazy"
-                className="aspect-[4/3] w-full object-cover lg:aspect-auto lg:h-[calc(100dvh-9rem)] lg:max-h-[34rem]"
+                /* Restitución docs/Fotos WEB AV.pdf: dron_26, 1600×1163
+                   (no 1600×1066 como el grueso del set — el hint lo
+                   refleja). Encuadre bajo (58%): el marco es 4:3 en móvil
+                   y una columna casi cuadrada en lg (h acotada a
+                   100dvh-9rem, máx 34rem), así que sobra cielo por arriba;
+                   bajar el recorte deja la casa y la línea de costa a la
+                   altura de los datos en serif, y conserva el degradado
+                   del atardecer que da el color a la sección marino. */
+                className="aspect-[4/3] w-full object-cover object-[50%_58%] lg:aspect-auto lg:h-[calc(100dvh-9rem)] lg:max-h-[34rem]"
               />
             </Parallax>
           </Reveal>

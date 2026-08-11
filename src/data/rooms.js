@@ -15,13 +15,31 @@
  * SIN `stats`: el cliente no entregó superficies ni cupos en esta ronda
  * y no se inventan datos (RoomCard omite el bloque si no hay stats).
  *
- * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): las siete
- * habitaciones toman una foto propia de `public/fotos/habitaciones/`
- * (29 disponibles), elegida por lo que describe cada ficha —camas,
- * ventanal, vestidor. Ya no hay ninguna genérica provisional: el flag
- * `fotoPendiente` desapareció junto con el set demo. Sin `pos`: las 29
- * son 3:2 con el sujeto centrado, así que el recorte por defecto de
- * RoomCard (`object-center`) las encuadra bien.
+ * FOTOS (restitución, docs/Fotos WEB AV.pdf): el PDF del cliente asigna
+ * una foto nominal a CINCO de las siete habitaciones —casa_39, casa_46,
+ * casa_51, casa_70 y casa_42, todas en `public/fotos/casa/`— y para las
+ * otras dos escribe literalmente "FOTO: PENDIENTE". La ronda ago 26
+ * había repartido tomas de `public/fotos/habitaciones/` por criterio
+ * propio; esas cinco quedan sustituidas (los archivos NO se borran:
+ * siguen alimentando la galería) y las dos pendientes conservan la que
+ * tenían, marcadas con `fotoPendiente: true` hasta que el cliente
+ * entregue la suya. O sea que el flag vuelve: la nota anterior decía que
+ * había desaparecido con el set demo, y ya no es cierto.
+ *
+ * `pos` (clase Tailwind que RoomCard concatena al className del <img>,
+ * NO un valor CSS suelto): encuadres del curador visual dentro del
+ * recorte 4:3 de la mini-galería. Las cinco fotos nuevas son 3:2
+ * (1600×1066), así que el recorte es lateral y suave, pero el sujeto
+ * —cabecera, clóset, ventanal— no siempre cae en el centro geométrico.
+ * Las dos pendientes siguen sin `pos` (heredan `object-center`).
+ *
+ * ALT: texto del curador visual VERBATIM, sin anteponer el nombre
+ * comercial. Motivo de accesibilidad (WCAG 1.1.1): cuatro habitaciones
+ * se llaman "Vista al Mar" pero solo casa_70 enseña el océano —
+ * anteponer el nombre metería "vista al mar" en el alt de fotos donde
+ * no hay mar, describiendo algo que no está en la imagen. El nombre ya
+ * lo anuncia el <h2> contiguo (`${slug}-titulo`), así que no se pierde
+ * contexto: el alt describe, el encabezado identifica.
  *
  * Las mayúsculas de los eyebrows las pone CSS (utilidad `eyebrow`),
  * nunca estos datos (copy §11). La primera foto es la principal.
@@ -45,8 +63,11 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos/habitaciones/habitaciones_01.jpg',
-        alt: 'Habitación Vista al Mar 1 con ventanales abiertos al océano y sala de estar para leer por las tardes',
+        src: '/fotos/casa/casa_39.jpg',
+        alt: 'Habitación amplia con cabecera arqueada retroiluminada y ventanal hacia la vegetación',
+        /* 55%: descentra hacia el ventanal para que la cabecera arqueada
+           y la luz del jardín entren juntas en el recorte 4:3. */
+        pos: 'object-[55%_50%]',
       },
     ],
   },
@@ -66,8 +87,11 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos/habitaciones/habitaciones_16.jpg',
-        alt: 'Habitación Vista al Mar Compartida 1, luminosa, con clóset abierto, sillón y maderas cálidas',
+        src: '/fotos/casa/casa_46.jpg',
+        alt: 'Habitación serena con librero de madera, orquídeas y ropa de cama impecable',
+        /* 55%: mismo desplazamiento que sus hermanas de categoría, para
+           que las tres se sientan encuadradas igual en la página. */
+        pos: 'object-[55%_50%]',
       },
     ],
   },
@@ -87,8 +111,11 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos/habitaciones/habitaciones_28.jpg',
-        alt: 'Habitación Vista al Mar Compartida 2 en paleta neutra, con acentos de madera tropical',
+        src: '/fotos/casa/casa_51.jpg',
+        alt: 'Habitación cálida con clóset abierto de madera, orquídeas y marina sobre la cama',
+        /* 55%: conserva el clóset abierto de madera, que es lo que
+           distingue a esta toma de la de su gemela casa_46. */
+        pos: 'object-[55%_50%]',
       },
     ],
   },
@@ -110,8 +137,12 @@ export const rooms = [
     cta: 'Reservar esta suite',
     fotos: [
       {
-        src: '/fotos/habitaciones/habitaciones_29.jpg',
-        alt: 'Estancia de la Suite con Vista al Mar frente al ventanal, con el oleaje del Pacífico al fondo',
+        src: '/fotos/casa/casa_70.jpg',
+        alt: 'Suite con ventanales de piso a techo abiertos al oleaje del Pacífico',
+        /* 45%: la única de las cuatro "vista al mar" que de verdad enseña
+           el océano. El encuadre corre a la izquierda para no perder la
+           hoja de ventanal donde entra el oleaje. */
+        pos: 'object-[45%_50%]',
       },
     ],
   },
@@ -130,6 +161,15 @@ export const rooms = [
       'Escritorio',
     ],
     cta: 'Reservar esta habitación',
+    /* docs/Fotos WEB AV.pdf dice literalmente "FOTO: PENDIENTE" para
+       esta habitación: el cliente AÚN NO la entregó. Se conserva
+       habitaciones_08 (ronda ago 26) como provisional en vez de dejar el
+       bloque sin imagen —RoomCard exige `fotos[0]` y romperlo por una
+       foto que falta no ayuda a nadie— y se marca con el flag para que
+       la sustitución sea un grep, no una arqueología.
+       Al llegar la definitiva: cambiar src/alt, añadir `pos` si el
+       encuadre 4:3 lo pide y BORRAR este flag. */
+    fotoPendiente: true,
     fotos: [
       {
         src: '/fotos/habitaciones/habitaciones_08.jpg',
@@ -154,8 +194,11 @@ export const rooms = [
     cta: 'Reservar esta habitación',
     fotos: [
       {
-        src: '/fotos/habitaciones/habitaciones_06.jpg',
-        alt: 'Habitación Doble Vista al Mar 1 con camas gemelas, madera cálida y luz natural',
+        src: '/fotos/casa/casa_42.jpg',
+        alt: 'Habitación doble con dos camas, muro de duelas de madera y tocador arqueado',
+        /* Encuadre apenas bajo (55%): las dos camas y el tocador viven
+           por debajo del eje; el borde superior es solo muro de duelas. */
+        pos: 'object-[50%_55%]',
       },
     ],
   },
@@ -175,6 +218,13 @@ export const rooms = [
       'La mejor vista de la casa',
     ],
     cta: 'Reservar esta suite',
+    /* Segunda entrada con "FOTO: PENDIENTE" en docs/Fotos WEB AV.pdf:
+       el cliente no entregó foto propia de esta suite (la del PDF es la
+       de la suite 1, casa_70, y NO se reutiliza aquí: dos bloques con el
+       mismo nombre comercial y la misma imagen se leerían como un error
+       de maquetación). Se conserva habitaciones_27 como provisional y se
+       marca igual que la Familiar. Mismo procedimiento al recibirla. */
+    fotoPendiente: true,
     fotos: [
       {
         src: '/fotos/habitaciones/habitaciones_27.jpg',
@@ -187,9 +237,14 @@ export const rooms = [
 /**
  * Encabezado de la página (copy §3.1 / §12). Ronda 15 jun: la `intro`
  * de una línea se expandió a dos niveles —`subtitulo` corto (bajo el
- * H1) + `cuerpo` editorial de 3 párrafos del cliente. Ronda ago 26: el
- * hero toma habitaciones_03, la única calidad 5 del set de recámaras
- * (cabecera de madera curva bañada por la luz del jardín).
+ * H1) + `cuerpo` editorial de 3 párrafos del cliente.
+ *
+ * HERO (restitución, docs/Fotos WEB AV.pdf): el cliente pide casa_41
+ * para la portada de /habitaciones. Sustituye a habitaciones_03, que la
+ * ronda ago 26 había elegido por calidad; habitaciones_03 sigue en
+ * disco. Encuadre y dimensiones, en Habitaciones.jsx (el <img> del hero
+ * vive ahí): 1600×1066 y recorte ALTO al 25%, porque la mitad inferior
+ * de casa_41 es edredón blanco sobreexpuesto sin detalle.
  */
 export const habitacionesHeader = {
   eyebrow: 'Descanso',
@@ -201,8 +256,8 @@ export const habitacionesHeader = {
     'Aquí, cada espacio ha sido diseñado para favorecer el descanso profundo, la relajación y la sensación de bienestar que define la esencia de Aurea Vita. Porque descansar no es solamente dormir. Es balancear los sentidos y sentirse en paz.',
   ],
   hero: {
-    src: '/fotos/habitaciones/habitaciones_03.jpg',
-    alt: 'Suite principal con cabecera de madera curva y luz de jardín',
+    src: '/fotos/casa/casa_41.jpg',
+    alt: 'Cama vestida en blanco frente a muro de madera y luz cálida indirecta',
   },
 };
 

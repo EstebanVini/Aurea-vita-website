@@ -89,17 +89,23 @@ export default function Experiencias() {
           width="1600"
           height="1066"
           fetchPriority="high"
-          /* Encuadre 58% verificado sobre alberca_11 (QA ago 2026), ya no
-             heredado: deja arriba el edificio con los ventanales y los
-             camastros alineados, y baja la línea de agua para que el
-             mosaico cobalto —la zona oscura de la foto— quede justo
-             detrás del bloque de texto. Se barrieron 0.30→1.00: 0.58 y
-             0.75 son los únicos que cumplen AA con el overlay de abajo,
-             y 0.58 conserva el edificio, que es el sujeto.
+          /* Restitución docs/Fotos WEB AV.pdf: el hero es casa_16 (mesa
+             de terraza frente al Pacífico en la hora dorada), 1600×1066.
+             Encuadre 45% (antes 58%, verificado sobre alberca_11 en el QA
+             de ago 2026): aquel 58% bajaba la línea de agua para dejar el
+             mosaico cobalto —la zona OSCURA de alberca_11— detrás del
+             texto. Ese razonamiento no traslada: en casa_16 la zona
+             oscura es la mesa y el follaje del tercio central, y el
+             tercio inferior es piso claro. A 45% la mesa puesta y el
+             horizonte quedan en cuadro, y bajo el bloque de texto cae la
+             mesa y no el piso.
+             ATENCIÓN: el overlay de abajo (40/45/80) se calibró contra
+             alberca_11 y NO se ha vuelto a medir sobre esta foto — ver la
+             nota del overlay.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
              por el overflow-hidden del section, solo motion-safe. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_58%] motion-safe:animate-kenburns"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_45%] motion-safe:animate-kenburns"
         />
         {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
             ligero arriba para que el edificio y el cielo respiren.
@@ -115,7 +121,14 @@ export default function Experiencias() {
             (scale 1.0 y 1.06): eyebrow 4.79:1, H1 4.94:1.
             40/55/85 se queda corto (eyebrow 4.37:1); 40/60/85 es el
             mínimo que cumple y a esa densidad la foto sigue leyéndose
-            entera —edificio, camastros, mosaico— como un atardecer. */}
+            entera —edificio, camastros, mosaico— como un atardecer.
+            REVERIFICADO (sin cambios) en la restitución de fotos
+            (docs/Fotos WEB AV.pdf): el hero pasó a casa_16 y estos mismos
+            40/60/85 dan eyebrow 6.18:1 y H1 6.23:1 — la hora dorada de
+            casa_16 es más oscura en la banda del texto que el agua
+            reflectante de alberca_11, así que el degradado ya sobra y se
+            deja intacto. Los heroes de /habitaciones y /spa SÍ hubo que
+            recalibrarlos en esa ronda; este no. */}
         <div
           className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/60 to-marino/85"
           aria-hidden="true"
@@ -198,13 +211,18 @@ export default function Experiencias() {
               <img
                 src={experienciasEditorial.foto.src}
                 alt={experienciasEditorial.foto.alt}
-                width="1600"
-                height="1066"
+                width="1452"
+                height="1364"
                 loading="lazy"
-                /* terraza_04 es 3:2 (1.501), no casi cuadrada como la
-                   foto anterior: el recorte 4:5 es bastante más agresivo
-                   de lo que suponía esta nota. El tipi queda centrado y
-                   completo, pero se pierden las palmeras de los bordes. */
+                /* Restitución docs/Fotos WEB AV.pdf: casa_07, 1452×1364
+                   (1.065) — la única casi cuadrada de la entrega, así que
+                   las intrínsecas se apartan del 1600×1066 del resto y el
+                   recorte 4:5 vuelve a ser suave: cede ~15% del ancho,
+                   frente al ~47% que perdía terraza_04 (3:2). Ahora el
+                   tipi entra completo CON las palmeras que lo flanquean,
+                   que es justo lo que la nota anterior daba por perdido.
+                   Sin object-position: el curador pide centro y el centro
+                   es el valor por defecto — no hace falta clase. */
                 className="aspect-[4/5] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:scale-[1.04]"
               />
             </Parallax>

@@ -15,16 +15,22 @@ export const heroHome = {
  * Sección "Descubre Aurea Vita" (copy §2.1 / §12). Sin eyebrow
  * (eliminado en la ronda). Cuerpo en tres párrafos del cliente.
  * Ronda 23 jul: título ampliado con ", tu casa frente al mar".
- * Ronda ago 26 (docs/fotos/catalogo-definitivas.md): la entrega del
- * cliente NO trae ninguna toma de dron, así que la vista abierta de la
- * casa la sostiene ahora `alberca_12` (calidad 5): deck, alberca y
- * jacuzzi abiertos al Pacífico, el equivalente en espíritu a la aérea.
+ *
+ * FOTO (restitución, docs/Fotos WEB AV.pdf): el cliente asigna a esta
+ * sección la aérea `dron_21`. La ronda ago 26 la había sustituido por
+ * `alberca_12` porque el set de entrega de entonces no traía tomas de
+ * dron; las aéreas SÍ existen ya en `public/fotos/casa/`, así que se
+ * restituye la que pide el PDF. `alberca_12` no se borra del disco:
+ * sigue disponible para la galería.
+ * El encuadre (50% 35%) y las dimensiones intrínsecas (1600×1200) viven
+ * en Home.jsx, que es donde este archivo pinta el <img> — ver la nota
+ * de recorte ahí: el 4:5 sobre una aérea 4:3 es agresivo.
  */
 export const bienvenida = {
   titulo: 'Descubre Aurea Vita, tu casa frente al mar',
   foto: {
-    src: '/fotos/alberca/alberca_12.jpg',
-    alt: 'Alberca y jacuzzi abiertos al Pacífico con camastros sobre deck de madera',
+    src: '/fotos/casa/dron_21.jpg',
+    alt: 'Vista aérea de la casa frente al mar con alberca y jardines cuidados',
   },
   cuerpo: [
     'En Aurea Vita creemos que el verdadero lujo es disponer de tiempo para uno mismo. Frente al Pacífico, hemos creado un refugio donde los días transcurren sin prisas y cada experiencia está pensada para reconectar con lo esencial. Aquí no existen itinerarios rígidos ni horarios que seguir. El mar marca el ritmo, la tranquilidad guía cada momento y el bienestar surge de forma natural.',
@@ -38,11 +44,18 @@ export const bienvenida = {
  * T2 "Gastronomía" → "Alimentación Consciente" (el `to` sigue
  * /gastronomia, D1); T3 "Spa Vita" → "Experiencia Aurea Vita" (el `to`
  * sigue /spa, D4). Eyebrows y rutas conservados.
- * Ronda ago 26 (fotografía definitiva): el tríptico toma una foto de
- * cada mundo que enlaza —habitaciones_26 (suite), restaurante_32 (la
- * mesa) y terraza_07 (el descanso)— todas calidad 4, sin repetirse en
- * ninguna otra sección del sitio. Sin `position`: las tres son 3:2 y
- * el sujeto queda centrado en el recorte 4:3 de FeatureCard.
+ *
+ * FOTOS (restitución, docs/Fotos WEB AV.pdf): el cliente asigna una
+ * foto concreta a cada card del tríptico —casa_69 (Descanso), casa_93
+ * (La mesa) y casa_78 (Bienestar)—, que sustituyen al trío elegido en
+ * la ronda ago 26 (habitaciones_26 / restaurante_32 / terraza_07; estas
+ * NO se borran del disco, siguen sirviendo a la galería).
+ * Las tres son 3:2 (1600×1066), igual que el hint 940×627 que
+ * FeatureCard fija, así que el recorte 4:3 de la card es lateral y
+ * suave. Ahora SÍ llevan `position` (la nota anterior decía que no
+ * hacía falta): FeatureCard la aplica como `object-position` en línea y
+ * son los encuadres del curador visual, que anclan el sujeto de cada
+ * toma —cabecera, plato y camastro— dentro de ese recorte.
  */
 export const homeCards = [
   {
@@ -51,8 +64,11 @@ export const homeCards = [
     title: 'Habitaciones & Suites',
     text: 'Amplios espacios para descansar y relajarse con absoluta privacidad.',
     image: {
-      src: '/fotos/habitaciones/habitaciones_26.jpg',
-      alt: 'Suite principal con cama vestida en lino blanco y luz natural del Pacífico',
+      src: '/fotos/casa/casa_69.jpg',
+      alt: 'Suite luminosa con cabecera de mármol retroiluminada y estancia en piedra clara',
+      /* Apenas a la izquierda (45%): mantiene la cabecera retroiluminada
+         en cuadro y cede el borde derecho, que es solo estancia. */
+      position: '45% 50%',
     },
   },
   {
@@ -61,8 +77,11 @@ export const homeCards = [
     title: 'Alimentación Consciente',
     text: 'Cocina saludable y llena de sabor, pensada para nutrir el cuerpo al ritmo del Pacífico.',
     image: {
-      src: '/fotos/restaurante/restaurante_32.jpg',
-      alt: 'Fruta fresca de temporada y parfaits de yogur servidos sobre madera',
+      src: '/fotos/casa/casa_93.jpg',
+      alt: 'Fruta fresca de temporada y yogur con granola servidos en la mesa de desayuno',
+      /* Encuadre apenas bajo (55%): la comida vive en la mitad inferior
+         del cuadro; subir el recorte se comería los platos. */
+      position: '50% 55%',
     },
   },
   {
@@ -71,8 +90,11 @@ export const homeCards = [
     title: 'Experiencia Aurea Vita',
     text: 'Descubre el descanso profundo a tu propio ritmo.',
     image: {
-      src: '/fotos/terraza/terraza_07.jpg',
-      alt: 'Sombrero de palma sobre camastro con vista abierta al oleaje',
+      src: '/fotos/casa/casa_78.jpg',
+      alt: 'Coco natural, naranja y hierbabuena junto al camastro, ritual de descanso',
+      /* Bajo y a la derecha (55% 55%): centra el servicio sobre la mesa
+         auxiliar, que es el sujeto, y no el respaldo del camastro. */
+      position: '55% 55%',
     },
   },
 ];
@@ -88,12 +110,16 @@ export const destino = {
     'Acapulco Diamante, una de las zonas más privilegiadas y mejor conservadas del Pacífico mexicano. Aquí, la naturaleza sigue siendo la protagonista. Kilómetros de playa prácticamente ininterrumpida, extensas áreas de vegetación tropical y la presencia constante del océano crean un entorno donde el tiempo parece transcurrir de forma diferente. El sonido de las olas, la brisa marina y los colores del paisaje acompañan cada momento, invitando a reducir el ritmo y reconectar con lo esencial.',
     'En Aurea Vita, creemos que el bienestar comienza con el lugar que nos rodea y con la capacidad de detenernos para apreciarlo. Más que un destino, este es un espacio para respirar profundamente, reconectar con uno mismo y dejar que la naturaleza marque el ritmo del día.',
   ],
-  /* Ronda ago 26: sin tomas de dron en la entrega, el destino lo cuenta
-     la luz —terraza_05 (calidad 5), el sol poniéndose sobre el jardín
-     del hotel: mismo cielo dorado del Pacífico que sostenía la aérea. */
+  /* FOTO (restitución, docs/Fotos WEB AV.pdf): el cliente asigna a
+     "Acapulco Diamante" la aérea `dron_26`, la casa recortada contra el
+     cielo del atardecer. Sustituye a `terraza_05`, que la ronda ago 26
+     había puesto aquí como sucedáneo porque el set de entonces no traía
+     aéreas; `terraza_05` queda en disco para la galería.
+     Encuadre (50% 58%) y dimensiones (1600×1163) van en Home.jsx, que
+     es donde vive este <img> (foto sticky con parallax). */
   foto: {
-    src: '/fotos/terraza/terraza_05.jpg',
-    alt: 'Sol poniente sobre el jardín del hotel, con el tipi de picnic recortado contra el cielo',
+    src: '/fotos/casa/dron_26.jpg',
+    alt: 'La casa recortada contra el cielo encendido del atardecer en Acapulco Diamante',
   },
 };
 

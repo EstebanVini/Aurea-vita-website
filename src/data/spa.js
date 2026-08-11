@@ -8,10 +8,18 @@
  * AA ahí). Por eso los eyebrows sobre marfil/arena van en marino, igual
  * que el comportamiento por defecto de SectionHeading.
  *
- * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): el set real
- * de spa son 11 tomas —yoga en el jardín y dos salas de tratamiento—,
- * ninguna de agua. Por eso el hero es spa_07 (calidad 4, la sesión de
- * yoga con el Pacífico de fondo: la única que junta bienestar y mar) y
+ * HERO (restitución, docs/Fotos WEB AV.pdf): el cliente asigna casa_63
+ * —la camilla de masaje frente al muro de duelas— a la portada de
+ * /spa. Sustituye a spa_07 (la sesión de yoga que había elegido la
+ * ronda ago 26); spa_07 no se borra, sigue en disco para la galería.
+ * Es además un hero más literal: la página se llama Wellness y ahora
+ * abre con la camilla, no con una actividad de jardín. Dimensiones
+ * 1600×1244 —de las pocas del set que NO son 3:2— y encuadre 50% 45%
+ * van en Spa.jsx, que es donde vive el <img>.
+ *
+ * Resto de fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): el
+ * set real de spa son 11 tomas —yoga en el jardín y dos salas de
+ * tratamiento—, ninguna de agua. Por eso
  * la aromaterapia usa el par spa_10 (aceites sobre camilla, el detalle)
  * + spa_11 (la sala completa, para dar escala). El circuito de aguas no
  * tiene foto propia en la entrega: lo sostiene alberca_10, el espejo de
@@ -33,8 +41,8 @@ export const spaHeader = {
   titulo: 'Wellness',
   subtitulo: 'Donde el bienestar sucede de forma natural.',
   hero: {
-    src: '/fotos/spa/spa_07.jpg',
-    alt: 'Sesión de yoga al aire libre con el Pacífico de fondo',
+    src: '/fotos/casa/casa_63.jpg',
+    alt: 'Camilla de masaje frente a muro de duelas de madera y flores frescas',
   },
 };
 

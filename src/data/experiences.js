@@ -6,10 +6,15 @@
  * /gastronomia) y "Descubre Acapulco" (el destino, única sección de
  * contraste en marino con texto marfil de la página).
  *
- * Fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md): el hero es
- * alberca_11 (mosaico cobalto, camastros y el edificio principal: una
- * toma de conjunto que abre la página). Lo fue alberca_05 hasta el QA
- * de ago 2026, que lo retiró por contraste — ver la nota sobre `hero`
+ * FOTOS DEL CLIENTE (restitución, docs/Fotos WEB AV.pdf): el PDF asigna
+ * dos fotos a esta página —casa_16 al hero y casa_07 a la editorial que
+ * acompaña al texto "vivir el día"—, y NADA a los bloques temáticos ni
+ * a las cards del destino, que conservan lo que tenían. Las
+ * desplazadas (alberca_11, terraza_04) no se borran del disco.
+ *
+ * Resto de fotos (ronda ago 26, docs/fotos/catalogo-definitivas.md):
+ * el hero fue alberca_11 y, antes, alberca_05 hasta que el QA
+ * de ago 2026 lo retiró por contraste — ver la nota sobre `hero`
  * más abajo. El bloque de la alberca alterna el borde infinito
  * (alberca_08), el mosaico en detalle (alberca_07), la noche iluminada
  * (alberca_01) y el servicio al borde del agua (restaurante_21, la más
@@ -41,28 +46,34 @@
 export const experienciasHeader = {
   eyebrow: 'Experiencias',
   titulo: 'Maneras de pasar el día',
-  /* Hero cambiado en el QA de ago 2026 (P0 de accesibilidad). Era
-     alberca_05, un still-life de alta clave (muro encalado a pleno sol y
-     toalla blanca) sobre el que el marfil daba 3.23:1 en el eyebrow y
-     2.74:1 en el H1 — por debajo de AA y sin arreglo posible por
-     encuadre: en móvil el recorte object-cover no tiene holgura
-     vertical. alberca_11 es además una toma de conjunto (portada real de
-     la página) y no un detalle: mosaico cobalto, camastros y el edificio
-     principal. Aparece también como una tesela en gallery.js; se acepta
-     esa duplicación menor antes que abrir la página con un still-life.
-     Alt EXACTO del catálogo. */
+  /* Hero pedido por el cliente en docs/Fotos WEB AV.pdf: casa_16, la
+     mesa de terraza puesta frente al Pacífico en la luz dorada de la
+     tarde. Sustituye a alberca_11, que a su vez había sustituido a
+     alberca_05 en el QA de ago 2026 por un P0 de accesibilidad (aquel
+     still-life de alta clave dejaba el marfil en 3.23:1 / 2.74:1). Como
+     casa_16 es también una toma de conjunto y no un detalle, la lección
+     de aquel QA se respeta; pero su hora dorada tiene cielo claro, así
+     que la calibración del overlay heredada de alberca_11 dejó de ser
+     válida — ver la nota del <img> y del overlay en Experiencias.jsx.
+     Encuadre 50% 45% y dimensiones 1600×1066, en el JSX.
+     Alt del curador visual, verbatim. */
   hero: {
-    src: '/fotos/alberca/alberca_11.jpg',
-    alt: 'Alberca de mosaico cobalto con camastros alineados junto al edificio principal',
+    src: '/fotos/casa/casa_16.jpg',
+    alt: 'Mesa de terraza puesta frente al Pacífico en la luz dorada de la tarde',
   },
 };
 
 /**
  * Bloque editorial bajo el hero (ronda 23 jul, docs/Fotos WEB AV.pdf:
  * "AGREGAR ESTE TEXTO JUSTO DEBAJO DE LA IMAGEN"). Cuerpo literal del
- * cliente en dos párrafos; la foto acompañante es terraza_04, el tipi
- * privado entre palmeras al atardecer —la imagen que mejor dice "el día
- * lo marcas tú" del set definitivo. El botón "Reservar
+ * cliente en dos párrafos; la foto acompañante es la que el mismo PDF
+ * asigna a este bloque: casa_07, el tipi de lino iluminado con farolas
+ * sobre el jardín al anochecer. Sustituye a terraza_04 (el tipi al
+ * atardecer) que había elegido la ronda ago 26 — mismo sujeto, otra
+ * hora. Encuadre CENTRADO (por defecto, sin clase) y dimensiones
+ * 1452×1364 en el JSX: casa_07 es la única casi cuadrada de la entrega,
+ * así que el recorte 4:5 es el más benévolo de la página. El botón
+ * "Reservar
  * experiencia" apunta por ahora a /contacto — cuando exista el
  * calendario de citas, basta cambiar aquí el destino (si es URL
  * externa, cambiar el <Link> por <a> en Experiencias.jsx).
@@ -81,8 +92,8 @@ export const experienciasEditorial = {
   remate:
     'Te sugerimos registrarte en nuestras actividades guiadas durante el día, recuerda que tú marcas el ritmo dentro de la casa.',
   foto: {
-    src: '/fotos/terraza/terraza_04.jpg',
-    alt: 'Tipi privado entre palmeras, con cojines verdes sobre el jardín al caer la tarde',
+    src: '/fotos/casa/casa_07.jpg',
+    alt: 'Tipi de lino iluminado con farolas sobre el jardín al anochecer entre palmeras',
   },
   boton: 'Reservar experiencia',
   to: '/contacto',

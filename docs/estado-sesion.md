@@ -194,3 +194,46 @@ desapareció del sitio (filtro de galería incluido) y sus usos se reemplazaron.
 **Regla nueva (añadir a las duras):** el **salvia** (`#a3b5a0`, L = 0.444) como texto se
 comporta igual que el dorado — solo funciona sobre marino **sólido**. Sobre foto con
 overlay no llega a 4.5:1 ni a alfa 0.94. La banda CTA de `/spa` pasó su eyebrow a marfil.
+
+---
+
+## Ronda "Fotos WEB AV" — 10 ago 2026 (fotos del PDF en sus espacios)
+
+Origen: `docs/Fotos WEB AV.pdf`, el documento donde el cliente asigna foto por foto a
+cada sección. Orquestación: `visual-designer` (ver las 14 fotos, alt + encuadre) →
+`ui-engineer` (mapeo + recalibración de overlays).
+
+**El copy de este PDF ya estaba implementado** desde la ronda del 23 jul (nombres,
+descripciones y amenidades de las 7 habitaciones, "Acapulco Diamante", los textos de
+Experiencias, el botón "Reservar espacio" de Wellness). Lo que faltaba —y lo que hace esta
+ronda— son las **fotos**: la ronda "entrada" las había sustituido por otras del set de 121
+al no existir todavía este mapeo. Las 14 fotos vienen de `docs/fotos_definitivas/` y se
+publican optimizadas en `public/fotos/casa/`.
+
+| Sección | Foto |
+|---|---|
+| Home · Descubre Aurea Vita | `dron_21` |
+| Home · tríptico (Descanso / La mesa / Bienestar) | `casa_69` · `casa_93` · `casa_78` |
+| Home · Acapulco Diamante | `dron_26` |
+| Hero /habitaciones | `casa_41` |
+| Vista al Mar 1 · Compartida 1 · Compartida 2 | `casa_39` · `casa_46` · `casa_51` |
+| Suite con Vista al Mar (4ª) · Doble (6ª) | `casa_70` · `casa_42` |
+| Hero /spa | `casa_63` |
+| /experiencias hero + editorial | `casa_16` · `casa_07` |
+
+**Recalibración obligada.** Cambiar la foto de un hero invalida su overlay, que estaba
+calibrado sobre la anterior. `/spa` con `casa_63` caía a 2.78:1 el eyebrow (la ropa blanca
+de la camilla cae justo en la banda del texto): overlay a `40/70/88` → 4.90:1 medido de
+forma independiente. `/habitaciones` con `casa_41`: `via` 45→50 → 4.73:1.
+`/experiencias` con `casa_16` pasa sin tocar nada.
+
+**Deuda con el cliente (marcada en el código con `fotoPendiente: true`):**
+- Habitación Familiar (5ª) y Suite con Vista al Mar (7ª): el PDF dice "FOTO: PENDIENTE".
+  Conservan una foto provisional del set general.
+- **Cuatro habitaciones se llaman "vista al mar" y no se ve el mar en su foto**
+  (`casa_39`, `casa_46`, `casa_51`, `casa_42`). El nombre comercial es del cliente y se
+  respeta; el `alt` describe lo que de verdad se ve, porque es texto de accesibilidad. La
+  única que acredita vista al mar real es `casa_70`.
+- `dron_26` ilustra "Acapulco Diamante" pero no muestra océano: es la casa al atardecer.
+- La 4ª y la 7ª habitación comparten nombre comercial ("Suite con Vista al Mar") en el
+  propio PDF. Probable duplicado del documento; conviene confirmarlo.
