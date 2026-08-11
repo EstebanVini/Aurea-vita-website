@@ -4,3 +4,13 @@ dist-ssr
 *.local
 .DS_Store
 npm-debug.log*
+
+# Másters de cámara: no van a git.
+# GitHub rechaza cualquier archivo >100MB y avisa a partir de 50MB. Los
+# CLIP N.mp4 en 4K pesan entre 35 y 138MB, así que ni caben ni tiene
+# sentido versionarlos: lo que el sitio sirve son las renditions web de
+# public/videos/, y los originales viven respaldados en Nextcloud
+# ("Eviniegra Software/Oskar/Fotos Pag.WEB").
+# Los CLIP que ya están en el historial siguen rastreados (.gitignore no
+# afecta a lo ya versionado); esta regla evita que se sumen más.
+originales/videos/

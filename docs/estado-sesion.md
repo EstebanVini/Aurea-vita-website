@@ -283,3 +283,44 @@ fotos dan 1.4–2.2:1 (edredón blanco, muro claro, mantel rosa) y ninguna es re
 sombra. Si quiere alguno de esos heroes completamente limpio, la vía no es bajar el alfa
 sino cambiar la fotografía por una con zona oscura en el tercio inferior izquierdo, o
 mover el bloque de texto.
+
+---
+
+## Ronda "CLIP 9 + 16" — 10 ago 2026 (el hero vuelve a ser un par)
+
+Pedido del cliente: el video del inicio pasa a ser **CLIP 9 y CLIP 16 juntos, en bucle**.
+Orquestación: `motion-engineer`.
+
+El hero vuelve a la secuencia de DOS clips con crossfade direccional de 700 ms que
+`VideoBucle` implementa de fábrica — el camino de un solo clip (ronda "entrada") queda
+probado y disponible, pero ya no lo monta nadie.
+
+| clip | origen | escena | dur. | escritorio | móvil |
+|---|---|---|---|---|---|
+| 01 | CLIP 9 | dron acercándose al acceso principal (la entrada por tierra) | 9.6 s | 3.42 MB | 1.02 MB |
+| 02 | CLIP 16 | la fachada de playa vista desde el mar, con oleaje y campo de golf | 15.2 s | 4.71 MB | 1.52 MB |
+
+Los másters 4K pesaban 91.8 MB y 138.5 MB; viven en `originales/videos/`, fuera de
+`public/`. Las renditions del 01 se renombraron `entrada.mp4` → `entrada_01.mp4` (y su
+`_movil`) por simetría con el par. El poster sigue siendo `entrada_poster.jpeg`, primer
+frame del 01, que es el que abre la secuencia — el fade-in sobre el poster es invisible.
+
+**Sin scrims, como decidió el cliente en la ronda anterior.** Remedido con el clip nuevo,
+mismo método (rects de línea reales de Chrome, 14 viewports, peor teja 24×24 px):
+
+| | H1 (pide 3:1) | subtítulo (pide 4.5:1) |
+|---|---|---|
+| clip 01 · CLIP 9 | 1.14:1 | 1.96:1 |
+| clip 02 · CLIP 16 | 1.25:1 | 1.41:1 |
+| **peor caso del bucle** | **1.14:1** (lo pone el 01) | **1.41:1** (lo pone el 02) |
+
+El H1 no se mueve; **el peor caso del subtítulo empeora de 1.96:1 a 1.41:1** y se muda de
+escritorio grande a móvil pequeño. Los perfiles de los dos clips están invertidos: CLIP 16
+va mejor de H1 y peor de subtítulo. A diferencia de CLIP 9, CLIP 16 **no falla de forma
+constante** — a 1366×768 el H1 recorre 1.25–4.02:1 durante sus 15 s—, pero el peor caso
+manda. La causa en móvil no es el cielo sino el **parapeto blanco de la azotea**, donde
+aterriza la última línea del subtítulo tras el recorte `object-cover`.
+
+Nota para el futuro: con dos clips ya **no existe una zona oscura común** a ambos, así que
+la salida "bajar el bloque de texto a una zona oscura" que se apuntó en la ronda anterior
+deja de ser viable sin cambiar el material.

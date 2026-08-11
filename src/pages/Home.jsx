@@ -134,11 +134,17 @@ export default function Home() {
      Ronda "entrada" (ago 2026): el set demo fotos_hotel/ desapareció del
      disco (aereas_11 era un 404 en la rama reduced-motion) y los dos
      modos convergieron en la MISMA imagen: entrada_poster.jpeg, el
-     primer frame de entrada.mp4. Así que el LCP ya no depende del modo y
-     el efecto no necesita depender de reduceMotion — un solo <link> para
-     ambos caminos, y la foto estática de reduced-motion coincide al
+     primer frame de entrada_01.mp4. Así que el LCP ya no depende del modo
+     y el efecto no necesita depender de reduceMotion — un solo <link>
+     para ambos caminos, y la foto estática de reduced-motion coincide al
      pixel con el primer frame del video (mismo 1920×1080, mismo
-     object-cover/object-center). Nota que sigue vigente para las ramas
+     object-cover/object-center).
+     Ronda "entrada 02" (ago 2026): el hero pasa a dos clips y los
+     archivos del 01 se renombraron entrada.mp4 → entrada_01.mp4 (y
+     _movil), pero el poster NO cambia de nombre ni de contenido: sigue
+     siendo el primer frame del clip que ABRE la secuencia, así que este
+     preload es exactamente el mismo y sigue apuntando al LCP real. Nota
+     que sigue vigente para las ramas
      reduceMotion del render: useReducedMotion de framer-motion 12 NO se
      actualiza en vivo (useState con el valor inicial de la media query;
      hay un TODO al respecto en su fuente), así que un cambio de
@@ -164,18 +170,43 @@ export default function Home() {
           Ronda "entrada" (ago 2026, pedido del cliente): «utilizar CLIP 9
           como la entrada». CLIP 9 es la toma de dron que se aproxima al
           ACCESO PRINCIPAL del hotel — literalmente la entrada — así que
-          el hero pasa a UN SOLO clip (entrada.mp4) en bucle simple, en
-          vez de la secuencia de dos. El máster 4K pesaba 91.8 MB, así que
-          se sirve transcodificado: 1920×1080 / 3.5 MB en escritorio y
-          960×540 / 1.05 MB en < md, ambos sin pista de audio y con
-          faststart (el moov al principio: el navegador puede empezar a
-          reproducir sin bajar el archivo entero).
-          El bloque de texto sigue anclado al tercio superior — ahí el
-          clip tiene cielo y la fachada blanca, que es justo la zona más
-          clara del frame; ver el bloque SIN SCRIMS más abajo, que
-          documenta el compromiso de contraste que eso implica desde que
-          el cliente pidió el video limpio (brief §3.1). overflow-hidden
-          contiene el fondo, como contenía el Ken Burns (§6.8).
+          el hero abandonó los clips de marca (hero_01/02, que siguen
+          sirviendo a la banda CTA) y se quedó con ese único plano en
+          bucle simple.
+          Ronda "entrada 02" (ago 2026, pedido del cliente): «que ahora
+          sean CLIP 9 y CLIP 16 juntos, en bucle». El hero VUELVE a ser
+          una SECUENCIA DE DOS clips —01 → 02 → 01 → …, con el crossfade
+          direccional de 700 ms de VideoBucle—, ya no un bucle simple.
+          Los dos planos se complementan y por eso el orden no es
+          arbitrario: se ENTRA por tierra y se sale al mar.
+            · 01 · entrada_01 (CLIP 9), 9.6 s — dron acercándose al acceso
+              principal entre palmeras, luz cálida encendida.
+            · 02 · entrada_02 (CLIP 16), 15.2 s — la fachada de playa vista
+              DESDE EL MAR, con el oleaje en primer plano y el campo de
+              golf y las palmeras detrás, en luz de tarde.
+          Ciclo completo ~24.8 s. Los másters 4K pesaban decenas de MB, así
+          que se sirven transcodificados, cada uno en dos renditions, sin
+          pista de audio y con faststart (el moov al principio: el
+          navegador empieza a reproducir sin bajar el archivo entero):
+            escritorio 1920×1080 → 3.42 MB (01) + 4.71 MB (02)
+            < md       960×540   → 1.02 MB (01) + 1.52 MB (02)
+          Solo el 01 compite con el LCP: VideoBucle monta el 02 con
+          preload="none" y promueve su descarga en el primer 'playing'
+          real, con ~8 s de clip 01 de margen por delante.
+          El poster (y la rama reduced-motion) es el primer frame del 01,
+          NO del 02: el 01 es el que abre la secuencia, así que el fundido
+          poster → video es invisible. Si algún día se invirtiera el
+          orden, el poster tendría que cambiar con él.
+          El bloque de texto sigue anclado al tercio superior, que en los
+          DOS clips cae sobre la parte clara del frame — en el 01 el cielo
+          y la fachada blanca; en el 02 el cielo brumoso del horizonte en
+          escritorio y el parapeto blanco de la azotea en móvil. Los dos
+          fallan AA, pero NO por lo mismo ni en el mismo viewport: ver el
+          bloque SIN SCRIMS más abajo, que trae la medición de cada clip
+          por separado y el peor caso del bucle, y documenta el compromiso
+          de contraste asumido desde que el cliente pidió el video limpio
+          (brief §3.1). overflow-hidden contiene el fondo, como contenía
+          el Ken Burns (§6.8).
           `bg-marino` de la sección NO es un filtro: es el color de
           respaldo que se ve mientras el poster aún no pinta, y queda
           DEBAJO del video, nunca encima. */}
@@ -184,14 +215,22 @@ export default function Home() {
             Ronda "entrada": la foto estática de esta rama es ahora el
             primer frame del propio clip (entrada_poster.jpeg, 1920×1080)
             en vez de aereas_11 — que además había desaparecido del disco
-            con el set demo fotos_hotel/ y daba 404. Ventaja doble: los
-            dos modos muestran EXACTAMENTE la misma escena y el mismo
+            con el set demo fotos_hotel/ y daba 404. Ventaja: los dos
+            modos ABREN con exactamente la misma escena y el mismo
             encuadre (object-cover + object-center, igual que el <video>
             de VideoBucle) y el <link rel="preload"> de arriba es el
             mismo en los dos caminos. Desde la ronda "sin filtro" esa
             equivalencia importa más todavía: NINGUNO de los dos modos
             lleva capa encima, así que la foto estática y el video se ven
             idénticos — que es exactamente lo que pidió el cliente.
+            Ronda "entrada 02": en modo motion el hero sigue con el clip
+            01 (de ahí que el arranque coincida al pixel) pero después
+            avanza al 02, la fachada de playa desde el mar. Esta rama NO
+            lo alcanza y se queda en el frame de apertura, que es lo
+            correcto: prefers-reduced-motion pide que nada se mueva, no
+            un pase de diapositivas de las dos escenas. El alt describe,
+            por tanto, lo que esta rama muestra de verdad — la entrada —,
+            no el bucle completo.
             Se retira el `motion-safe:animate-kenburns` que arrastraba
             aereas_11: en esta rama nunca podía correr (motion-safe y
             reduceMotion son excluyentes) salvo si la preferencia cambiaba
@@ -209,9 +248,18 @@ export default function Home() {
         ) : (
           <VideoBucle
             prioridad
+            /* Secuencia de DOS clips (ronda "entrada 02", ago 2026). El
+               orden manda: el 01 abre porque el poster —y por tanto el
+               LCP y la rama reduced-motion— es su primer frame. Los dos
+               arrays son renditions del MISMO material en el mismo orden;
+               VideoBucle elige el par una sola vez al montar con
+               matchMedia (< md → móvil). */
             clips={{
-              escritorio: ['/videos/entrada.mp4'],
-              movil: ['/videos/entrada_movil.mp4'],
+              escritorio: ['/videos/entrada_01.mp4', '/videos/entrada_02.mp4'],
+              movil: [
+                '/videos/entrada_01_movil.mp4',
+                '/videos/entrada_02_movil.mp4',
+              ],
             }}
             poster={{
               src: '/videos/entrada_poster.jpeg',
@@ -245,6 +293,10 @@ export default function Home() {
             del copy (ver el bloque del H1 abajo), que es el único recurso
             que no toca un pixel de la imagen: vive pegado al contorno de
             cada glifo, no es un rectángulo sobre el video.
+            Ronda "entrada 02": entra un SEGUNDO clip al bucle y la
+            decisión NO se revisa — sigue sin haber capa. Lo que sí se
+            rehace es la medición, porque ahora la mitad del ciclo es otra
+            escena (ver abajo: el peor caso del subtítulo cambió de clip).
 
             ─── COMPROMISO DE ACCESIBILIDAD ASUMIDO ───────────────────
             Esto tiene un costo medido y hay que decirlo sin adornos: el
@@ -252,42 +304,79 @@ export default function Home() {
             decisión del cliente, tomada con el número delante.
 
             Medición (ago 2026, misma metodología que la calibración
-            anterior, ahora con la geometría REAL): rects de línea del H1
-            y del subtítulo medidos en Chrome headless con Cormorant
-            Garamond / Jost cargadas, 19 frames de entrada.mp4 y
-            entrada_movil.mp4 (uno cada 0.5s), recortados con el mismo
+            anterior, ahora sobre los DOS clips del bucle): rects de línea
+            del H1 y del subtítulo medidos en Chrome headless con Cormorant
+            Garamond / Jost cargadas; frames uno cada 0.5s de las cuatro
+            renditions (19 + 19 de entrada_01 / _movil, 9.6s; 30 + 30 de
+            entrada_02 / _movil, 15.2s), recortados con el mismo
             object-cover/object-center que aplica el navegador, luminancia
             relativa WCAG contra el marfil #f5f1ec (L = 0.884) y peor teja
             de 24×24 px CSS (≈ el fondo local de un glifo), sobre 14
-            viewports × 19 frames.
+            viewports.
 
               SIN SCRIM (lo que hay hoy)   H1 pide 3:1 · subtítulo 4.5:1
+
+              clip 01 · CLIP 9 · entrada_01 (sin cambios respecto de la
+              ronda anterior — se remidió y reproduce al centésimo):
                 H1         1.14:1  peor caso @1920×1080   → NO CUMPLE
                 subtítulo  1.96:1  peor caso @1920×1080   → NO CUMPLE
-              Rango por viewport: H1 entre 1.14:1 y 1.20:1; subtítulo
-              entre 1.96:1 y 2.95:1 (el mejor caso es móvil, 360–430px).
-              Y no es un instante desafortunado del bucle: a 1440×900 el
-              H1 va de 1.16:1 a 1.96:1 a lo largo de los 9.6s y el
-              subtítulo se queda plano en ~2.2:1. En NINGÚN frame, en
-              NINGÚN viewport, el H1 llega a 3:1 ni el subtítulo a 4.5:1.
+                Rango por viewport: H1 1.14–1.20:1; subtítulo 1.96–2.95:1
+                (su mejor caso es móvil, 360–430px). Plano en el tiempo:
+                a 1440×900 el subtítulo no se mueve de ~2.2:1 en los 9.6s.
+
+              clip 02 · CLIP 16 · entrada_02 (nuevo):
+                H1         1.25:1  peor caso @1366×768    → NO CUMPLE
+                subtítulo  1.41:1  peor caso @360×800     → NO CUMPLE
+                Rango por viewport: H1 1.25–1.41:1; subtítulo 1.41–2.10:1.
+                Perfil INVERTIDO respecto del 01: el H1 mejora un poco
+                (1.25 vs 1.14) y el subtítulo empeora bastante (1.41 vs
+                1.96) — y donde más empeora es justo donde el 01 iba mejor,
+                en móvil. Además es mucho menos plano en el tiempo: a
+                1366×768 el H1 recorre 1.25–4.02:1 y el subtítulo
+                1.92–7.37:1 a lo largo de los 15.2s. O sea que HAY
+                instantes del 02 que sí cumplen AA; el peor caso manda y
+                no cumple, pero conviene saber que el fallo aquí es
+                intermitente y no constante.
+
+              PEOR CASO DEL BUCLE COMPLETO (lo que hay que citar):
+                H1         1.14:1  @1920×1080  → lo pone el clip 01
+                subtítulo  1.41:1  @360×800    → lo pone el clip 02
+                El H1 no cambia con la entrada del 02; el SUBTÍTULO SÍ:
+                baja de 1.96:1 a 1.41:1 y el peor caso se muda de
+                escritorio grande a móvil pequeño.
 
               CON LOS SCRIMS ANTERIORES (referencia, para dimensionar lo
               que se cedió): H1 5.21:1 @900×1200 y subtítulo 7.05:1
               @768×1024 en el peor caso — ambos cumplían con holgura.
 
-            La causa es el encuadre, no el códec: el bloque de texto está
-            anclado al tercio superior y ahí el clip tiene el CIELO y la
-            FACHADA BLANCA del hotel, cuya luminancia es casi la del
-            marfil del copy (de ahí ratios de ~1.1:1, prácticamente marfil
-            sobre blanco en los frames más cerrados del acercamiento).
+            La causa es el encuadre, no el códec, y en cada clip es una
+            cosa distinta:
+              · en el 01, el bloque de texto cae sobre el CIELO y la
+                FACHADA BLANCA del hotel según el dron se acerca — casi la
+                luminancia del marfil del copy, de ahí ~1.1:1 en los
+                frames más cerrados;
+              · en el 02 la cámara mira a tierra desde el agua, así que en
+                escritorio el H1 se apoya en el CIELO BRUMOSO sobre la
+                línea del horizonte (el subtítulo cae más abajo, en la
+                franja de palmeras, y por eso respira algo más). En móvil
+                el object-cover recorta ~4× sobre el centro y sube la casa
+                al encuadre: ahí la última línea del subtítulo aterriza en
+                el PARAPETO BLANCO de la azotea, que es el pixel más claro
+                del clip. Ese es exactamente el 1.41:1 de 360×800.
 
             El text-shadow NO entra en el cálculo formal de WCAG —la
             norma mide color de texto contra color de fondo y no reconoce
             halos—, así que sostiene la legibilidad percibida pero no
             recupera el ratio. Las salidas que SÍ cumplirían sin volver a
-            poner una capa sobre el video serían cambiar el encuadre del
-            texto (bajarlo al césped) o mover el copy fuera del video; las
-            dos alteran el diseño aprobado y ninguna se hizo aquí.
+            poner una capa sobre el video serían mover el copy fuera del
+            video o bajar el bloque de texto a la zona oscura del frame;
+            ojo con la segunda, porque con dos clips ya no hay una zona
+            oscura COMÚN: en el 01 es el césped del acceso y en el 02 es
+            la arena y el oleaje del pie, que en el 01 ni siquiera están
+            en cuadro. Habría que buscar el encuadre que sirva a los dos a
+            la vez, o aceptar que el peor caso lo fije siempre el mismo
+            clip. Las dos salidas alteran el diseño aprobado y ninguna se
+            hizo aquí.
             Si en el futuro el cliente cambia de opinión, lo que había era
             el trío negro/45–35/25 vertical + negro/45–25/transparent
             lateral + negro/50 superior h-[60dvh] md:hidden. ─────────── */}
@@ -533,9 +622,11 @@ export default function Home() {
           descarga hasta que la banda entra al viewport). Son los clips
           por defecto del componente (hero_01/hero_02) — hasta la ronda
           "entrada" (ago 2026) eran los mismos del hero y su descarga
-          salía del caché HTTP; ahora que el hero reproduce entrada.mp4
-          ya no se comparten, y el modo lazy pasa de optimización a
-          requisito: son ~4.3 MB que no deben competir con el LCP.
+          salía del caché HTTP; desde que el hero tiene material propio
+          (hoy entrada_01 + entrada_02) ya no se comparten, y el modo lazy
+          pasa de optimización a requisito: son ~4.3 MB que no deben
+          competir con el LCP — y ahora compiten además con los ~8.1 MB
+          del hero, así que nada de esto debe moverse del fold.
           La banda conserva su alto de siempre (py-28 / lg:py-40): los
           clips se recortan con object-cover y no importa (acordado con
           el cliente). El poster del video —y el fondo estático con

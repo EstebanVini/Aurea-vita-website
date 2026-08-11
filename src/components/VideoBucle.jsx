@@ -25,8 +25,8 @@ const MEDIA_MOVIL = '(max-width: 767px)';
    exactamente en ese frame, el fade-in del video sobre el poster es
    invisible.
    Ronda "entrada" (ago 2026): las DOS instancias del Home pasan hoy su
-   propio poster — el hero, el primer frame de entrada.mp4 (que además es
-   su LCP, con el <link rel="preload"> que inyecta Home); el CTA final,
+   propio poster — el hero, el primer frame de entrada_01.mp4 (que además
+   es su LCP, con el <link rel="preload"> que inyecta Home); el CTA final,
    su foto aérea — así que este default ya solo cubriría a un consumidor
    futuro que montara los clips por defecto sin poster propio. Cuando el
    poster NO es el primer frame del clip (caso del CTA) el fundido foto →
@@ -104,8 +104,11 @@ function IconoPlay() {
  *   bucle (default: CLIPS_DEFECTO, el par hero_01/hero_02). Los dos
  *   arrays deben tener la misma longitud — son renditions del mismo
  *   material — y ADMITEN UN SOLO ELEMENTO: con longitud 1 la secuencia
- *   degrada a bucle simple (ver avanzar()). Es el caso del hero desde la
- *   ronda "entrada" (ago 2026), que reproduce solo entrada.mp4.
+ *   degrada a bucle simple (ver avanzar()). El hero usó ese camino
+ *   durante la ronda "entrada" (ago 2026), cuando reproducía solo CLIP 9;
+ *   en la ronda "CLIP 9 + 16" volvió al par (entrada_01 → entrada_02),
+ *   así que hoy NINGUNA instancia monta con longitud 1 — pero el camino
+ *   se conserva probado por si el cliente vuelve a pedir un clip único.
  * - `poster`: { src, alt, width, height } de la foto que pinta debajo
  *   del video (default: el poster emparejado con CLIPS_DEFECTO). El
  *   marco lo pone el padre (sección relative + overflow-hidden); el
@@ -118,8 +121,8 @@ function IconoPlay() {
  *   preload="none" y NADA se descarga ni reproduce hasta que el
  *   IntersectionObserver ve la banda y sincronizar() dispara el primer
  *   play(). Ronda "entrada": el CTA ya NO comparte archivos con el hero
- *   (que pasó a entrada.mp4), así que su descarga ya no sale del caché
- *   HTTP — razón de más para que siga en modo lazy y bajo el fold.
+ *   (que pasó a los clips entrada_NN), así que su descarga ya no sale del
+ *   caché HTTP — razón de más para que siga en modo lazy y bajo el fold.
  * - `etiquetaBoton`: sustantivo para el aria-label del control de pausa
  *   ("video de fondo" por defecto); las dos instancias del Home lo
  *   diferencian para que sus botones no compartan nombre accesible.
