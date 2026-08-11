@@ -171,9 +171,14 @@ export default function Home() {
           faststart (el moov al principio: el navegador puede empezar a
           reproducir sin bajar el archivo entero).
           El bloque de texto sigue anclado al tercio superior — ahí el
-          clip tiene cielo y la fachada, ver la calibración de scrims
-          abajo (brief §3.1). overflow-hidden contiene el fondo, como
-          contenía el Ken Burns (§6.8). */}
+          clip tiene cielo y la fachada blanca, que es justo la zona más
+          clara del frame; ver el bloque SIN SCRIMS más abajo, que
+          documenta el compromiso de contraste que eso implica desde que
+          el cliente pidió el video limpio (brief §3.1). overflow-hidden
+          contiene el fondo, como contenía el Ken Burns (§6.8).
+          `bg-marino` de la sección NO es un filtro: es el color de
+          respaldo que se ve mientras el poster aún no pinta, y queda
+          DEBAJO del video, nunca encima. */}
       <section className="relative flex min-h-[100dvh] flex-col justify-start overflow-hidden bg-marino pt-[max(20vh,9rem)]">
         {/* Con prefers-reduced-motion NO se reproduce video (brief §6).
             Ronda "entrada": la foto estática de esta rama es ahora el
@@ -182,9 +187,11 @@ export default function Home() {
             con el set demo fotos_hotel/ y daba 404. Ventaja doble: los
             dos modos muestran EXACTAMENTE la misma escena y el mismo
             encuadre (object-cover + object-center, igual que el <video>
-            de VideoBucle), así que una sola calibración de scrims sirve
-            para ambos (ver bloque siguiente) y el <link rel="preload">
-            de arriba es el mismo en los dos caminos.
+            de VideoBucle) y el <link rel="preload"> de arriba es el
+            mismo en los dos caminos. Desde la ronda "sin filtro" esa
+            equivalencia importa más todavía: NINGUNO de los dos modos
+            lleva capa encima, así que la foto estática y el video se ven
+            idénticos — que es exactamente lo que pidió el cliente.
             Se retira el `motion-safe:animate-kenburns` que arrastraba
             aereas_11: en esta rama nunca podía correr (motion-safe y
             reduceMotion son excluyentes) salvo si la preferencia cambiaba
@@ -214,89 +221,76 @@ export default function Home() {
             }}
           />
         )}
-        {/* ── SCRIMS DEL HERO (ronda "entrada", ago 2026) ──────────────
-            Pedido del cliente: «quitar el filtro azul verdoso». El clip
-            NO tiene tinte alguno: sus colores son cálidos y naturales
-            (cielo de atardecer, piedra, palmeras, césped). El verde
-            azulado lo ponían estos tres overlays, que teñían el frame
-            entero con el token `marino` (#1f3a44), que es literalmente un
-            azul-verde oscuro. Solución acordada: conservar un degradado
-            detrás del texto (hace falta para AA) pero en NEGRO puro, sin
-            componente de color, para que el video se lea con sus colores
-            reales.
+        {/* ── HERO SIN SCRIMS (ronda "sin filtro", ago 2026) ───────────
+            AQUÍ NO VA NINGUNA CAPA. Si alguien está por añadir un <div
+            absolute inset-0> con un degradado encima del video, lea esto
+            antes: se quitó a propósito y por pedido expreso del cliente.
 
-            El cambio de color permite ADEMÁS bajar las opacidades,
-            porque a igual alfa un scrim negro rinde bastante más que uno
-            marino (el marino aporta su propia luminancia: L = 0.038, no
-            0). Medido sobre la franja del H1 a 1440×900: negro/45 →
-            3.75:1, marino/45 → 2.74:1, marino/60 → 3.87:1. O sea
-            negro/45 ≈ marino/58. Por eso los tres scrims bajan (60→45,
-            40→35, 35→25 el vertical; 60→45, 30→25 el lateral; 65→50 el
-            de móvil) sin perder piso de contraste: se quita el color Y
-            se destapa video.
+            HISTORIA. El hero llevaba tres scrims apilados sobre el clip:
+            un degradado vertical, uno lateral y uno superior solo < md.
+            En la ronda anterior el cliente pidió «quitar el filtro azul
+            verdoso» y esas tres capas pasaron de `marino` (#1f3a44, que
+            es literalmente un azul-verde oscuro) a negro puro, con las
+            opacidades rebajadas (60→45, 40→35, 35→25 el vertical; 60→45,
+            30→25 el lateral; 65→50 el de móvil). No bastó: en esta ronda
+            el pedido es «quita el filtro del video del inicio, quiero que
+            se vea tal cuál está el video». Es la SEGUNDA vez que lo pide
+            y ya conoce el resultado de la primera, así que se va hasta el
+            final: el video se ve con su luminancia y sus colores reales,
+            sin nada encima. Lo mismo en la rama prefers-reduced-motion
+            (entrada_poster.jpeg es el primer frame de este mismo clip):
+            los dos modos deben verse idénticos.
 
-            CALIBRACIÓN (WCAG 1.4.3: el H1 es texto grande → 3:1; el
-            subtítulo, texto normal → 4.5:1). Metodología: 19 frames de
-            entrada.mp4 y entrada_movil.mp4 (uno cada 0.5s), recortados
-            con el mismo object-cover/object-center que aplica el
-            navegador, con los tres degradados compuestos encima en sRGB
-            NO lineal — c_salida = c_video · Π(1−αᵢ), que es lo que hace
-            el compositor — y luminancia relativa WCAG del resultado
-            contra el marfil #f5f1ec (L = 0.884). Como el fondo siempre
-            queda más oscuro que el marfil, el peor caso de una zona es
-            su parte más CLARA; se evaluó la peor teja de 24×24 px (≈ el
-            fondo local de un glifo) sobre 11 viewports × 19 frames.
-            Peores casos con los valores de abajo:
-              H1         4.53:1  @1024×768   (pide 3:1)
-              subtítulo  4.79:1  @768×1024   (pide 4.5:1)
-            Los dos mínimos caen en tablet, donde el bloque de texto ocupa
-            casi todo el ancho y el scrim lateral ya se agotó; en
-            escritorio ancho suben a 5.6:1 / 8.8:1 y en móvil a 8.1:1 /
-            5.6:1. El pixel suelto más claro (p99.9) queda en ~4.2:1 para
-            el H1 y ~4.0:1 para el subtítulo: bajo 4.5 en el 0.1% del área
-            (reflejos puntuales del muro blanco), que es exactamente lo
-            que cubre el text-shadow del copy (abajo) — el mismo recurso
-            que ya sostenía los glints de sol de la foto anterior.
+            LO QUE SOSTIENE LA LEGIBILIDAD es ahora SOLO el text-shadow
+            del copy (ver el bloque del H1 abajo), que es el único recurso
+            que no toca un pixel de la imagen: vive pegado al contorno de
+            cada glifo, no es un rectángulo sobre el video.
 
-            UN SOLO juego de scrims para los DOS modos: desde esta ronda
-            reduced-motion muestra el primer frame de este mismo clip, así
-            que la rama marino/45–20/35 que tenía la foto aérea dejó de
-            aplicar (y sobre esta escena habría fallado: subtítulo 2.93:1
-            en móvil, H1 con p99.9 de 2.78:1 en tablet). ─────────────── */}
-        <div
-          className="absolute inset-0 bg-linear-to-b from-black/45 via-black/35 to-black/25"
-          aria-hidden="true"
-        />
-        {/* Scrim lateral, reforzando la columna donde vive el texto
-            (brief §1.1: overlay "solo donde hay texto encima"). El
-            degradado vertical por sí solo no basta en la mitad izquierda,
-            que en este clip cruza la fachada blanca y el cielo; la mitad
-            derecha del frame — césped, palmeras, el campo al fondo —
-            queda sin refuerzo y se ve limpia. Se apaga a transparent
-            antes del borde derecho para que la caída no se note como
-            banda. */}
-        <div
-          className="absolute inset-0 bg-linear-to-r from-black/45 via-black/25 to-transparent"
-          aria-hidden="true"
-        />
-        {/* En < md el bloque de texto ocupa todo el ancho y el scrim
-            lateral se agota antes de cubrirlo, así que el texto cruzaría
-            la zona más clara del frame casi sin refuerzo. Scrim superior
-            dedicado, solo < md: negro/50 → transparente sobre la franja
-            que ocupa el texto con pt-[max(20vh,9rem)]. Se extiende de
-            55dvh a 60dvh en esta ronda: en móvil el recorte object-cover
-            deja a la vista solo la banda CENTRAL del frame 16:9 (≈26% del
-            ancho a 390×844), que es justo el acceso iluminado y el muro
-            blanco — lo más claro del clip. Con 55dvh el degradado ya
-            estaba casi agotado a la altura del subtítulo (~50dvh) y este
-            se quedaba en 4.45:1; con 60dvh sube a 4.79:1 y entra en AA.
-            La mitad inferior del clip sigue limpia (brief §1.1).
-            Va en los dos modos: con reduced-motion el fondo es el primer
-            frame de este mismo clip y tiene el problema idéntico. */}
-        <div
-          className="absolute inset-x-0 top-0 h-[60dvh] bg-linear-to-b from-black/50 to-transparent md:hidden"
-          aria-hidden="true"
-        />
+            ─── COMPROMISO DE ACCESIBILIDAD ASUMIDO ───────────────────
+            Esto tiene un costo medido y hay que decirlo sin adornos: el
+            hero YA NO CUMPLE WCAG 1.4.3 (AA). No es un descuido, es una
+            decisión del cliente, tomada con el número delante.
+
+            Medición (ago 2026, misma metodología que la calibración
+            anterior, ahora con la geometría REAL): rects de línea del H1
+            y del subtítulo medidos en Chrome headless con Cormorant
+            Garamond / Jost cargadas, 19 frames de entrada.mp4 y
+            entrada_movil.mp4 (uno cada 0.5s), recortados con el mismo
+            object-cover/object-center que aplica el navegador, luminancia
+            relativa WCAG contra el marfil #f5f1ec (L = 0.884) y peor teja
+            de 24×24 px CSS (≈ el fondo local de un glifo), sobre 14
+            viewports × 19 frames.
+
+              SIN SCRIM (lo que hay hoy)   H1 pide 3:1 · subtítulo 4.5:1
+                H1         1.14:1  peor caso @1920×1080   → NO CUMPLE
+                subtítulo  1.96:1  peor caso @1920×1080   → NO CUMPLE
+              Rango por viewport: H1 entre 1.14:1 y 1.20:1; subtítulo
+              entre 1.96:1 y 2.95:1 (el mejor caso es móvil, 360–430px).
+              Y no es un instante desafortunado del bucle: a 1440×900 el
+              H1 va de 1.16:1 a 1.96:1 a lo largo de los 9.6s y el
+              subtítulo se queda plano en ~2.2:1. En NINGÚN frame, en
+              NINGÚN viewport, el H1 llega a 3:1 ni el subtítulo a 4.5:1.
+
+              CON LOS SCRIMS ANTERIORES (referencia, para dimensionar lo
+              que se cedió): H1 5.21:1 @900×1200 y subtítulo 7.05:1
+              @768×1024 en el peor caso — ambos cumplían con holgura.
+
+            La causa es el encuadre, no el códec: el bloque de texto está
+            anclado al tercio superior y ahí el clip tiene el CIELO y la
+            FACHADA BLANCA del hotel, cuya luminancia es casi la del
+            marfil del copy (de ahí ratios de ~1.1:1, prácticamente marfil
+            sobre blanco en los frames más cerrados del acercamiento).
+
+            El text-shadow NO entra en el cálculo formal de WCAG —la
+            norma mide color de texto contra color de fondo y no reconoce
+            halos—, así que sostiene la legibilidad percibida pero no
+            recupera el ratio. Las salidas que SÍ cumplirían sin volver a
+            poner una capa sobre el video serían cambiar el encuadre del
+            texto (bajarlo al césped) o mover el copy fuera del video; las
+            dos alteran el diseño aprobado y ninguna se hizo aquí.
+            Si en el futuro el cliente cambia de opinión, lo que había era
+            el trío negro/45–35/25 vertical + negro/45–25/transparent
+            lateral + negro/50 superior h-[60dvh] md:hidden. ─────────── */}
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
@@ -305,27 +299,44 @@ export default function Home() {
         >
           {/* Eyebrow "Aurea Vita · Acapulco" eliminado en la ronda 15 jun
               (§9.3): el H1 abre la secuencia. */}
-          {/* text-shadow (QA 15 jun, P1): garantía AA del marfil sobre
-              los reflejos puntuales que el overlay no puede cubrir sin
-              oscurecer todo el fondo — antes los glints de sol/espuma de
-              aereas_11, hoy los del muro blanco y el cielo del clip de la
-              entrada (el 0.1% de pixels que la calibración de arriba deja
-              bajo 4.5:1). El halo sostiene el contraste en el borde de
-              cada glifo aun sobre el pixel más claro, conservando "la
-              imagen manda" en la mitad derecha limpia (brief §1.1).
-              Ronda "entrada": el halo pasa de marino a NEGRO por el mismo
-              pedido de quitar el azul verdoso — era el último resto de
-              color tintando el video, y a igual alfa un halo negro rinde
-              más, así que el respaldo queda incluso algo más firme. */}
+          {/* text-shadow — ÚNICO soporte de legibilidad del hero desde
+              que se retiraron los scrims (ver el bloque de arriba). Pasa
+              de ser un remate para reflejos puntuales a ser la estructura
+              entera, así que se rehace como halo APILADO, que es la
+              técnica estándar para texto sobre foto:
+                1) sombra corta y densa (1–2px): reconstruye el borde del
+                   glifo contra el fondo claro. Es la que hace el trabajo
+                   real de separación, sobre todo en la Cormorant Light
+                   del H1, cuyas astas finas se disuelven sobre el muro
+                   blanco sin un contorno que las sostenga.
+                2) sombra media (9–14px): rellena el hueco entre el borde
+                   y el halo, para que no se lea como un stroke duro.
+                3) halo amplio y suave (24–38px, α ≤ 0.55): apoya la
+                   silueta completa. Amplio a propósito y de opacidad
+                   moderada: más alfa aquí empezaría a leerse como una
+                   mancha rectangular alrededor del bloque — es decir,
+                   como el scrim que el cliente pidió quitar.
+              Todo en NEGRO PURO, nunca marino: un halo marino es
+              exactamente el tinte azul-verde que el cliente sacó del
+              video (fue el pedido de la ronda anterior), y a igual alfa
+              el negro rinde más porque no aporta luminancia propia
+              (marino L = 0.038, negro L = 0).
+              El H1 lleva radios mayores porque su cuerpo va de 40 a 80px;
+              el subtítulo, de 18px, los lleva más cerrados y algo más
+              densos: a ese tamaño un halo ancho emborrona la contraforma
+              de la letra en vez de despegarla del fondo.
+              Recordatorio: esto NO cuenta para WCAG (la norma compara
+              texto contra fondo, no reconoce halos). Los ratios formales
+              siguen siendo los del bloque de arriba. */}
           <motion.h1
             variants={heroItem}
-            className="max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.05] text-marfil [text-shadow:0_1px_18px_rgb(0_0_0_/_0.55)]"
+            className="max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.05] text-marfil [text-shadow:0_1px_2px_rgb(0_0_0_/_0.85),0_2px_14px_rgb(0_0_0_/_0.65),0_0_38px_rgb(0_0_0_/_0.5)]"
           >
             {heroHome.titulo}
           </motion.h1>
           <motion.p
             variants={heroItem}
-            className="mt-6 max-w-2xl text-lg text-marfil [text-shadow:0_1px_12px_rgb(0_0_0_/_0.7)]"
+            className="mt-6 max-w-2xl text-lg text-marfil [text-shadow:0_1px_2px_rgb(0_0_0_/_0.9),0_1px_9px_rgb(0_0_0_/_0.75),0_0_24px_rgb(0_0_0_/_0.55)]"
           >
             {heroHome.subtitulo}
           </motion.p>

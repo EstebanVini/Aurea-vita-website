@@ -69,78 +69,94 @@ export default function Spa() {
 
   return (
     <>
-      {/* 1 · Hero interior (70vh, no fullscreen — brief §4.4): el hero
-          es spa_07 (yoga al aire libre con el Pacífico de fondo), la
-          única calidad 4 del set de spa en la entrega definitiva; la
-          nota anterior hablaba de spa_01 y de una editorial en penumbra
-          que ya no es esta foto. La foto es el LCP: sin lazy, eager +
-          fetchPriority alta. */}
+      {/* 1 · Hero interior (70vh, no fullscreen — brief §4.4): el hero es
+          casa_63, la sala de masaje en interior con el muro de duelas de
+          cedro. Las notas anteriores hablaban de spa_01 (mármol en
+          penumbra) y de spa_07 (yoga sobre césped): ninguna de las dos es
+          esta foto. LCP: sin lazy, eager + fetchPriority alta.
+          Ronda ago 2026 (cambios.txt): archivo a 2048px, encuadre a 70%
+          y fuera el tinte marino — el detalle, en las notas del <img> y
+          del scrim. */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-marino">
         <img
           src={spaHeader.hero.src}
           alt={spaHeader.hero.alt}
-          width="1600"
-          height="1244"
+          width="2048"
+          height="1592"
           fetchPriority="high"
-          /* Restitución docs/Fotos WEB AV.pdf: el hero es casa_63, «una
-             mesa de masaje en interior» — exactamente la foto que la nota
-             anterior daba por perdida. Intrínsecas 1600×1244 (1.29), NO
-             1600×1002 ni el 3:2 del resto del set: casa_63 es de las
-             pocas verticales-ish de la entrega y el hint debe decirlo.
-             Encuadre 45% (antes 58%): el 58% bajaba a por el césped de
-             spa_07; aquí bajar mete el piso y decapita el arreglo floral.
-             A 45% la camilla queda centrada en la banda visible del hero
-             y el muro de duelas ocupa el tercio superior, que es donde el
-             overlay es más ligero — la textura de madera se lee.
-             Ojo: la calibración de overlays de abajo se midió sobre
-             spa_07 (ver la nota).
+          /* Hero: casa_63, «una mesa de masaje en interior» (docs/Fotos
+             WEB AV.pdf).
+             INTRÍNSECAS 2048×1592 (ronda ago 2026, queja «se ven poco
+             nítidas»): se servía a 1600px y CSS la estiraba por encima de
+             su resolución nativa en pantallas grandes. Regenerada a su
+             ancho original. Ratio 1.29 —NO el 3:2 del resto del set:
+             casa_63 es de las pocas verticales-ish de la entrega—, así
+             que el hint sube a 1592 de alto, no a 1365, o el
+             aspect-ratio reservado quedaría mal y habría CLS.
+             ENCUADRE 45% → 70% (misma ronda, queja «se ven muy arriba»).
+             A 45% el borde superior del recorte cortaba por la pantalla
+             de TV colgada del muro: un rectángulo negro de electrónica
+             dominando el hero de una página de bienestar. Bajar el eje a
+             70% la saca del cuadro por completo y deja el frame que
+             cuenta la foto —camilla, toalla enrollada, arreglo floral y
+             el muro de duelas de madera a lo ancho—. El piso, que era el
+             riesgo de bajar demasiado, todavía no entra: a 80% sí. La
+             camilla de vinilo negro pasa a ocupar la mitad inferior, que
+             es justo la banda del texto: es la zona más oscura de la foto
+             y por eso este hero es el que menos scrim necesita.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
-             por el overflow-hidden del section, solo motion-safe. En la
-             página más pausada del sitio, la penumbra respira. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_45%] motion-safe:animate-kenburns"
+             por el overflow-hidden del section, solo motion-safe. El zoom
+             1→1.06 cierra el recorte ~3% por lado; comprobado a ambas
+             escalas: a 1.06 la TV sigue fuera y el piso sigue sin entrar. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_70%] motion-safe:animate-kenburns"
         />
-        {/* Overlay degradado marino solo donde hay texto (brief §1.1):
-            denso al pie, ligero arriba para que la foto respire. Nunca
-            negro puro.
-            Historial: 40/15/65 se calibró para spa_01 (penumbra de
-            mármol); el QA de ago 2026 lo subió a 40/45/80 para spa_07
-            (yoga sobre césped a pleno día), donde daba eyebrow 5.12:1 y
-            H1 4.80:1.
-            RECALIBRADO otra vez en la restitución de fotos (docs/Fotos
-            WEB AV.pdf): el hero es ahora casa_63 y con 40/45/80 el
-            eyebrow caía a 2.78:1 y el H1 a 2.84:1 — los DOS por debajo de
-            AA, y el H1 es el peor dato de contraste que ha tenido un hero
-            de este sitio. Motivo: casa_63 es un interior claro y la ropa
-            blanca de la camilla cae justo en la banda del texto, mientras
-            que en spa_07 esa banda era césped en sombra.
-            El `via` sube 45→70 y el pie 80→88: es el mínimo del barrido
-            (40/65/88 aún se queda en 4.22:1 el eyebrow). A esa densidad
-            el tercio superior —muro de duelas, que sigue en 40%— se lee
-            entero, que es donde el encuadre 45% dejó la textura.
-            Método: archivo web + object-cover real, overlay compuesto en
-            sRGB no lineal, peor teja de 24×24 px, 6 viewports × Ken Burns
-            (scale 1.0 y 1.06): eyebrow 4.72:1, H1 5.01:1, subtítulo
-            7.49:1. El modelo de layout del texto es aproximado (±0.7
-            reproduciendo las cifras históricas de arriba), así que el
-            margen del eyebrow es ajustado: conviene que QA lo confirme
-            sobre el render real antes de publicar. */}
+        {/* SCRIM NEUTRO anclado al pie (ronda ago 2026, petición literal
+            del cliente: «sin el filtro azul, que las fotos se vean tal
+            cual»). Sustituye al degradado marino 40/70/88 — el más denso
+            que ha tenido un hero de este sitio, y el que peor le sentaba
+            a esta foto: casa_63 es un interior de maderas cálidas y el
+            marino a 0.70–0.88 lo dejaba verde-azulado de arriba abajo.
+            Aquí no hay color: negro puro. La duela de cedro recupera su
+            naranja real y las flores su morado.
+            Mismas paradas que /habitaciones y /experiencias — los tres
+            heroes hermanos comparten scrim, un solo sistema:
+            linear-gradient(to top) 55/52/47/32/14 → TRANSPARENTE al 72%.
+            El 28% superior queda intacto y la cobertura media sobre toda
+            la altura cae de 0.67 (marino) a 0.30 (negro). Meseta, no
+            rampa: el eyebrow vive en u≈0.38–0.42 desde el pie (el H1
+            «Wellness» ocupa UNA línea, así que el bloque es corto y el
+            eyebrow queda más alto que en las otras dos páginas — es el
+            caso que fija la meseta hasta u=0.45 para las tres).
+            Este hero es el que menos scrim necesitaba: con el encuadre a
+            70% la camilla de vinilo negro ocupa la banda del texto. Aun
+            así con la foto 100% limpia daba eyebrow 1.77:1, H1 1.79:1 y
+            subtítulo 1.73:1 — el muro claro tras la camilla y la toalla
+            blanca caen dentro de las cajas. Alfa mínima de negro para AA:
+            0.399 (eyebrow), 0.406 (subtítulo), 0.236 (H1); el scrim
+            entrega ~0.48–0.53 ahí.
+            Método: archivo 2048px, object-cover y object-position reales,
+            composición en sRGB no lineal, peor teja de 24×24 px, 7
+            viewports (390→1920) × Ken Burns (scale 1.0 y 1.06).
+            Resultado: eyebrow 5.73:1 (pide 4.5:1, AA OK), H1 6.13:1
+            (texto grande, pide 3:1, AA OK), subtítulo 6.46:1 (18px →
+            pide 4.5:1, AA OK). Peor caso del eyebrow: 1024×768 a 1.06. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/70 to-marino/88"
+          className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0_/_0.55)_0%,rgb(0_0_0_/_0.52)_25%,rgb(0_0_0_/_0.47)_45%,rgb(0_0_0_/_0.32)_55%,rgb(0_0_0_/_0.14)_63%,transparent_72%)]"
           aria-hidden="true"
         />
-        {/* text-shadow marino (QA 15 jun, P1). La nota original hablaba
-            de los reflejos del mármol de spa_01; el hero es ahora spa_07
-            y el papel del halo es el mismo pero sobre otro riesgo: los
-            brillos del césped a pleno sol y las toallas blancas de los
-            tapetes. Sostiene el contraste en el borde de cada glifo allí
-            donde el degradado recalibrado no llega, sin oscurecer más el
-            hero. */}
+        {/* text-shadow: marino → NEGRO (ronda ago 2026). El halo hacía el
+            mismo trabajo de siempre —sostener el borde del glifo sobre
+            los brillos, aquí la toalla enrollada y el muro claro— pero en
+            marino reintroducía por el contorno de cada letra justo el
+            tinte que el cliente pidió quitar. Negro a 0.55, 10px de blur.
+            No entra en las cifras de contraste de arriba: WCAG mide fondo
+            plano, no halos. Es margen, no la razón por la que pasan. */}
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
           animate="visible"
-          className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20 [text-shadow:0_1px_12px_rgb(31_58_68_/_0.7)]"
+          className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20 [text-shadow:0_1px_10px_rgb(0_0_0_/_0.55)]"
         >
           <motion.p variants={heroItem} className="eyebrow text-marfil">
             {spaHeader.eyebrow}
@@ -151,10 +167,14 @@ export default function Spa() {
           >
             {spaHeader.titulo}
           </motion.h1>
-          {/* Subtítulo nuevo (ronda 15 jun §9.5): más pequeño, bajo el H1,
-              dentro de la secuencia de entrada. marfil/90 sobre el overlay
-              denso al pie del hero pasa AA en la mediana; el text-shadow
-              del bloque cubre los reflejos del mármol. */}
+          {/* Subtítulo (ronda 15 jun §9.5): más pequeño, bajo el H1,
+              dentro de la secuencia de entrada. A 18px cuenta como texto
+              NORMAL para WCAG (el umbral de «texto grande» son 24px, o
+              18.66px en negrita), así que pide 4.5:1 igual que el
+              eyebrow, no 3:1. Es la caja más baja del bloque y por tanto
+              la que más scrim recibe: 6.46:1 medido sobre casa_63 con el
+              encuadre 70% (ronda ago 2026). El marfil/90 le quita ~10% de
+              luminancia frente al marfil pleno y aun así sobra margen. */}
           <motion.p
             variants={heroItem}
             className="mt-5 max-w-xl text-lg text-marfil/90"

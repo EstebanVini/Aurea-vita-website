@@ -237,3 +237,49 @@ forma independiente. `/habitaciones` con `casa_41`: `via` 45→50 → 4.73:1.
 - `dron_26` ilustra "Acapulco Diamante" pero no muestra océano: es la casa al atardecer.
 - La 4ª y la 7ª habitación comparten nombre comercial ("Suite con Vista al Mar") en el
   propio PDF. Probable duplicado del documento; conviene confirmarlo.
+
+---
+
+## Ronda "sin filtro" — 10 ago 2026 (heroes limpios y reencuadrados)
+
+Origen: `.claude/docs/cambios.txt`. Orquestación: `motion-engineer` (video del Home) +
+`visual-designer` (los tres heroes interiores) en paralelo.
+
+**1 · Video del Home sin NADA encima.** El cliente ya había pedido quitar "el filtro azul
+verdoso" en la ronda anterior —se cambió de `marino` a negro y se bajaron opacidades— y
+ahora pidió llegar al final: «que se vea tal cuál está el video». Las tres capas de scrim
+del hero se eliminaron por completo, en las dos ramas (video y `prefers-reduced-motion`).
+El texto se sostiene solo con `text-shadow` negro apilado.
+
+**Compromiso de accesibilidad, asumido y documentado.** Medido con rects de línea reales
+en Chrome headless, 19 frames × 14 viewports: **H1 1.14:1** (pide 3:1) y **subtítulo
+1.96:1** (pide 4.5:1) en el peor caso. Con los scrims anteriores eran 5.21:1 y 7.05:1. No
+hay ningún frame ni viewport donde cumplan: el bloque de texto está anclado al tercio
+superior y ahí el clip tiene cielo y fachada blanca, casi la misma luminancia que el
+marfil del copy. El `text-shadow` sostiene la legibilidad percibida pero **no cuenta para
+WCAG**, que compara color de texto contra color de fondo y no reconoce halos. Es decisión
+explícita del cliente, pedida dos veces. Los valores del trío retirado quedan guardados en
+el comentario `HERO SIN SCRIMS` de `Home.jsx` por si se revierte.
+
+**2 · Los tres heroes interiores.** Tres quejas, las tres ciertas:
+
+- *"Sin el filtro azul"*: fuera el degradado `marino` de los tres. Lo sustituye un scrim
+  **neutro** (negro, sin color) anclado al pie y transparente desde el 72% de la altura:
+  cobertura media 0.30 frente a 0.55–0.67 antes, y el tercio superior queda a alfa 0.
+  El `text-shadow` también pasó de marino a negro — el halo devolvía por el borde del
+  glifo justo el tinte que se quería fuera.
+- *"Que se vean nítidas"*: se servían a 1600px y en pantallas ≥1600 (y en 2× DPR mucho
+  antes) se reescalaban hacia ARRIBA. Regeneradas a su ancho original de 2048px.
+- *"Se ven muy arriba / mal recortadas"*: `casa_41` 25%→**35%** (entran muro de duelas,
+  espejo y repisas; baja el techo), `casa_63` 45%→**70%** (sale la pantalla de TV; quedan
+  camilla, flores y duela), `casa_16` 45%→**60%** (la mesa entra completa, el horizonte
+  sube a su tercio). Verificados a 7 viewports y a las dos escalas del Ken Burns.
+
+Los tres cumplen AA: eyebrow 5.83 / 5.73 / 6.83, H1 5.00 / 6.13 / 5.94.
+
+**Por qué los heroes sí llevan scrim y el video no:** el cliente pidió para las fotos
+quitar *el filtro azul*, y para el video que *se vea tal cuál*. Sin nada encima, las tres
+fotos dan 1.4–2.2:1 (edredón blanco, muro claro, mantel rosa) y ninguna es rescatable con
+sombra. Si quiere alguno de esos heroes completamente limpio, la vía no es bajar el alfa
+sino cambiar la fotografía por una con zona oscura en el tercio inferior izquierdo, o
+mover el bloque de texto.

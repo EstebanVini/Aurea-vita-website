@@ -1,1 +1,3 @@
-1. Lee el archivo docs/Fotos WEB AV.pdf y realiza los cambios que solicita, coloca las imágenes que pide en ese documento en los espacios correspondientes según pide el documento. Las imágenes están en docs/fotos_definitivas 
+1. Las fotos de presentación de las secciones "Habitaciones", "Wellness" y "Experiencias" tienen que ir sin el filtro azul, quiero que las fotos se vean nítidas tal cuál y hay un problema, se ven "Muy arriba" y parece que están mal recortadas, alínealas para que se vean mejor.
+
+2. Quita el filtro del video del inicio, quiero que se vea tal cuál está el video

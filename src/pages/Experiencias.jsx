@@ -78,66 +78,91 @@ export default function Experiencias() {
 
   return (
     <>
-      {/* 1 · Hero interior (60–70vh, brief §4.5): alberca_11 — la
-          alberca de mosaico cobalto con los camastros y el edificio
-          principal. Sustituyó a alberca_05 en el QA de ago 2026 por un
-          fallo de contraste (ver nota en experiences.js). LCP: sin lazy. */}
+      {/* 1 · Hero interior (60–70vh, brief §4.5): casa_16 — la mesa de
+          terraza puesta frente al Pacífico en la hora dorada. La nota
+          anterior hablaba de alberca_11 (mosaico cobalto), que ya no es
+          esta foto. LCP: sin lazy, eager + fetchPriority alta.
+          Ronda ago 2026 (cambios.txt): archivo a 2048px, encuadre a 60%
+          y fuera el tinte marino — el detalle, en las notas del <img> y
+          del scrim. */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden bg-marino">
         <img
           src={experienciasHeader.hero.src}
           alt={experienciasHeader.hero.alt}
-          width="1600"
-          height="1066"
+          width="2048"
+          height="1365"
           fetchPriority="high"
-          /* Restitución docs/Fotos WEB AV.pdf: el hero es casa_16 (mesa
-             de terraza frente al Pacífico en la hora dorada), 1600×1066.
-             Encuadre 45% (antes 58%, verificado sobre alberca_11 en el QA
-             de ago 2026): aquel 58% bajaba la línea de agua para dejar el
-             mosaico cobalto —la zona OSCURA de alberca_11— detrás del
-             texto. Ese razonamiento no traslada: en casa_16 la zona
-             oscura es la mesa y el follaje del tercio central, y el
-             tercio inferior es piso claro. A 45% la mesa puesta y el
-             horizonte quedan en cuadro, y bajo el bloque de texto cae la
-             mesa y no el piso.
-             ATENCIÓN: el overlay de abajo (40/45/80) se calibró contra
-             alberca_11 y NO se ha vuelto a medir sobre esta foto — ver la
-             nota del overlay.
+          /* Hero: casa_16, mesa de terraza frente al Pacífico en la hora
+             dorada (docs/Fotos WEB AV.pdf).
+             INTRÍNSECAS 2048×1365 (ronda ago 2026, queja «se ven poco
+             nítidas»): se servía a 1600px y CSS la reescalaba hacia
+             arriba en pantallas grandes. Regenerada a su ancho original;
+             el hint sube con ella para conservar el aspect-ratio
+             reservado y no introducir CLS.
+             ENCUADRE 45% → 60% (misma ronda, queja «se ven muy arriba y
+             mal recortadas»). A 45% el recorte partía la mesa por la
+             mitad —platos y copas cortados por el borde inferior— y
+             empujaba el horizonte al centro exacto del cuadro, que es el
+             reparto más plano posible. A 60% la mesa puesta entra
+             ENTERA, con las dos sillas de mimbre que la enmarcan, y el
+             horizonte sube a su tercio: la foto vuelve a tener primer
+             plano, medio y fondo. El piso de barro, riesgo de bajar más,
+             se queda en el borde inferior.
              Ken Burns lento (§6.8, ronda 23 jul, pase de motion): mismo
              pulso que el Home — CSS puro (no retrasa el LCP), contenido
-             por el overflow-hidden del section, solo motion-safe. */
-          className="absolute inset-0 h-full w-full object-cover object-[50%_45%] motion-safe:animate-kenburns"
+             por el overflow-hidden del section, solo motion-safe. El zoom
+             1→1.06 cierra el recorte ~3% por lado; comprobado a ambas
+             escalas: a 1.06 la mesa sigue completa y el horizonte sigue
+             dentro. */
+          className="absolute inset-0 h-full w-full object-cover object-[50%_60%] motion-safe:animate-kenburns"
         />
-        {/* Overlay solo donde hay texto (brief §1.1): denso al pie,
-            ligero arriba para que el edificio y el cielo respiren.
-            Esta página lleva el degradado UN PASO MÁS DENSO que los
-            otros heroes interiores (que van 40/45/80): alberca_11 tiene
-            el agua muy reflectante y el eyebrow —12px, texto normal,
-            pide 4.5:1— se queda en 3.60:1 con el valor común. El `via`
-            manda porque el H1 ocupa dos líneas en escritorio y empuja el
-            eyebrow a ~57% de la altura, no al pie.
-            Medido con el copy real ("Maneras de pasar el día" /
-            "Experiencias") sobre el archivo web, con el object-cover del
-            navegador, peor teja de 24×24 px, 10 viewports × Ken Burns
-            (scale 1.0 y 1.06): eyebrow 4.79:1, H1 4.94:1.
-            40/55/85 se queda corto (eyebrow 4.37:1); 40/60/85 es el
-            mínimo que cumple y a esa densidad la foto sigue leyéndose
-            entera —edificio, camastros, mosaico— como un atardecer.
-            REVERIFICADO (sin cambios) en la restitución de fotos
-            (docs/Fotos WEB AV.pdf): el hero pasó a casa_16 y estos mismos
-            40/60/85 dan eyebrow 6.18:1 y H1 6.23:1 — la hora dorada de
-            casa_16 es más oscura en la banda del texto que el agua
-            reflectante de alberca_11, así que el degradado ya sobra y se
-            deja intacto. Los heroes de /habitaciones y /spa SÍ hubo que
-            recalibrarlos en esa ronda; este no. */}
+        {/* SCRIM NEUTRO anclado al pie (ronda ago 2026, petición literal
+            del cliente: «sin el filtro azul, que las fotos se vean tal
+            cual»). Sustituye al degradado marino 40/60/85. Es el hero al
+            que más le costaba ese tinte: casa_16 es una hora dorada
+            —cielo malva, mar turquesa, barro naranja— y el marino
+            #1f3a44, que es azul-verde, la neutralizaba entera; el
+            «atardecer» que decía la nota anterior era en realidad el
+            overlay. Sin él, el mar vuelve a ser turquesa y el piso, barro.
+            Mismas paradas que /habitaciones y /spa — los tres heroes
+            hermanos comparten scrim, un solo sistema:
+            linear-gradient(to top) 55/52/47/32/14 → TRANSPARENTE al 72%.
+            El 28% superior (cielo y línea de horizonte) queda intacto,
+            alfa 0.00, y la cobertura media sobre toda la altura cae de
+            0.61 (marino) a 0.30 (negro). Meseta, no rampa: con el H1 a
+            dos líneas el eyebrow se sitúa en u≈0.33–0.38 desde el pie,
+            donde una rampa lineal ya estaría casi apagada.
+            De los tres es el que menos alfa pedía —la mesa en penumbra y
+            el mimbre ocupan la banda del texto—, pero tampoco aguanta la
+            foto pelada: limpia da eyebrow 2.21:1 y H1 1.50:1 (el mantel
+            rosa y los platos claros caen bajo el H1 en 1920). Alfa mínima
+            de negro para AA: 0.328 (eyebrow) y 0.298 (H1); el scrim
+            entrega ~0.50. Se mantienen las paradas comunes en lugar de
+            aligerarlas solo aquí: tres páginas hermanas con tres scrims
+            distintos es lo que produjo el desajuste de la ronda anterior.
+            Método: archivo 2048px, object-cover y object-position reales,
+            copy real («Experiencias» / «Maneras de pasar el día»),
+            composición en sRGB no lineal, peor teja de 24×24 px, 7
+            viewports (390→1920) × Ken Burns (scale 1.0 y 1.06) × 2–3
+            líneas de H1. Resultado: eyebrow 6.83:1 (pide 4.5:1, AA OK),
+            H1 5.94:1 (texto grande, pide 3:1, AA OK). Peor caso del
+            eyebrow: 390×844 con H1 a tres líneas, scale 1.06. */}
         <div
-          className="absolute inset-0 bg-linear-to-b from-marino/40 via-marino/60 to-marino/85"
+          className="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0_/_0.55)_0%,rgb(0_0_0_/_0.52)_25%,rgb(0_0_0_/_0.47)_45%,rgb(0_0_0_/_0.32)_55%,rgb(0_0_0_/_0.14)_63%,transparent_72%)]"
           aria-hidden="true"
         />
+        {/* text-shadow NEGRO (ronda ago 2026, nuevo en este hero). Con el
+            marino fuera, el halo tampoco puede ser marino: sería
+            devolver por el borde del glifo el tinte que el cliente
+            rechaza. Negro a 0.55, 10px de blur, contra los reflejos
+            especulares del cristal del barandal y la cubertería. No entra
+            en las cifras de contraste de arriba (WCAG mide fondo plano,
+            no halos): es margen, no la razón por la que pasan. */}
         <motion.div
           variants={heroSequence}
           initial={reduceMotion ? false : 'hidden'}
           animate="visible"
-          className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20"
+          className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 pt-44 sm:px-8 lg:pb-20 [text-shadow:0_1px_10px_rgb(0_0_0_/_0.55)]"
         >
           <motion.p variants={heroItem} className="eyebrow text-marfil">
             {experienciasHeader.eyebrow}
