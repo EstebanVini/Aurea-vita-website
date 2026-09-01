@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useT } from '../i18n/LanguageContext.jsx';
 import { fadeRise, staggerGroup } from '../lib/motion.js';
 
 /* Secuencia de entrada sobria, una sola vez (brief §6). */
@@ -18,10 +19,12 @@ const item = fadeRise({ y: 18, duration: 0.7 });
  * marca; el dato de contacto real queda como salida (también en el footer).
  */
 export default function Contacto() {
-  usePageMeta(
-    'Aún en construcción · Aurea Vita Acapulco',
-    'Nuestro sistema de reservaciones está en preparación. Muy pronto podrás apartar tu lugar frente al Pacífico.',
-  );
+  /* i18n: la página no tiene archivo de datos — todo su copy vive en
+     src/i18n/ui.js (`contacto`); usePageMeta recibe los metadatos por
+     idioma. */
+  const t = useT();
+
+  usePageMeta(t.contacto.metaTitulo, t.contacto.metaDescripcion);
 
   const reduceMotion = useReducedMotion();
 
@@ -37,20 +40,20 @@ export default function Contacto() {
         <motion.img
           variants={item}
           src="/Logo.svg"
-          alt="Aurea Vita"
+          alt={t.contacto.logoAlt}
           width="96"
           height="96"
           className="logo-claro h-24 w-24"
         />
         {/* Eyebrow en salvia (5.54:1 sobre marino, AA). */}
         <motion.p variants={item} className="eyebrow mt-10 text-salvia">
-          Reservaciones
+          {t.contacto.eyebrow}
         </motion.p>
         <motion.h1
           variants={item}
           className="mt-5 font-display text-[clamp(2.5rem,6vw,4.5rem)] font-light leading-[1.05] text-marfil"
         >
-          Aún en construcción
+          {t.contacto.titulo}
         </motion.h1>
         <motion.div
           variants={item}
@@ -61,13 +64,11 @@ export default function Contacto() {
           variants={item}
           className="mt-8 max-w-[52ch] text-base leading-relaxed text-marfil/85 sm:text-lg"
         >
-          Estamos afinando los últimos detalles de nuestro sistema de
-          reservaciones. Muy pronto podrás apartar aquí tu lugar frente al
-          Pacífico. Gracias por tu paciencia: el mar no se irá a ningún lado.
+          {t.contacto.cuerpo}
         </motion.p>
         {/* Salida real mientras tanto (también está en el footer). */}
         <motion.div variants={item} className="mt-7 text-sm text-marfil/75">
-          <p>Mientras tanto, escríbenos:</p>
+          <p>{t.contacto.escribenos}</p>
           <p className="mt-2">
             <a
               href="tel:+527444820136"
@@ -94,7 +95,7 @@ export default function Contacto() {
                currentColor=marino sería invisible aquí). */
             className="eyebrow mt-11 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 focus-visible:outline-marfil motion-safe:active:scale-[0.99]"
           >
-            Volver al inicio
+            {t.contacto.volver}
           </Link>
         </motion.div>
       </motion.div>

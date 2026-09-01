@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useT } from '../i18n/LanguageContext.jsx';
 
 /* Clips POR DEFECTO: los dos del video de marca (ronda fotos cliente
    jul 2026) en secuencia infinita 01 → 02 → 01 → … Hasta la ronda 28 jul
@@ -34,7 +35,8 @@ const MEDIA_MOVIL = '(max-width: 767px)';
    sección — suave a propósito. */
 const POSTER_DEFECTO = {
   src: '/videos/hero_poster.jpeg',
-  alt: 'Entrada principal de Aurea Vita entre palmeras al atardecer, con la iluminación cálida encendida y el Pacífico al fondo',
+  /* El alt vive por idioma en src/i18n/ui.js (video.posterAlt) y se
+     resuelve en el componente según el idioma activo. */
   width: 1920,
   height: 1080,
 };
@@ -175,10 +177,17 @@ function IconoPlay() {
  */
 export default function VideoBucle({
   clips = CLIPS_DEFECTO,
-  poster = POSTER_DEFECTO,
+  poster,
   prioridad = false,
-  etiquetaBoton = 'video de fondo',
+  etiquetaBoton,
 }) {
+  /* i18n: los defaults de poster (alt) y del sustantivo del control de
+     pausa se resuelven en el idioma activo cuando el padre no los pasa
+     (hoy las dos instancias del Home pasan su propio poster). */
+  const t = useT();
+  const posterFinal = poster ?? { ...POSTER_DEFECTO, alt: t.video.posterAlt };
+  const etiqueta = etiquetaBoton ?? t.video.etiquetaDefecto;
+
   /* Marco observado por el IntersectionObserver (envuelve el stack). */
   const marcoRef = useRef(null);
   const videoRefs = useRef([]);
@@ -392,10 +401,10 @@ export default function VideoBucle({
             el que replica la rama de reduced-motion del Home, para que
             los dos modos recorten idéntico. */}
         <img
-          src={poster.src}
-          alt={poster.alt}
-          width={poster.width}
-          height={poster.height}
+          src={posterFinal.src}
+          alt={posterFinal.alt}
+          width={posterFinal.width}
+          height={posterFinal.height}
           fetchPriority={prioridad ? 'high' : undefined}
           loading={prioridad ? undefined : 'lazy'}
           className="absolute inset-0 h-full w-full object-cover object-center"
@@ -470,8 +479,8 @@ export default function VideoBucle({
           onClick={alternarPausa}
           aria-label={
             mostrandoPlay
-              ? `Reproducir ${etiquetaBoton}`
-              : `Pausar ${etiquetaBoton}`
+              ? t.video.reproducir(etiqueta)
+              : t.video.pausar(etiqueta)
           }
           className="absolute bottom-6 right-5 z-20 flex h-11 w-11 items-center justify-center bg-marino/40 text-marfil backdrop-blur-sm transition-colors duration-300 hover:bg-marino/60 focus-visible:outline-marfil sm:right-8"
         >

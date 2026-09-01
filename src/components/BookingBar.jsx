@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../i18n/LanguageContext.jsx';
 
-/** Opciones del selector de huéspedes (copy §8.2). */
-const GUEST_OPTIONS = [
-  { value: '1', label: '1 huésped' },
-  { value: '2', label: '2 huéspedes' },
-  { value: '3', label: '3 huéspedes' },
-  { value: '4', label: '4 huéspedes' },
-  { value: '5', label: '5 o más' },
-];
+/* Opciones del selector de huéspedes (copy §8.2): viven por idioma en
+   src/i18n/ui.js (`booking.opciones`) y se leen vía useT(). */
 
 /** Fecha local de hoy en formato YYYY-MM-DD para el atributo min. */
 function hoyISO() {
@@ -49,6 +44,9 @@ function FieldUnderline({ filled }) {
  */
 export default function BookingBar() {
   const navigate = useNavigate();
+  /* i18n: labels, opciones y aria-labels por idioma. */
+  const t = useT();
+  const GUEST_OPTIONS = t.booking.opciones;
   const [llegada, setLlegada] = useState('');
   const [salida, setSalida] = useState('');
   const [huespedes, setHuespedes] = useState('2');
@@ -93,7 +91,7 @@ export default function BookingBar() {
 
   return (
     <form
-      aria-label="Consulta de disponibilidad"
+      aria-label={t.booking.formAria}
       onSubmit={onSubmit}
       className="bg-marfil shadow-[0_24px_60px_-24px] shadow-marino/40 ring-1 ring-arena"
     >
@@ -107,7 +105,7 @@ export default function BookingBar() {
           aria-controls="bookingbar-campos"
           className="eyebrow flex min-h-[56px] w-full items-center justify-center bg-dorado px-6 text-marino transition-colors duration-300 hover:bg-dorado/85 md:hidden"
         >
-          Consultar disponibilidad
+          {t.booking.consultar}
         </button>
       )}
 
@@ -135,7 +133,7 @@ export default function BookingBar() {
             aria-expanded={openMovil}
             className="eyebrow flex min-h-[44px] items-center gap-1.5 px-1 text-[0.65rem] text-piedra transition-colors duration-300 hover:text-marino"
           >
-            Cerrar
+            {t.booking.cerrar}
             <svg
               width="16"
               height="16"
@@ -153,7 +151,7 @@ export default function BookingBar() {
 
         <div className="group relative md:px-6 md:py-4">
           <label htmlFor="bookingbar-llegada" className={fieldLabelClass}>
-            Llegada
+            {t.booking.llegada}
           </label>
           <input
             id="bookingbar-llegada"
@@ -169,7 +167,7 @@ export default function BookingBar() {
 
         <div className="group relative md:px-6 md:py-4">
           <label htmlFor="bookingbar-salida" className={fieldLabelClass}>
-            Salida
+            {t.booking.salida}
           </label>
           <input
             id="bookingbar-salida"
@@ -184,7 +182,7 @@ export default function BookingBar() {
 
         <div className="group relative col-span-2 mt-2 md:col-span-1 md:mt-0 md:px-6 md:py-4">
           <label htmlFor="bookingbar-huespedes" className={fieldLabelClass}>
-            Huéspedes
+            {t.booking.huespedes}
           </label>
           <select
             id="bookingbar-huespedes"
@@ -208,7 +206,7 @@ export default function BookingBar() {
           type="submit"
           className="eyebrow col-span-2 mt-4 flex min-h-[52px] items-center justify-center bg-dorado px-7 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99] md:col-span-1 md:mt-0 md:min-h-full"
         >
-          Consultar disponibilidad
+          {t.booking.consultar}
         </button>
       </div>
     </form>

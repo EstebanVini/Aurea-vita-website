@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { drawLine, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
-  albercaInfinita,
-  atardeceres,
-  descubreAcapulco,
-  experienciasCta,
-  experienciasEditorial,
-  experienciasHeader,
-  experienciasProximamente,
+  albercaInfinita as albercaInfinitaData,
+  atardeceres as atardeceresData,
+  descubreAcapulco as descubreAcapulcoData,
+  experienciasCta as experienciasCtaData,
+  experienciasEditorial as experienciasEditorialData,
+  experienciasHeader as experienciasHeaderData,
+  experienciasProximamente as experienciasProximamenteData,
 } from '../data/experiences.js';
 
 /**
@@ -69,9 +70,23 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
  * sola vez, solo transform/opacity, reduced-motion seguro.
  */
 export default function Experiencias() {
+  /* i18n: contenido del idioma activo (src/data/experiences.js) con
+     sus nombres históricos — incluidos los bloques gateados, que
+     quedan traducidos para cuando revivan; usePageMeta recibe los
+     metadatos por idioma. */
+  const { lang } = useLang();
+  const t = useT();
+  const experienciasHeader = experienciasHeaderData[lang];
+  const experienciasEditorial = experienciasEditorialData[lang];
+  const experienciasProximamente = experienciasProximamenteData[lang];
+  const albercaInfinita = albercaInfinitaData[lang];
+  const atardeceres = atardeceresData[lang];
+  const descubreAcapulco = descubreAcapulcoData[lang];
+  const experienciasCta = experienciasCtaData[lang];
+
   usePageMeta(
-    'Experiencias · Aurea Vita Acapulco',
-    'Alberca infinita, atardeceres en la terraza de Cielo y salidas por Acapulco: vela en la bahía, La Quebrada, manglares de Coyuca y el viejo puerto.',
+    experienciasHeader.metaTitulo,
+    experienciasHeader.metaDescripcion,
   );
 
   const reduceMotion = useReducedMotion();
@@ -318,7 +333,7 @@ export default function Experiencias() {
             fotos (brief §6.3). */}
         <div
           role="region"
-          aria-label="Momentos de la alberca a lo largo del día"
+          aria-label={t.experiencias.albercaStripAria}
           tabIndex={0}
           className="mt-14 snap-x snap-mandatory overflow-x-auto scroll-pl-5 sm:scroll-pl-8 lg:mt-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
@@ -515,7 +530,7 @@ export default function Experiencias() {
           <RevealItem>
             <SectionHeading
               align="center"
-              eyebrow="Reservaciones"
+              eyebrow={t.reservaciones}
               title={experienciasCta.titulo}
             >
               <p>{experienciasCta.texto}</p>

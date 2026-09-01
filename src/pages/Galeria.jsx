@@ -1,13 +1,14 @@
 import { useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 import Reveal from '../components/Reveal.jsx';
 import Lightbox from '../components/Lightbox.jsx';
 import { EASE_OUT } from '../lib/motion.js';
 import {
-  galleryEmpty,
-  galleryFilters,
-  galleryPhotos,
+  galleryEmpty as galleryEmptyData,
+  galleryFilters as galleryFiltersData,
+  galleryPhotos as galleryPhotosData,
 } from '../data/gallery.js';
 
 /**
@@ -43,10 +44,17 @@ import {
  * al thumbnail de origen (triggerRef apunta al botón pulsado).
  */
 export default function Galeria() {
-  usePageMeta(
-    'Galería · Aurea Vita Acapulco',
-    'Un recorrido visual por Aurea Vita: arquitectura frente al Pacífico, habitaciones, alberca infinita, gastronomía, spa y atardeceres en terraza.',
-  );
+  /* i18n: filtros, alts y textos por idioma (src/data/gallery.js +
+     src/i18n/ui.js). Los ids de filtro y el orden de las 72 fotos son
+     idénticos entre idiomas: el filtro activo y un visor abierto
+     sobreviven al cambio sin perder posición. */
+  const { lang } = useLang();
+  const t = useT();
+  const galleryFilters = galleryFiltersData[lang];
+  const galleryEmpty = galleryEmptyData[lang];
+  const galleryPhotos = galleryPhotosData[lang];
+
+  usePageMeta(t.galeria.metaTitulo, t.galeria.metaDescripcion);
 
   const reduceMotion = useReducedMotion();
 
@@ -64,7 +72,7 @@ export default function Galeria() {
       filtro === 'todas'
         ? galleryPhotos
         : galleryPhotos.filter((f) => f.category === filtro),
-    [filtro],
+    [filtro, galleryPhotos],
   );
 
   const vacio = fotos.length === 0;
@@ -112,14 +120,13 @@ export default function Galeria() {
               línea decorativa, no en el texto pequeño. Mismo lenguaje que
               el header de /contacto (su página hermana sin hero) y que
               SectionHeading por defecto sobre fondos claros. */}
-          <p className="eyebrow text-marino">Galería</p>
+          <p className="eyebrow text-marino">{t.galeria.eyebrow}</p>
           <h1 className="mt-4 max-w-2xl font-display text-4xl font-light leading-[1.1] text-balance text-marino sm:text-5xl lg:text-6xl">
-            La casa, en imágenes
+            {t.galeria.titulo}
           </h1>
           <div className="mt-7 h-px w-12 bg-dorado" aria-hidden="true" />
           <p className="mt-7 max-w-[60ch] text-base leading-relaxed text-marino/80 sm:text-lg">
-            Un recorrido visual por Aurea Vita y su costa. Lo único que falta es
-            la temperatura del aire.
+            {t.galeria.intro}
           </p>
         </Reveal>
       </section>
@@ -139,7 +146,7 @@ export default function Galeria() {
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
           <div
             role="group"
-            aria-label="Filtrar fotografías por categoría"
+            aria-label={t.galeria.filtrosAria}
             className="-mx-5 flex gap-1 overflow-x-auto px-5 py-3 sm:mx-0 sm:flex-wrap sm:gap-1.5 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {galleryFilters.map((f) => {
@@ -211,7 +218,7 @@ export default function Galeria() {
                   key={foto.src}
                   type="button"
                   onClick={(evento) => abrir(indice, evento)}
-                  aria-label={`Ampliar fotografía ${indice + 1} de ${fotos.length}: ${foto.alt}`}
+                  aria-label={t.galeria.ampliarFoto(indice + 1, fotos.length, foto.alt)}
                   className="group relative mb-3 block w-full overflow-hidden text-marino focus-visible:outline-marino sm:mb-4"
                   /* Reserva el alto exacto desde el ratio real: el
                      masonry no salta al cargar (brief §4.6). break-inside

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 import BookingBar from '../components/BookingBar.jsx';
 import FeatureCard from '../components/FeatureCard.jsx';
 import Parallax from '../components/Parallax.jsx';
@@ -10,12 +11,12 @@ import VideoBucle from '../components/VideoBucle.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { EASE_OUT, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
-  bienvenida,
-  ctaFinal,
-  destino,
-  destinoStats,
-  heroHome,
-  homeCards,
+  bienvenida as bienvenidaData,
+  ctaFinal as ctaFinalData,
+  destino as destinoData,
+  destinoStats as destinoStatsData,
+  heroHome as heroHomeData,
+  homeCards as homeCardsData,
 } from '../data/home.js';
 
 /** Flecha lineal para links editoriales (sin emojis; brief: iconos SVG). */
@@ -112,10 +113,20 @@ const bookingBarEntrance = fadeRise({ y: 16, duration: 0.7, delay: 0.34 });
  * sin animación (initial={false} en las primitivas y en este archivo).
  */
 export default function Home() {
-  usePageMeta(
-    'Aurea Vita · Santuario frente al Pacífico — Acapulco',
-    'Hotel de lujo sereno en la bahía de Acapulco: habitaciones frente al mar, cocina del Pacífico, spa y atardeceres en terraza. Consulta disponibilidad.',
-  );
+  /* i18n (ronda 31 ago 2026): los objetos {es, en} de src/data/home.js
+     se resuelven al idioma activo conservando sus nombres históricos;
+     el resto del JSX no cambia. usePageMeta ya es reactivo: recibe los
+     metadatos del idioma en cada render. */
+  const { lang } = useLang();
+  const t = useT();
+  const heroHome = heroHomeData[lang];
+  const bienvenida = bienvenidaData[lang];
+  const homeCards = homeCardsData[lang];
+  const destino = destinoData[lang];
+  const destinoStats = destinoStatsData[lang];
+  const ctaFinal = ctaFinalData[lang];
+
+  usePageMeta(heroHome.metaTitulo, heroHome.metaDescripcion);
 
   const reduceMotion = useReducedMotion();
 
@@ -239,7 +250,7 @@ export default function Home() {
         {reduceMotion ? (
           <img
             src="/videos/entrada_poster.jpeg"
-            alt="Acceso principal de Aurea Vita visto desde el aire, entre palmeras y con la iluminación cálida encendida al atardecer"
+            alt={heroHome.heroAlt}
             width="1920"
             height="1080"
             fetchPriority="high"
@@ -263,7 +274,7 @@ export default function Home() {
             }}
             poster={{
               src: '/videos/entrada_poster.jpeg',
-              alt: 'Acceso principal de Aurea Vita visto desde el aire, entre palmeras y con la iluminación cálida encendida al atardecer',
+              alt: heroHome.heroAlt,
               width: 1920,
               height: 1080,
             }}
@@ -464,7 +475,7 @@ export default function Home() {
                  (1.86:1 — falla AA); la flecha completa el feedback */
               className="eyebrow group mt-9 inline-flex min-h-[44px] items-center gap-2.5 text-marino transition-colors duration-300 hover:text-marino/70"
             >
-              Conoce nuestras habitaciones
+              {t.home.conoceHabitaciones}
               <ArrowIcon />
             </Link>
           </Reveal>
@@ -504,7 +515,7 @@ export default function Home() {
           Stagger de ~100ms entre cards (brief §6.3). */}
       <section className="bg-arena py-20 lg:py-32">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
-          <h2 className="sr-only">Habitaciones, gastronomía y spa</h2>
+          <h2 className="sr-only">{t.home.gridSr}</h2>
           <RevealGroup
             stagger={0.1}
             className="grid gap-12 md:grid-cols-3 md:gap-8"
@@ -568,7 +579,7 @@ export default function Home() {
               to="/experiencias"
               className="eyebrow group mt-12 inline-flex min-h-[44px] items-center gap-2.5 text-marfil transition-colors duration-300 hover:text-dorado"
             >
-              Explora las experiencias
+              {t.home.exploraExperiencias}
               <ArrowIcon />
             </Link>
           </Reveal>
@@ -655,7 +666,7 @@ export default function Home() {
               width: 1600,
               height: 1066,
             }}
-            etiquetaBoton="video de fondo de la banda de reserva"
+            etiquetaBoton={t.home.videoCta}
           />
         )}
         {/* QA 15 jun (P1): el fondo de esta banda tiene un cielo amplio

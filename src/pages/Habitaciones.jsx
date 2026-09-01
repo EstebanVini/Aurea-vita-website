@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 import RoomCard from '../components/RoomCard.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { fadeRise, staggerGroup } from '../lib/motion.js';
 import {
-  habitacionesCta,
-  habitacionesHeader,
-  rooms,
+  habitacionesCta as habitacionesCtaData,
+  habitacionesHeader as habitacionesHeaderData,
+  rooms as roomsData,
 } from '../data/rooms.js';
 
 /* Entrada del hero interior: eyebrow → H1, mismo lenguaje que el Home
@@ -28,9 +29,17 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
  * para sostener el ritmo editorial de la ronda anterior.
  */
 export default function Habitaciones() {
+  /* i18n: contenido del idioma activo (src/data/rooms.js) con sus
+     nombres históricos; usePageMeta recibe los metadatos por idioma. */
+  const { lang } = useLang();
+  const t = useT();
+  const habitacionesHeader = habitacionesHeaderData[lang];
+  const habitacionesCta = habitacionesCtaData[lang];
+  const rooms = roomsData[lang];
+
   usePageMeta(
-    'Habitaciones & Suites · Aurea Vita Acapulco',
-    'Habitaciones y suites frente al mar en Acapulco Diamante: vista al Pacífico, baño con tina, clóset de caoba y suites con cuarto de masajes privado.',
+    habitacionesHeader.metaTitulo,
+    habitacionesHeader.metaDescripcion,
   );
 
   const reduceMotion = useReducedMotion();
@@ -207,7 +216,7 @@ export default function Habitaciones() {
           <RevealItem>
             <SectionHeading
               align="center"
-              eyebrow="Reservaciones"
+              eyebrow={t.reservaciones}
               title={habitacionesCta.titulo}
             >
               <p>{habitacionesCta.texto}</p>

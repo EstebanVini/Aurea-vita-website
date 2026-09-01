@@ -1,19 +1,20 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 import Parallax from '../components/Parallax.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { drawLine, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
-  spaAromaterapia,
-  spaCircuito,
-  spaCta,
-  spaFilosofia,
-  spaHeader,
-  spaMenu,
-  spaNota,
-  spaReserva,
+  spaAromaterapia as spaAromaterapiaData,
+  spaCircuito as spaCircuitoData,
+  spaCta as spaCtaData,
+  spaFilosofia as spaFilosofiaData,
+  spaHeader as spaHeaderData,
+  spaMenu as spaMenuData,
+  spaNota as spaNotaData,
+  spaReserva as spaReservaData,
 } from '../data/spa.js';
 
 /**
@@ -60,10 +61,22 @@ const heroItem = fadeRise({ y: 18, duration: 0.7 });
  * duraciones").
  */
 export default function Spa() {
-  usePageMeta(
-    'Wellness · Aurea Vita Acapulco',
-    'Wellness frente al Pacífico: masajes, terapias y experiencias para desacelerar y reconectar contigo mismo, al ritmo del mar. Muy pronto, el menú completo.',
-  );
+  /* i18n: contenido del idioma activo (src/data/spa.js) con sus
+     nombres históricos — incluidos los bloques gateados, que quedan
+     traducidos para cuando revivan; usePageMeta recibe los metadatos
+     por idioma. */
+  const { lang } = useLang();
+  const t = useT();
+  const spaHeader = spaHeaderData[lang];
+  const spaReserva = spaReservaData[lang];
+  const spaFilosofia = spaFilosofiaData[lang];
+  const spaMenu = spaMenuData[lang];
+  const spaCircuito = spaCircuitoData[lang];
+  const spaAromaterapia = spaAromaterapiaData[lang];
+  const spaNota = spaNotaData[lang];
+  const spaCta = spaCtaData[lang];
+
+  usePageMeta(spaHeader.metaTitulo, spaHeader.metaDescripcion);
 
   const reduceMotion = useReducedMotion();
 
@@ -536,7 +549,7 @@ export default function Spa() {
             <SectionHeading
               align="center"
               tone="dark"
-              eyebrow="Reservaciones"
+              eyebrow={t.reservaciones}
               /* Eyebrow salvia (no dorado) sobre marino: cierra la página
                  en su acento verde. salvia sobre marino respira sin ser
                  texto accionable; el dorado se reserva al botón. */

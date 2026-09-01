@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EASE_OUT } from '../lib/motion.js';
+import { useT } from '../i18n/LanguageContext.jsx';
 
 /**
  * Lightbox de la galería (brief §5.4 + copy §9.3).
@@ -68,6 +69,8 @@ export default function Lightbox({
   onNext,
   triggerRef,
 }) {
+  /* i18n: aria-labels, ayuda de teclado y contador por idioma. */
+  const t = useT();
   const reduceMotion = useReducedMotion();
   const dialogRef = useRef(null);
   const closeRef = useRef(null);
@@ -203,7 +206,7 @@ export default function Lightbox({
           ref={dialogRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Visor de fotografías"
+          aria-label={t.lightbox.visorAria}
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
@@ -216,9 +219,7 @@ export default function Lightbox({
           className="fixed inset-0 z-[100] flex flex-col bg-marino/95 text-marfil backdrop-blur-sm"
         >
           {/* Ayuda de teclado para lectores de pantalla (copy §9.3). */}
-          <p className="sr-only">
-            Usa las flechas para navegar y Escape para cerrar.
-          </p>
+          <p className="sr-only">{t.lightbox.ayudaTeclado}</p>
 
           {/* Capa de cierre: clic en el fondo (fuera de la foto y los
               controles) cierra el visor. Decorativa para lectores de
@@ -237,17 +238,18 @@ export default function Lightbox({
               que el número que cambia sea el que llama la atención. */}
           <div className="relative z-20 flex items-center justify-between px-5 pt-5 sm:px-8 sm:pt-6">
             <p className="eyebrow tabular-nums text-marfil/60" aria-live="polite">
-              <span className="sr-only">Fotografía </span>
-              <span className="text-dorado">{index + 1}</span> de {total}
+              <span className="sr-only">{t.lightbox.fotografiaSr}</span>
+              <span className="text-dorado">{index + 1}</span> {t.lightbox.de}{' '}
+              {total}
             </p>
             <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              aria-label="Cerrar visor"
+              aria-label={t.lightbox.cerrarVisor}
               className="-mr-2 inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-marfil/90 transition-colors duration-200 hover:text-marfil focus-visible:outline-marfil"
             >
-              <span className="eyebrow mr-3 hidden sm:inline">Cerrar</span>
+              <span className="eyebrow mr-3 hidden sm:inline">{t.lightbox.cerrar}</span>
               <svg
                 width="22"
                 height="22"
@@ -271,7 +273,7 @@ export default function Lightbox({
             <button
               type="button"
               onClick={onPrev}
-              aria-label="Fotografía anterior"
+              aria-label={t.lightbox.anterior}
               className="absolute left-3 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center text-marfil/80 transition-colors duration-200 hover:text-marfil focus-visible:outline-marfil sm:inline-flex sm:h-12 sm:w-12 lg:left-6"
             >
               <svg
@@ -295,13 +297,13 @@ export default function Lightbox({
             <button
               type="button"
               onClick={onPrev}
-              aria-label="Fotografía anterior"
+              aria-label={t.lightbox.anterior}
               className="absolute inset-y-0 left-0 z-20 w-1/4 focus-visible:outline-marfil sm:hidden"
             />
             <button
               type="button"
               onClick={onNext}
-              aria-label="Fotografía siguiente"
+              aria-label={t.lightbox.siguiente}
               className="absolute inset-y-0 right-0 z-20 w-1/4 focus-visible:outline-marfil sm:hidden"
             />
 
@@ -336,7 +338,7 @@ export default function Lightbox({
             <button
               type="button"
               onClick={onNext}
-              aria-label="Fotografía siguiente"
+              aria-label={t.lightbox.siguiente}
               className="absolute right-3 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center text-marfil/80 transition-colors duration-200 hover:text-marfil focus-visible:outline-marfil sm:inline-flex sm:h-12 sm:w-12 lg:right-6"
             >
               <svg

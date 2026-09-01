@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
 import { EASE_OUT, drawLine, slideFrom } from '../lib/motion.js';
+import { useT } from '../i18n/LanguageContext.jsx';
 
 /**
  * Bloque de categoría de /habitaciones (brief §4.2 y §5.3, variante
@@ -67,6 +68,9 @@ const ACCENT = {
 const SWAP_DURATION = 0.45;
 
 export default function RoomCard({ room, tone = 'light', reverse = false }) {
+  /* i18n: los datos (`room`) llegan ya en el idioma activo desde la
+     página; aquí solo se localiza el aria-label de los thumbnails. */
+  const t = useT();
   const [activa, setActiva] = useState(0);
   const reduceMotion = useReducedMotion();
 
@@ -176,7 +180,7 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
                 type="button"
                 onClick={() => setActiva(indice)}
                 aria-pressed={indice === activa}
-                aria-label={`Ver fotografía ${indice + 1} de ${room.fotos.length}: ${foto.alt}`}
+                aria-label={t.roomCard.verFoto(indice + 1, room.fotos.length, foto.alt)}
                 className={[
                   'block w-full border-2 transition-[opacity,border-color,transform] duration-300',
                   /* El anillo de foco global usa currentColor; sin esto,

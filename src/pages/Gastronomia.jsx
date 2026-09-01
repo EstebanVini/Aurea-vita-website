@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { drawLine, fadeRise, staggerGroup } from '../lib/motion.js';
 import {
-  cielo,
-  cocteles,
-  gastronomiaCta,
-  gastronomiaHeader,
-  menuMarea,
-  origen,
+  cielo as cieloData,
+  cocteles as coctelesData,
+  gastronomiaCta as gastronomiaCtaData,
+  gastronomiaHeader as gastronomiaHeaderData,
+  menuMarea as menuMareaData,
+  origen as origenData,
 } from '../data/dining.js';
 
 /* Entrada del hero interior: eyebrow → H1, mismo lenguaje que
@@ -66,10 +67,19 @@ function Horarios({ items, nota, label }) {
  * deleite puntual de /gastronomia, espejo de la Suite Aurea.
  */
 export default function Gastronomia() {
-  usePageMeta(
-    'Alimentación Consciente · Aurea Vita Acapulco',
-    'Alimentación consciente frente al Pacífico: cocina sana y de temporada en Origen y atardeceres en la terraza de Cielo. Comer bien como parte del descanso.',
-  );
+  /* i18n: contenido del idioma activo (src/data/dining.js) con sus
+     nombres históricos + strings hardcodeados vía useT; usePageMeta
+     recibe los metadatos por idioma. */
+  const { lang } = useLang();
+  const t = useT();
+  const gastronomiaHeader = gastronomiaHeaderData[lang];
+  const origen = origenData[lang];
+  const menuMarea = menuMareaData[lang];
+  const cielo = cieloData[lang];
+  const cocteles = coctelesData[lang];
+  const gastronomiaCta = gastronomiaCtaData[lang];
+
+  usePageMeta(gastronomiaHeader.metaTitulo, gastronomiaHeader.metaDescripcion);
 
   const reduceMotion = useReducedMotion();
 
@@ -180,7 +190,7 @@ export default function Gastronomia() {
               <Horarios
                 items={origen.horarios}
                 nota={origen.notaHorarios}
-                label="Horarios de Origen"
+                label={t.gastronomia.horariosOrigen}
               />
             </div>
           </Reveal>
@@ -201,7 +211,7 @@ export default function Gastronomia() {
           </Reveal>
           <Reveal delay={0.1} as="figcaption" className="mt-4">
             <span className="eyebrow text-marino/75">
-              La mañana en Origen · desayuno en la terraza verde
+              {t.gastronomia.figcaptionTerraza}
             </span>
           </Reveal>
         </figure>
@@ -267,7 +277,7 @@ export default function Gastronomia() {
                   </span>
                   <div>
                     <h3 className="font-display text-2xl font-light leading-snug text-marfil sm:text-3xl">
-                      <span className="sr-only">{`Tiempo ${indice + 1}: `}</span>
+                      <span className="sr-only">{t.gastronomia.tiempoSr(indice + 1)}</span>
                       {tiempo.nombre}
                     </h3>
                     <p className="mt-1.5 max-w-[60ch] text-sm leading-relaxed text-marfil/70 sm:text-base">
@@ -315,7 +325,7 @@ export default function Gastronomia() {
               <Horarios
                 items={cielo.horarios}
                 nota={cielo.notaHorarios}
-                label="Horarios de Cielo"
+                label={t.gastronomia.horariosCielo}
               />
             </div>
           </Reveal>
@@ -355,9 +365,9 @@ export default function Gastronomia() {
           </RevealGroup>
           <RevealGroup stagger={0.09} delayChildren={0.12} amount={0.15}>
             <RevealItem>
-              <p className="eyebrow text-marino">La carta</p>
+              <p className="eyebrow text-marino">{t.gastronomia.laCarta}</p>
               <h3 className="mt-4 font-display text-3xl font-light leading-[1.1] text-balance text-marino sm:text-4xl">
-                Cocteles de autor
+                {t.gastronomia.coctelesTitulo}
               </h3>
               <div className="mt-7 h-px w-12 bg-dorado" aria-hidden="true" />
             </RevealItem>
@@ -392,7 +402,7 @@ export default function Gastronomia() {
             <SectionHeading
               align="center"
               tone="dark"
-              eyebrow="Reservaciones"
+              eyebrow={t.reservaciones}
               title={gastronomiaCta.titulo}
             >
               <p>{gastronomiaCta.texto}</p>

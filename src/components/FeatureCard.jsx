@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useT } from '../i18n/LanguageContext.jsx';
 
 /**
  * Tarjeta del grid del Home (brief §5.3, variante simple):
@@ -27,8 +28,12 @@ export default function FeatureCard({
   eyebrow,
   title,
   text,
-  linkLabel = 'Descubrir',
+  linkLabel,
 }) {
+  /* i18n: si el padre no pasa linkLabel, el label cae al "Descubrir"/
+     "Discover" del diccionario en el idioma activo. */
+  const t = useT();
+
   return (
     <Link
       to={to}
@@ -63,7 +68,7 @@ export default function FeatureCard({
             (falla AA incluso como estado). El feedback de hover vive en
             la flecha, el zoom de la foto y la elevación de la card. */}
         <span className="eyebrow mt-6 inline-flex min-h-[44px] items-center gap-2.5 text-marino">
-          {linkLabel}
+          {linkLabel ?? t.descubrir}
           <svg
             width="18"
             height="12"

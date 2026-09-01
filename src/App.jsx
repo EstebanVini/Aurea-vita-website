@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { useT } from './i18n/LanguageContext.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
@@ -11,13 +12,15 @@ import Galeria from './pages/Galeria.jsx';
 import Contacto from './pages/Contacto.jsx';
 
 export default function App() {
+  const t = useT();
+
   return (
     <>
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-marfil focus:px-5 focus:py-3 focus:text-marino"
       >
-        Saltar al contenido
+        {t.skipLink}
       </a>
       <ScrollToTop />
       <Navbar />

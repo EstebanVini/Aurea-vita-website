@@ -1,23 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useT } from '../i18n/LanguageContext.jsx';
 
-/**
+/*
  * Navegación del pie (copy §9.4, ronda 15 jun §9.2 G3): 6 entradas,
- * IDÉNTICAS al array NAV_LINKS de Navbar.jsx. Sin "Gastronomía";
- * "Spa" renombrado a "Wellness" (el `to` sigue /spa).
+ * IDÉNTICAS al array NAV_LINKS de Navbar.jsx — desde la ronda i18n
+ * (31 ago 2026) ambos consumen el MISMO array por idioma de
+ * src/i18n/ui.js (`navLinks`), así que la identidad se cumple por
+ * construcción. Sin "Gastronomía"; "Wellness" apunta a /spa.
  */
-const NAV_LINKS = [
-  { to: '/', label: 'Inicio' },
-  { to: '/habitaciones', label: 'Habitaciones' },
-  { to: '/spa', label: 'Wellness' },
-  { to: '/experiencias', label: 'Experiencias' },
-  { to: '/galeria', label: 'Galería' },
-  { to: '/contacto', label: 'Contacto' },
-];
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Footer() {
+  /* i18n: strings del footer y navegación por idioma (src/i18n/ui.js). */
+  const t = useT();
+  const NAV_LINKS = t.navLinks;
+
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState(null); // null | 'ok' | 'error'
 
@@ -39,7 +38,7 @@ export default function Footer() {
           <div>
             <Link
               to="/"
-              aria-label="Aurea Vita — Inicio"
+              aria-label={t.footer.logoAria}
               className="inline-block"
             >
               <img
@@ -56,13 +55,13 @@ export default function Footer() {
               />
             </Link>
             <p className="mt-5 font-display text-2xl font-light italic text-marfil/85">
-              Donde el día baja la voz.
+              {t.footer.tagline}
             </p>
           </div>
 
           {/* Navegación */}
-          <nav aria-label="Navegación del pie de página">
-            <h2 className="eyebrow text-dorado">Navegación</h2>
+          <nav aria-label={t.footer.navAria}>
+            <h2 className="eyebrow text-dorado">{t.footer.navTitulo}</h2>
             <ul className="mt-5 space-y-2.5">
               {NAV_LINKS.map((link) => (
                 <li key={link.to}>
@@ -79,12 +78,12 @@ export default function Footer() {
 
           {/* Contacto */}
           <div>
-            <h2 className="eyebrow text-dorado">Contacto</h2>
+            <h2 className="eyebrow text-dorado">{t.footer.contactoTitulo}</h2>
             <address className="mt-5 space-y-2.5 text-sm not-italic text-marfil/80">
               <p>
-                Av. Escénica 1200, Lomas del Pacífico
+                {t.footer.direccion[0]}
                 <br />
-                Acapulco de Juárez, Guerrero, México
+                {t.footer.direccion[1]}
               </p>
               <p>
                 <a
@@ -107,13 +106,13 @@ export default function Footer() {
 
           {/* Newsletter decorativo */}
           <div>
-            <h2 className="eyebrow text-dorado">Cartas desde la costa</h2>
+            <h2 className="eyebrow text-dorado">{t.footer.newsletterTitulo}</h2>
             <p className="mt-5 text-sm text-marfil/80">
-              Una carta al mes: temporada, mesa y mareas. Nada más.
+              {t.footer.newsletterTexto}
             </p>
             <form className="mt-5" onSubmit={onNewsletterSubmit} noValidate>
               <label htmlFor="newsletter-email" className="sr-only">
-                Correo electrónico para recibir las cartas
+                {t.footer.newsletterLabel}
               </label>
               <div className="flex">
                 <input
@@ -124,7 +123,7 @@ export default function Footer() {
                     setEmail(event.target.value);
                     setStatus(null);
                   }}
-                  placeholder="nombre@correo.com"
+                  placeholder={t.footer.newsletterPlaceholder}
                   autoComplete="email"
                   /* placeholder marfil/60 (≥4.5:1 sobre marino, AA): el
                      /40 anterior quedaba muy por debajo del contraste.
@@ -138,18 +137,18 @@ export default function Footer() {
                   type="submit"
                   className="eyebrow min-h-[44px] shrink-0 bg-dorado px-5 text-marino transition-colors duration-300 hover:bg-dorado/85"
                 >
-                  Suscribirme
+                  {t.footer.suscribirme}
                 </button>
               </div>
               <p aria-live="polite" className="mt-3 min-h-[1.25rem] text-sm">
                 {status === 'ok' && (
                   <span className="text-marfil/85">
-                    Listo. La próxima carta llegará a tu correo.
+                    {t.footer.newsletterOk}
                   </span>
                 )}
                 {status === 'error' && (
                   <span className="text-dorado">
-                    Revisa tu correo: parece incompleto.
+                    {t.footer.newsletterError}
                   </span>
                 )}
               </p>
@@ -162,16 +161,15 @@ export default function Footer() {
           {/* marfil/60, no /55: a 12px el /55 daba 4.43:1 sobre marino,
               justo bajo el 4.5:1 de WCAG AA */}
           <p className="text-xs leading-relaxed text-marfil/60">
-            © 2026 Aurea Vita. Hotel ficticio creado con fines de demostración;
-            las fotografías son de dominio público.
+            {t.footer.legal}
             <span className="mx-2" aria-hidden="true">
               ·
             </span>
-            <span>Aviso de privacidad</span>
+            <span>{t.footer.avisoPrivacidad}</span>
             <span className="mx-2" aria-hidden="true">
               ·
             </span>
-            <span>Términos de estancia</span>
+            <span>{t.footer.terminos}</span>
           </p>
         </div>
       </div>

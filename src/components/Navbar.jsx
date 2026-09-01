@@ -1,21 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useLang, useT } from '../i18n/LanguageContext.jsx';
 
-/**
+/*
  * Orden del menú fijo (brief §2.1, ronda 15 jun §9.2 G3): 6 entradas.
  * Sale "Gastronomía" del menú (su contenido vive en la tarjeta
  * "Alimentación Consciente" del Home; la ruta /gastronomia sigue
  * accesible). "Spa" se renombra a "Wellness"; el `to` sigue /spa (D4).
- * Este array debe mantenerse IDÉNTICO al de Footer.jsx.
+ * i18n (ronda 31 ago 2026): el array vive por idioma en src/i18n/ui.js
+ * (`navLinks`) y Navbar y Footer consumen la MISMA fuente vía useT() —
+ * la regla "idéntico al de Footer.jsx" se cumple por construcción.
  */
-const NAV_LINKS = [
-  { to: '/', label: 'Inicio' },
-  { to: '/habitaciones', label: 'Habitaciones' },
-  { to: '/spa', label: 'Wellness' },
-  { to: '/experiencias', label: 'Experiencias' },
-  { to: '/galeria', label: 'Galería' },
-  { to: '/contacto', label: 'Contacto' },
-];
 
 /**
  * Rutas con hero fotográfico fullscreen donde la navbar inicia
@@ -31,8 +26,17 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const hasHero = HERO_ROUTES.includes(pathname);
 
+  /* i18n: idioma activo + diccionario de UI. NAV_LINKS conserva su
+     nombre histórico, pero ya es el array por idioma de ui.js. */
+  const { lang, setLang } = useLang();
+  const t = useT();
+  const NAV_LINKS = t.navLinks;
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  /* true tras el primer cambio manual de idioma: arma el anuncio
+     aria-live sin que se anuncie nada al cargar la página. */
+  const [idiomaAnunciado, setIdiomaAnunciado] = useState(false);
 
   const toggleRef = useRef(null);
   const panelRef = useRef(null);
@@ -101,9 +105,61 @@ export default function Navbar() {
 
   const closeMenu = useCallback(() => setOpen(false), []);
 
+  /* Cambio de idioma: re-renderiza en sitio — sin navegar, sin recargar
+     y sin tocar el scroll — y arma el anuncio aria-live (el texto sale
+     del diccionario YA en el idioma nuevo). No cierra el panel móvil:
+     cambiar de idioma es configuración, no navegación. */
+  const cambiarIdioma = (nuevo) => {
+    if (nuevo === lang) return;
+    setLang(nuevo);
+    setIdiomaAnunciado(true);
+  };
+
+  /* Opción del toggle "ES / EN" (ronda 31 ago 2026): texto sobrio con
+     la utilidad eyebrow, coherente con los estados A/B de la barra —
+     NINGÚN dorado nuevo, el CTA "Reservar" sigue siendo el único botón
+     dorado. El idioma activo se resalta con el color pleno y
+     aria-pressed; el inactivo baja a /75, clicable y con hover al
+     pleno (QA i18n P2: /60 daba 3.48:1 sobre marfil y fallaba AA;
+     /75 pasa en los tres fondos y unifica también el panel móvil).
+     Cada opción lleva su atributo `lang` y un aria-label con el
+     nombre completo del idioma (docs/traduccion_ui_faltante.md
+     §Toggle). Touch target de 44×44px mínimo, salvo el ancho en lg
+     (36px, QA i18n P1: ahí manda el espacio horizontal; min-h-[44px]
+     se conserva siempre). `enPanel` fija los colores claros del panel
+     móvil marino, que no dependen del estado A/B. */
+  const opcionIdioma = (codigo, aria, enPanel = false) => {
+    const activo = lang === codigo;
+    const claro = enPanel || onDark;
+    return (
+      <button
+        type="button"
+        lang={codigo}
+        aria-label={aria}
+        aria-pressed={activo}
+        onClick={() => cambiarIdioma(codigo)}
+        className={[
+          'eyebrow flex min-h-[44px] min-w-[44px] items-center justify-center transition-colors duration-300 lg:min-w-[36px] xl:min-w-[44px]',
+          claro
+            ? activo
+              ? 'text-marfil'
+              : 'text-marfil/75 hover:text-marfil'
+            : activo
+              ? 'text-marino'
+              : 'text-marino/75 hover:text-marino',
+          /* Anillo de foco marfil sobre fondos oscuros (patrón del CTA):
+             el currentColor global sería invisible ahí. */
+          claro ? 'focus-visible:outline-marfil' : '',
+        ].join(' ')}
+      >
+        {codigo === 'es' ? 'ES' : 'EN'}
+      </button>
+    );
+  };
+
   const desktopLinkClass = ({ isActive }) =>
     [
-      'eyebrow relative py-2 transition-colors duration-300',
+      'eyebrow relative whitespace-nowrap py-2 transition-colors duration-300',
       /* Subrayado que crece de izquierda a derecha con scale-x (transform,
          no width: animar layout está prohibido — brief §6) */
       'after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:bg-dorado after:transition-transform after:duration-300 after:ease-out',
@@ -143,12 +199,12 @@ export default function Navbar() {
           - Galeria.jsx: sticky top-32 (= 128px) y pt-36/lg:pt-44 del header
           - heros interiores: pt-44 (176px) libran los 128px con aire. */}
       <nav
-        aria-label="Navegación principal"
+        aria-label={t.nav.navAria}
         className="mx-auto flex h-32 max-w-[1400px] items-center justify-between px-5 sm:px-8"
       >
         <Link
           to="/"
-          aria-label="Aurea Vita — Inicio"
+          aria-label={t.nav.logoAria}
           /* Click en el logo: navega a Inicio y sube al tope de la página
              (cubre el caso de estar ya en "/", donde no hay cambio de ruta
              que dispare ScrollToTop). El scroll respeta prefers-reduced-
@@ -174,12 +230,26 @@ export default function Navbar() {
         </Link>
 
         {/* Navegación de escritorio */}
-        <div className="hidden items-center gap-7 lg:flex xl:gap-9">
+        <div className="hidden items-center lg:flex lg:gap-3 xl:gap-9">
           {NAV_LINKS.map((link) => (
             <NavLink key={link.to} to={link.to} end className={desktopLinkClass}>
               {link.label}
             </NavLink>
           ))}
+          {/* Toggle de idioma: junto a los links, antes del CTA. */}
+          <div role="group" aria-label={t.toggle.grupoAria} className="flex items-center">
+            {opcionIdioma('es', t.toggle.esAria)}
+            <span
+              aria-hidden="true"
+              className={[
+                'transition-colors duration-300',
+                onDark ? 'text-marfil/40' : 'text-marino/40',
+              ].join(' ')}
+            >
+              /
+            </span>
+            {opcionIdioma('en', t.toggle.enAria)}
+          </div>
           <Link
             to="/contacto"
             /* En Estado A (onDark, navbar transparente sobre la foto del
@@ -189,13 +259,16 @@ export default function Navbar() {
             /* Botón un poco más grande (ronda 15 jun G2): a la escala de
                los CTAs dorados de las bandas finales (min-h-[48px] px-8);
                touch target ≥44px se conserva. Sigue siendo el único CTA
-               persistente: no se multiplican dorados en la navbar. */
+               persistente: no se multiplican dorados en la navbar.
+               QA i18n (P1): en lg (1024–1279px) el padding baja a px-5 —
+               junto con lg:gap-3 y el toggle a 36px recupera el ancho que
+               sumó el toggle de idioma; desde xl vuelve px-8. */
             className={[
-              'eyebrow inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85',
+              'eyebrow inline-flex min-h-[48px] items-center bg-dorado px-5 text-marino transition-colors duration-300 hover:bg-dorado/85 xl:px-8',
               onDark ? 'focus-visible:outline-marfil' : '',
             ].join(' ')}
           >
-            Reservar
+            {t.nav.reservar}
           </Link>
         </div>
 
@@ -206,7 +279,7 @@ export default function Navbar() {
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
           aria-controls="menu-movil"
-          aria-label={open ? 'Cerrar menú' : 'Abrir menú de navegación'}
+          aria-label={open ? t.nav.cerrarMenu : t.nav.abrirMenu}
           className={[
             'relative z-50 flex h-11 w-11 items-center justify-center transition-colors duration-300 lg:hidden',
             onDark ? 'text-marfil' : 'text-marino',
@@ -266,15 +339,34 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+          {/* Toggle de idioma del panel: arriba del CTA "Reservar",
+              visible sin scroll (mt-auto ancla el par toggle+CTA al
+              pie). Cambiar de idioma NO cierra el panel ni navega. */}
+          <div
+            role="group"
+            aria-label={t.toggle.grupoAria}
+            className="mt-auto mb-4 flex items-center self-start"
+          >
+            {opcionIdioma('es', t.toggle.esAria, true)}
+            <span aria-hidden="true" className="text-marfil/40">
+              /
+            </span>
+            {opcionIdioma('en', t.toggle.enAria, true)}
+          </div>
           <Link
             to="/contacto"
             onClick={closeMenu}
-            className="eyebrow mt-auto inline-flex min-h-[48px] w-full items-center justify-center bg-dorado text-marino transition-colors duration-300 hover:bg-dorado/85"
+            className="eyebrow inline-flex min-h-[48px] w-full items-center justify-center bg-dorado text-marino transition-colors duration-300 hover:bg-dorado/85"
           >
-            Reservar
+            {t.nav.reservar}
           </Link>
         </div>
       )}
+      {/* Anuncio del cambio de idioma para lectores de pantalla: vacío
+          hasta el primer cambio manual (nada se anuncia al cargar). */}
+      <span aria-live="polite" className="sr-only">
+        {idiomaAnunciado ? t.toggle.cambiado : ''}
+      </span>
     </header>
   );
 }
