@@ -51,7 +51,8 @@ jobs:
           port: ${{ secrets.SSH_PORT || 22 }}
           script: |
             set -e
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+            GH_USER=$(gh api user --jq .login)
+            gh auth token | docker login ghcr.io -u "$GH_USER" --password-stdin
             docker pull ghcr.io/${{ github.repository }}:latest
             docker stop aureavita || true
             docker rm aureavita || true
