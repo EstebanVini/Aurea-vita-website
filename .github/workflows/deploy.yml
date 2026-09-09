@@ -4,18 +4,21 @@ on:
   push:
     branches: [main]
 
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    outputs:
+      image: ${{ steps.image.outputs.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Compute lowercase image name
+        id: image
+        run: echo "name=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -33,14 +36,16 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ steps.image.outputs.name }}:latest
+            ${{ steps.image.outputs.name }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+    env:
+      IMAGE: ${{ needs.build-and-push.outputs.image }}
     steps:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
@@ -53,12 +58,12 @@ jobs:
             set -e
             GH_USER=$(gh api user --jq .login)
             gh auth token | docker login ghcr.io -u "$GH_USER" --password-stdin
-            docker pull ghcr.io/${{ github.repository }}:latest
+            docker pull ${{ env.IMAGE }}:latest
             docker stop aureavita || true
             docker rm aureavita || true
             docker run -d \
               --name aureavita \
               --network odoo_odoo-net \
               --restart unless-stopped \
-              ghcr.io/${{ github.repository }}:latest
+              ${{ env.IMAGE }}:latest
             docker image prune -f
