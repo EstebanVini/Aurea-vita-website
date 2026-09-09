@@ -65,5 +65,8 @@ jobs:
               --name aureavita \
               --network odoo_odoo-net \
               --restart unless-stopped \
+              --memory 64m \
+              --memory-swap 128m \
+              --cpus 0.5 \
               ${{ env.IMAGE }}:latest
-            docker image prune -f
+            docker image prune -af --filter "until=24h"
