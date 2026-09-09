@@ -1,3 +1,5 @@
 1. Realiza la traducción de la página que está descrita en el documento docs/traduccion_ingles.md y agrega un botón para cambiar el idioma, sin embargo guarda una cookie para recordar la preferencia de idioma del usuario (o si no es una cookie, utiliza el mecanismo que sea mejor)
 
 Al necesitar cambios en este proyecto siempre genera un documento de planeación tomando en cuenta los agentes y sus habilidades dentro de este proyecto dándoles tareas específicas a cada uno. Una vez terminada la planeación, orquesta a los agentes para ejecutar el cambio
+
+Probando github actions
