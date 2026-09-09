@@ -95,10 +95,10 @@ export default function Footer() {
               </p>
               <p>
                 <a
-                  href="mailto:reservaciones@aureavita.mx"
+                  href="mailto:aureavita@consorciorazo.com"
                   className="transition-colors duration-300 hover:text-dorado"
                 >
-                  reservaciones@aureavita.mx
+                  aureavita@consorciorazo.com
                 </a>
               </p>
             </address>

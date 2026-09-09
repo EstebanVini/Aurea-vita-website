@@ -544,7 +544,7 @@ Patrón general: lugar + qué se ve + atmósfera, en una frase. Lista completa p
 - **Encabezado:** `Aurea Vita`
 - **Dirección:** `Av. Escénica 1200, Lomas del Pacífico` / `Acapulco de Juárez, Guerrero, 39880 · México`
 - **Teléfono:** `+52 744 482 0136`
-- **Email:** `reservaciones@aureavita.mx`
+- **Email:** `aureavita@consorciorazo.com`
 - **Horario de atención:** `Concierge disponible todos los días · 8:00 – 22:00`
 - **Alt foto (`lobby_05.jpeg`):** `Lobby de Aurea Vita con arquitectura de doble altura y luz natural`
 
@@ -588,7 +588,7 @@ Patrón general: lugar + qué se ve + atmósfera, en una frase. Lista completa p
   - `Av. Escénica 1200, Lomas del Pacífico`
   - `Acapulco de Juárez, Guerrero, México`
   - `+52 744 482 0136`
-  - `reservaciones@aureavita.mx`
+  - `aureavita@consorciorazo.com`
 - **Columna 3 — Newsletter (decorativo):**
   - Título: `Cartas desde la costa`
   - Texto: `Una carta al mes: temporada, mesa y mareas. Nada más.`
