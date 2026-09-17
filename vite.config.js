@@ -5,6 +5,6 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-        allowedHosts: ["dev-aureavita.eviniegra.qzz.io", "dev-aureavita.consorciorazo.com"]
+        allowedHosts: ["dev-aureavita.eviniegra.qzz.io", "dev-aureavita.consorciorazo.com", "aureavita.consorciorazo.com"]
         }
 });
