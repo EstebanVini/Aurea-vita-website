@@ -1,0 +1,14 @@
+# Material de trabajo que no forma parte del sitio construido.
+# Evita que Vercel lo suba/procese en cada deploy (son >1GB entre ambos).
+originales/
+docs/
+prompt-claude-code-aurea-vita.md
+
+# Config de la otra vía de despliegue (Docker/nginx en VPS propio),
+# irrelevante para Vercel.
+Dockerfile
+.dockerignore
+nginx.conf
+.github/
+
+.claude/
