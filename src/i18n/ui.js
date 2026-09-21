@@ -40,6 +40,7 @@ export const ui = {
 
     nav: {
       reservar: 'Reservar',
+      login: 'LOGIN',
       navAria: 'Navegación principal',
       logoAria: 'Aurea Vita — Inicio',
       abrirMenu: 'Abrir menú de navegación',
@@ -186,6 +187,7 @@ export const ui = {
 
     nav: {
       reservar: 'Reserve',
+      login: 'LOGIN',
       navAria: 'Main navigation',
       logoAria: 'Aurea Vita — Home',
       abrirMenu: 'Open navigation menu',

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
-import { RESERVAS_URL } from '../lib/constants.js';
+import { LOGIN_URL, RESERVAS_URL } from '../lib/constants.js';
 
 /*
  * Orden del menú fijo (brief §2.1, ronda 15 jun §9.2 G3): 6 entradas.
@@ -251,6 +251,19 @@ export default function Navbar() {
             </span>
             {opcionIdioma('en', t.toggle.enAria)}
           </div>
+          {/* Botón "hueco" (borde, sin relleno): entra a la izquierda del
+              CTA dorado "Reservar" sin competir con él en peso visual. */}
+          <a
+            href={LOGIN_URL}
+            className={[
+              'eyebrow inline-flex min-h-[48px] items-center border px-5 transition-colors duration-300 xl:px-8',
+              onDark
+                ? 'border-marfil/70 text-marfil hover:border-marfil hover:bg-marfil/10 focus-visible:outline-marfil'
+                : 'border-marino/50 text-marino hover:border-marino hover:bg-marino/5',
+            ].join(' ')}
+          >
+            {t.nav.login}
+          </a>
           <a
             href={RESERVAS_URL}
             /* En Estado A (onDark, navbar transparente sobre la foto del
@@ -354,13 +367,24 @@ export default function Navbar() {
             </span>
             {opcionIdioma('en', t.toggle.enAria, true)}
           </div>
-          <a
-            href={RESERVAS_URL}
-            onClick={closeMenu}
-            className="eyebrow inline-flex min-h-[48px] w-full items-center justify-center bg-dorado text-marino transition-colors duration-300 hover:bg-dorado/85"
-          >
-            {t.nav.reservar}
-          </a>
+          <div className="flex gap-3">
+            {/* Botón "hueco": mismo par que en desktop, LOGIN a la
+                izquierda del CTA dorado "Reservar". */}
+            <a
+              href={LOGIN_URL}
+              onClick={closeMenu}
+              className="eyebrow inline-flex min-h-[48px] flex-1 items-center justify-center border border-marfil/70 text-marfil transition-colors duration-300 hover:border-marfil hover:bg-marfil/10"
+            >
+              {t.nav.login}
+            </a>
+            <a
+              href={RESERVAS_URL}
+              onClick={closeMenu}
+              className="eyebrow inline-flex min-h-[48px] flex-1 items-center justify-center bg-dorado text-marino transition-colors duration-300 hover:bg-dorado/85"
+            >
+              {t.nav.reservar}
+            </a>
+          </div>
         </div>
       )}
       {/* Anuncio del cambio de idioma para lectores de pantalla: vacío
