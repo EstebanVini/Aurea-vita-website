@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { RESERVAS_URL } from '../lib/constants.js';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { RevealGroup, RevealItem } from './Reveal.jsx';
 import { EASE_OUT, drawLine, slideFrom } from '../lib/motion.js';
@@ -321,8 +321,8 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
             ))}
           </ul>
 
-          <Link
-            to={`/contacto?habitacion=${room.slug}`}
+          <a
+            href={RESERVAS_URL}
             className={[
               'eyebrow mt-11 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85',
               /* El anillo currentColor sería marino sobre marino (offset
@@ -332,7 +332,7 @@ export default function RoomCard({ room, tone = 'light', reverse = false }) {
             ].join(' ')}
           >
             {room.cta}
-          </Link>
+          </a>
         </RevealItem>
       </div>
     </RevealGroup>

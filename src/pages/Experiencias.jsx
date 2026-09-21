@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { RESERVAS_URL } from '../lib/constants.js';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
@@ -232,14 +233,13 @@ export default function Experiencias() {
             <p className="mt-10 max-w-[38ch] border-l-2 border-dorado pl-6 font-display text-2xl font-light leading-snug text-balance text-marino sm:pl-8 sm:text-3xl">
               {experienciasEditorial.remate}
             </p>
-            {/* CTA al calendario de citas (hoy /contacto; ver nota en
-                data/experiences.js). */}
-            <Link
-              to={experienciasEditorial.to}
+            {/* CTA al motor de reservas (Odoo, ver src/lib/constants.js). */}
+            <a
+              href={RESERVAS_URL}
               className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99]"
             >
               {experienciasEditorial.boton}
-            </Link>
+            </a>
           </Reveal>
           <Reveal delay={0.12} className="overflow-hidden">
             {/* Parallax sutil (ronda 23 jul, pase de motion): el tipi
@@ -537,8 +537,8 @@ export default function Experiencias() {
             </SectionHeading>
           </RevealItem>
           <RevealItem>
-            <Link
-              to="/contacto"
+            <a
+              href={RESERVAS_URL}
               /* Feedback del CTA (patrón BookingBar/Gastronomia): cambio de
                  tono al hover + leve "asentamiento" al presionar, solo
                  motion-safe. La banda es arena, así que el anillo de foco
@@ -546,7 +546,7 @@ export default function Experiencias() {
               className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99]"
             >
               {experienciasCta.boton}
-            </Link>
+            </a>
           </RevealItem>
         </RevealGroup>
       </section>

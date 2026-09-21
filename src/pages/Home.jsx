@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { RESERVAS_URL } from '../lib/constants.js';
 import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
@@ -709,14 +710,14 @@ export default function Home() {
             </SectionHeading>
           </RevealItem>
           <RevealItem>
-            <Link
-              to="/contacto"
+            <a
+              href={RESERVAS_URL}
               /* Sobre foto+overlay marino el anillo global (currentColor=
                  marino) es invisible; se fuerza marfil para el foco visible. */
               className="eyebrow mt-11 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85 focus-visible:outline-marfil"
             >
               {ctaFinal.boton}
-            </Link>
+            </a>
           </RevealItem>
         </RevealGroup>
       </section>

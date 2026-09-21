@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
+import { RESERVAS_URL } from '../lib/constants.js';
 
 /*
  * Orden del menú fijo (brief §2.1, ronda 15 jun §9.2 G3): 6 entradas.
@@ -250,8 +251,8 @@ export default function Navbar() {
             </span>
             {opcionIdioma('en', t.toggle.enAria)}
           </div>
-          <Link
-            to="/contacto"
+          <a
+            href={RESERVAS_URL}
             /* En Estado A (onDark, navbar transparente sobre la foto del
                hero) el anillo global currentColor=marino queda de bajo
                contraste sobre la fotografía; se fuerza marfil. En Estado B
@@ -269,7 +270,7 @@ export default function Navbar() {
             ].join(' ')}
           >
             {t.nav.reservar}
-          </Link>
+          </a>
         </div>
 
         {/* Hamburguesa (móvil) */}
@@ -353,13 +354,13 @@ export default function Navbar() {
             </span>
             {opcionIdioma('en', t.toggle.enAria, true)}
           </div>
-          <Link
-            to="/contacto"
+          <a
+            href={RESERVAS_URL}
             onClick={closeMenu}
             className="eyebrow inline-flex min-h-[48px] w-full items-center justify-center bg-dorado text-marino transition-colors duration-300 hover:bg-dorado/85"
           >
             {t.nav.reservar}
-          </Link>
+          </a>
         </div>
       )}
       {/* Anuncio del cambio de idioma para lectores de pantalla: vacío

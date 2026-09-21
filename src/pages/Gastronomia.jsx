@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { RESERVAS_URL } from '../lib/constants.js';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
@@ -409,8 +409,8 @@ export default function Gastronomia() {
             </SectionHeading>
           </RevealItem>
           <RevealItem>
-            <Link
-              to="/contacto"
+            <a
+              href={RESERVAS_URL}
               /* Anillo de foco marfil sobre marino: el currentColor del
                  botón (marino) sería invisible aquí (patrón RoomCard). */
               /* Feedback del CTA (patrón BookingBar): cambio de tono al
@@ -418,7 +418,7 @@ export default function Gastronomia() {
               className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 focus-visible:outline-marfil motion-safe:active:scale-[0.99]"
             >
               {gastronomiaCta.boton}
-            </Link>
+            </a>
           </RevealItem>
         </RevealGroup>
       </section>

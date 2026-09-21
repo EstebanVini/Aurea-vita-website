@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { RESERVAS_URL } from '../lib/constants.js';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
@@ -230,12 +231,12 @@ export default function Spa() {
             {spaReserva.nota}
           </RevealItem>
           <RevealItem className="shrink-0 self-start lg:self-auto">
-            <Link
-              to={spaReserva.to}
+            <a
+              href={RESERVAS_URL}
               className="eyebrow inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-[background-color,transform] duration-300 hover:bg-dorado/85 motion-safe:active:scale-[0.99]"
             >
               {spaReserva.boton}
-            </Link>
+            </a>
           </RevealItem>
         </RevealGroup>
       </section>
