@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useT } from '../i18n/LanguageContext.jsx';
+import { RESERVAS_URL } from '../lib/constants.js';
 
 /* Opciones del selector de huéspedes (copy §8.2): viven por idioma en
    src/i18n/ui.js (`booking.opciones`) y se leen vía useT(). */
@@ -34,16 +34,15 @@ function FieldUnderline({ filled }) {
 }
 
 /**
- * BookingBar (brief §5.2): solo UI, sin motor de reservas. Al enviar
- * redirige a /contacto con las fechas y huéspedes como query params,
- * donde el formulario los precarga (brief §2.2).
+ * BookingBar (brief §5.2): solo UI, sin motor de reservas propio. Al
+ * enviar redirige al motor de reservas externo (Odoo, RESERVAS_URL);
+ * las fechas/huéspedes elegidos aquí no viajan a Odoo.
  *
  * Desktop: barra horizontal de 4 zonas sobre marfil. Móvil: colapsa a
  * un botón único que despliega los campos como panel (brief §3.3 —
  * nunca tres selects apilados sobre la foto).
  */
 export default function BookingBar() {
-  const navigate = useNavigate();
   /* i18n: labels, opciones y aria-labels por idioma. */
   const t = useT();
   const GUEST_OPTIONS = t.booking.opciones;
@@ -72,13 +71,11 @@ export default function BookingBar() {
 
   const hoy = hoyISO();
 
+  /* "Consultar disponibilidad" ya no arma un query string interno: el
+     motor de reservas es Odoo, así que solo redirige ahí (RESERVAS_URL). */
   const onSubmit = (event) => {
     event.preventDefault();
-    const params = new URLSearchParams();
-    if (llegada) params.set('llegada', llegada);
-    if (salida) params.set('salida', salida);
-    params.set('huespedes', huespedes);
-    navigate(`/contacto?${params.toString()}`);
+    window.location.href = RESERVAS_URL;
   };
 
   const fieldLabelClass = 'eyebrow block text-[0.65rem] text-piedra';

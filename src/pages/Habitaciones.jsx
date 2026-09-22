@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePageMeta } from '../hooks/usePageMeta.js';
 import { useLang, useT } from '../i18n/LanguageContext.jsx';
@@ -6,6 +5,7 @@ import RoomCard from '../components/RoomCard.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal.jsx';
 import { fadeRise, staggerGroup } from '../lib/motion.js';
+import { RESERVAS_URL } from '../lib/constants.js';
 import {
   habitacionesCta as habitacionesCtaData,
   habitacionesHeader as habitacionesHeaderData,
@@ -223,12 +223,12 @@ export default function Habitaciones() {
             </SectionHeading>
           </RevealItem>
           <RevealItem>
-            <Link
-              to="/contacto"
+            <a
+              href={RESERVAS_URL}
               className="eyebrow mt-10 inline-flex min-h-[48px] items-center bg-dorado px-8 text-marino transition-colors duration-300 hover:bg-dorado/85"
             >
               {habitacionesCta.boton}
-            </Link>
+            </a>
           </RevealItem>
         </RevealGroup>
       </section>
